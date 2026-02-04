@@ -1,11 +1,28 @@
-import React from "react";
+import React, { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import "../../Styles/header.scss";
 import { Search, User, Heart, ShoppingCart } from "lucide-react";
+import { CartContext } from "../../CartContext";
 
 const Header = () => {
+  const navigate = useNavigate();
+  const { getTotalItems } = useContext(CartContext);
+  const cartCount = getTotalItems();
+
   return (
     <header className="header">
       {/* Top Bar */}
+      <div>
+        <div className="header__top-bar">
+          <p>Free Shipping on Orders Over $50!</p>
+          <div className="top-bar-links">
+            <a href="#">Home</a>
+            <a href="#">About</a>
+            <a href="#">Login/Register</a>
+            <a href="#">EN/USD</a>
+          </div>
+        </div>
+      </div>
       <div className="header__top">
         <div className="header__logo">
            <img
@@ -24,16 +41,16 @@ const Header = () => {
         </div>
 
         <div className="header__actions">
-          <button>
+          <button onClick={() => navigate('/profile')}>
             <User size={20} />
             <span>Account</span>
           </button>
           <button>
             <Heart size={20} />
           </button>
-          <button className="cart">
+          <button className="cart" onClick={() => navigate('/cart')}>
             <ShoppingCart size={20} />
-            <span className="badge">2</span>
+            <span className="badge">{cartCount}</span>
           </button>
         </div>
       </div>
@@ -41,7 +58,7 @@ const Header = () => {
       {/* Navigation */}
       <nav className="header__nav">
         <ul>
-          <li>All Categories</li>
+          <li onClick={() => navigate('/category')} style={{ cursor: 'pointer' }}>All Categories</li>
           <li>Accessories</li>
           <li>Smartphones</li>
           <li>Laptops</li>

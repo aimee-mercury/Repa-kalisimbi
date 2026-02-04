@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "../../Styles/Landing.scss";
 import Footer from "../Layout/Footer";
 
@@ -234,6 +235,7 @@ const recentlyViewed = [
 ];
 
 const HomeHero = () => {
+  const navigate = useNavigate();
   const topProductsGridRef = React.useRef(null);
 
   const scrollTopProducts = (direction) => {
@@ -244,6 +246,10 @@ const HomeHero = () => {
         behavior: "smooth",
       });
     }
+  };
+
+  const handleAddToCart = (product) => {
+    navigate("/product", { state: { product } });
   };
 
   return (
@@ -410,7 +416,12 @@ const HomeHero = () => {
                 {"☆".repeat(5 - item.rating)}
               </div>
               <span className="price">{item.price}</span>
-              <button className="add-to-cart">Add to Cart</button>
+              <button 
+                className="add-to-cart"
+                onClick={() => handleAddToCart(item)}
+              >
+                Add to Cart
+              </button>
             </div>
           ))}
         </div>
