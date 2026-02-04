@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { Star, Grid3x3, List, ChevronLeft, ChevronRight } from 'lucide-react'
 import Footer from '../Layout/Footer'
 import '../../Styles/Category.scss'
@@ -517,7 +517,9 @@ const Category = () => {
   ]
 
   // State for filters
-  const [selectedCategory, setSelectedCategory] = useState('All Categories')
+  const location = useLocation()
+  const initialCategory = location && location.state && location.state.category ? location.state.category : 'All Categories'
+  const [selectedCategory, setSelectedCategory] = useState(initialCategory)
   const [priceRange, setPriceRange] = useState('$0 - $2,500')
   const [sortBy, setSortBy] = useState('Popularity')
   const [viewMode, setViewMode] = useState('grid')
@@ -579,6 +581,9 @@ const Category = () => {
     return filtered
   }, [selectedCategory, priceRange, sortBy])
 
+  // Optional banner image passed from navigation (e.g., header link)
+  const bannerImage = location && location.state && location.state.image ? location.state.image : null
+
   // Paginate
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage)
   const startIdx = (currentPage - 1) * itemsPerPage
@@ -586,6 +591,11 @@ const Category = () => {
 
   return (
     <div className="category-page">
+      {bannerImage && (
+        <div className="category-banner">
+          <img src={bannerImage} alt={selectedCategory} />
+        </div>
+      )}
       {/* Filters Section */}
       <div className="filters-section">
         <div className="filters-container">

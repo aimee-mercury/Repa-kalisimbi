@@ -36,13 +36,20 @@ const ProductPage = () => {
 
   let product = defaultProduct
   if (passed) {
+    // Normalize incoming product fields (handle strings like "$99.99")
+    const parsePrice = (val, fallback) => {
+      if (val == null) return fallback;
+      const num = parseFloat(String(val).replace(/[^0-9.-]+/g, ""));
+      return Number.isFinite(num) ? num : fallback;
+    };
+
     product = {
       ...defaultProduct,
       title: passed.title || passed.name || defaultProduct.title,
-      price: passed.price ?? defaultProduct.price,
-      originalPrice: passed.originalPrice ?? defaultProduct.originalPrice,
-      rating: passed.rating ?? defaultProduct.rating,
-      reviews: passed.reviews ?? defaultProduct.reviews,
+      price: parsePrice(passed.price, defaultProduct.price),
+      originalPrice: parsePrice(passed.originalPrice, defaultProduct.originalPrice),
+      rating: (passed.rating != null && !Number.isNaN(Number(passed.rating))) ? Number(passed.rating) : defaultProduct.rating,
+      reviews: (passed.reviews != null && !Number.isNaN(Number(passed.reviews))) ? parseInt(passed.reviews, 10) : defaultProduct.reviews,
       brand: passed.brand ?? defaultProduct.brand,
       size: passed.size ?? defaultProduct.size,
       weight: passed.weight ?? defaultProduct.weight,

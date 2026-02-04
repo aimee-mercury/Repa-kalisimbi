@@ -1,13 +1,20 @@
 import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../Styles/header.scss";
-import { Search, User, Heart, ShoppingCart } from "lucide-react";
+import { Search, User, Heart, ShoppingCart, LogOut } from "lucide-react";
 import { CartContext } from "../../CartContext";
+import { AuthContext } from "../../AuthContext";
 
 const Header = () => {
   const navigate = useNavigate();
   const { getTotalItems } = useContext(CartContext);
+  const { user, logout } = useContext(AuthContext);
   const cartCount = getTotalItems();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   return (
     <header className="header">
@@ -41,16 +48,22 @@ const Header = () => {
         </div>
 
         <div className="header__actions">
-          <button onClick={() => navigate('/profile')}>
+          <button onClick={() => navigate('/profile')} className="account-info">
             <User size={20} />
-            <span>Account</span>
+            <div className="account-details">
+              <span className="account-label">Account</span>
+              {user && <span className="account-name">{user.email}</span>}
+            </div>
           </button>
-          <button>
+          <button className="wishlist-btn">
             <Heart size={20} />
           </button>
           <button className="cart" onClick={() => navigate('/cart')}>
             <ShoppingCart size={20} />
             <span className="badge">{cartCount}</span>
+          </button>
+          <button className="logout-btn" onClick={handleLogout} title="Logout">
+            <LogOut size={18} />
           </button>
         </div>
       </div>
@@ -61,7 +74,7 @@ const Header = () => {
           <li onClick={() => navigate('/category')} style={{ cursor: 'pointer' }}>All Categories</li>
           <li>Accessories</li>
           <li>Smartphones</li>
-          <li>Laptops</li>
+          <li onClick={() => navigate('/category', { state: { category: 'LAPTOP', image: '/Images/lap.jpg' } })} style={{ cursor: 'pointer' }}>Laptops</li>
           <li>Gaming</li>
           <li>TV & Media</li>
           <li>Headphones</li>
