@@ -142,6 +142,13 @@ const ProductPage = () => {
     setTimeout(() => setShowCartMessage(false), 2000);
   };
 
+  const handleBuyNow = () => {
+    const message = `Hi! I'm interested in purchasing:\n\n*Product:* ${product.title}\n*Price:* $${product.price.toFixed(2)}\n*Color:* ${selectedColor}\n*Quantity:* ${quantity}\n\nPlease provide more details and proceed with the order.`;
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `https://wa.me/250732659689?text=${encodedMessage}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
   return (
     <div className="product-page">
       {/* Main Product Section */}
@@ -267,7 +274,7 @@ const ProductPage = () => {
                   <Plus size={16} />
                 </button>
               </div>
-              <button className="btn-buy-now">Buy Now</button>
+              <button className="btn-buy-now" onClick={handleBuyNow}>Buy Now</button>
               <button className="btn-add-cart" onClick={handleAddToCart}>
                 <Heart size={18} />
               </button>
