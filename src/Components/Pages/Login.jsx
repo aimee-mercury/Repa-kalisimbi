@@ -21,7 +21,7 @@ const Login = () => {
     // Simulate API call
     setTimeout(() => {
       if (login(email, password)) {
-        navigate('/');
+        navigate('/dashboard');
       } else {
         setError('Please enter both email and password');
       }

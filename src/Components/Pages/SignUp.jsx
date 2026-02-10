@@ -32,7 +32,7 @@ const SignUp = () => {
     // Simulate API call
     setTimeout(() => {
       if (signup(email, password, confirmPassword)) {
-        navigate('/');
+        navigate('/dashboard');
       } else {
         setError('Please fill in all fields correctly');
       }

@@ -1,5 +1,5 @@
 import './App.css'
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { useContext } from 'react'
 import { CartProvider } from './CartContext'
 import { AuthProvider, AuthContext } from './AuthContext'
@@ -11,6 +11,14 @@ import Cart from './Components/Pages/Cart'
 import Profile from './Components/Pages/Profile'
 import Login from './Components/Pages/Login'
 import SignUp from './Components/Pages/SignUp'
+import Dashboard from './Components/Dashboard/Home'
+import Analytics from './Components/Dashboard/Pages/Analytics'
+import History from './Components/Dashboard/Pages/History'
+import Notifications from './Components/Dashboard/Pages/Notifications'
+import Settings from './Components/Dashboard/Pages/Settings'
+import NewProduct from './Components/Dashboard/Pages/NewProduct'
+import AddProduct from './Components/Dashboard/Pages/AddProduct'
+import ProductReport from './Components/Dashboard/Pages/ProductReport'
 
 // Protected route wrapper
 const ProtectedRoute = ({ element }) => {
@@ -25,6 +33,8 @@ const ProtectedRoute = ({ element }) => {
 
 function AppRoutes() {
   const { isLoggedIn, loading } = useContext(AuthContext);
+  const location = useLocation();
+  const hideHeader = location.pathname.startsWith('/dashboard');
 
   if (loading) {
     return <div style={{ textAlign: 'center', padding: '40px' }}>Loading...</div>;
@@ -44,15 +54,23 @@ function AppRoutes() {
   // If logged in, show main app with header
   return (
     <div className="landing-page">
-      <Header />
+      {!hideHeader && <Header />}
       <Routes>
         <Route path="/" element={<HomeHero />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/dashboard/analytics" element={<Analytics />} />
+        <Route path="/dashboard/history" element={<History />} />
+        <Route path="/dashboard/notifications" element={<Notifications />} />
+        <Route path="/dashboard/settings" element={<Settings />} />
+        <Route path="/dashboard/products/new" element={<NewProduct />} />
+        <Route path="/dashboard/products/add" element={<AddProduct />} />
+        <Route path="/dashboard/products/report" element={<ProductReport />} />
         <Route path="/product" element={<ProductPage />} />
         <Route path="/category" element={<Category />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/profile" element={<Profile />} />
-        <Route path="/login" element={<Navigate to="/" />} />
-        <Route path="/signup" element={<Navigate to="/" />} />
+        <Route path="/login" element={<Navigate to="/dashboard" />} />
+        <Route path="/signup" element={<Navigate to="/dashboard" />} />
       </Routes>
     </div>
   );
