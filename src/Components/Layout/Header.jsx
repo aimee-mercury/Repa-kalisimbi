@@ -13,7 +13,7 @@ const Header = () => {
 
   const handleLogout = () => {
     logout();
-    window.location.href = '/';
+    window.location.replace('/');
   };
 
   return (

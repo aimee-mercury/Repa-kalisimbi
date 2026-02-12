@@ -66,8 +66,8 @@ const ensureSettingsProfile = (userData) => {
 export const AuthProvider = ({ children }) => {
   const initialUser = readStoredUser();
   const [user, setUser] = useState(initialUser);
-  const [isLoggedIn, setIsLoggedIn] = useState(Boolean(initialUser));
   const [loading] = useState(false);
+  const isLoggedIn = Boolean(user);
 
   const login = (email, password) => {
     // Simple validation (in production, this would call a backend API)
@@ -81,7 +81,6 @@ export const AuthProvider = ({ children }) => {
       trySetStorage('user', JSON.stringify(userData));
       ensureSettingsProfile(userData);
       setUser(userData);
-      setIsLoggedIn(true);
       return true;
     }
     return false;
@@ -100,7 +99,6 @@ export const AuthProvider = ({ children }) => {
       trySetStorage('user', JSON.stringify(userData));
       ensureSettingsProfile(userData);
       setUser(userData);
-      setIsLoggedIn(true);
       return true;
     }
     return false;
@@ -108,8 +106,8 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     localStorage.removeItem('user');
+    sessionStorage.removeItem('user');
     setUser(null);
-    setIsLoggedIn(false);
   };
 
   const updateUserProfile = (profileData) => {

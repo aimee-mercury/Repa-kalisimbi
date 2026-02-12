@@ -35,7 +35,7 @@ export default function Sidebar() {
   const go = (path) => () => navigate(path);
   const handleLogout = () => {
     logout();
-    window.location.href = "/";
+    window.location.replace("/");
   };
 
   return (
