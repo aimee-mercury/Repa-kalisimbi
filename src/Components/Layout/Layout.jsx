@@ -1,8 +1,25 @@
 "use client";
-import React from "react";
+import React, { useContext, useMemo } from "react";
+import { AuthContext } from "../../AuthContext";
 import "../../Styles/layout.scss";
 
 export default function DashboardHeader() {
+  const { user } = useContext(AuthContext);
+  const profile = useMemo(() => {
+    const savedSettings = JSON.parse(localStorage.getItem("settingsProfile") || "{}");
+    const fullName = `${savedSettings.firstName || ""} ${savedSettings.lastName || ""}`.trim();
+    const avatar =
+      user?.avatar ||
+      (savedSettings.avatar && !String(savedSettings.avatar).includes("/Images/profile.jpg")
+        ? savedSettings.avatar
+        : "");
+    return {
+      name: fullName || user?.name || "User",
+      email: user?.email || savedSettings.email || "",
+      avatar,
+    };
+  }, [user]);
+
   return (
     <header className="dashboard-header">
       {/* Left */}
@@ -20,13 +37,16 @@ export default function DashboardHeader() {
         </button>
 
         <div className="user-info">
-          <img
-            src="https://i.pravatar.cc/40?img=13"
-            alt="User"
-          />
+          {profile.avatar ? (
+            <img src={profile.avatar} alt="User" />
+          ) : (
+            <div className="avatar-placeholder">
+              {profile.name.charAt(0).toUpperCase()}
+            </div>
+          )}
           <div>
-            <strong>Daniel Smith</strong>
-            <span>Sale Manager</span>
+            <strong>{profile.name}</strong>
+            <span>{profile.email || "No email"}</span>
           </div>
         </div>
       </div>

@@ -1,24 +1,25 @@
-import React, { useState, useEffect } from 'react'
+import React, { useContext, useState } from 'react'
+import { AuthContext } from '../../AuthContext'
 import '../../Styles/Profile.scss'
 import Footer from '../Layout/Footer'
 
 const Profile = () => {
-  const saved = typeof window !== 'undefined' && localStorage.getItem('userProfile')
-  const initial = saved ? JSON.parse(saved) : {
-    firstName: 'Amelia',
-    lastName: 'Robert',
-    email: 'amelia.watson@eshop.com',
+  const { user, updateUserProfile } = useContext(AuthContext)
+  const saved = typeof window !== 'undefined' && localStorage.getItem('settingsProfile')
+  const parsed = saved ? JSON.parse(saved) : {}
+  const [fallbackFirstName = 'User', fallbackLastName = ''] = String(user?.name || 'User').split(' ')
+  const initial = {
+    firstName: parsed.firstName || fallbackFirstName,
+    lastName: parsed.lastName || fallbackLastName,
+    email: user?.email || parsed.email || '',
     password: '',
-    avatar: '/Images/profile.jpg',
+    avatar:
+      parsed.avatar && !String(parsed.avatar).includes('/Images/profile.jpg')
+        ? parsed.avatar
+        : '',
   }
 
   const [profile, setProfile] = useState(initial)
-  const [preview, setPreview] = useState(profile.avatar)
-  const [editing, setEditing] = useState(false)
-
-  useEffect(() => {
-    setPreview(profile.avatar)
-  }, [profile.avatar])
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -30,7 +31,6 @@ const Profile = () => {
     if (!file) return
     const reader = new FileReader()
     reader.onload = (ev) => {
-      setPreview(ev.target.result)
       setProfile(prev => ({ ...prev, avatar: ev.target.result }))
     }
     reader.readAsDataURL(file)
@@ -38,8 +38,8 @@ const Profile = () => {
 
   const handleSave = (e) => {
     e.preventDefault()
-    localStorage.setItem('userProfile', JSON.stringify(profile))
-    setEditing(false)
+    localStorage.setItem('settingsProfile', JSON.stringify(profile))
+    updateUserProfile(profile)
     alert('Profile saved locally')
   }
 
@@ -48,7 +48,13 @@ const Profile = () => {
       <div className="profile-container">
         <aside className="profile-sidebar">
           <div className="avatar-wrap">
-            <img src={preview} alt="Profile" className="avatar" />
+            {profile.avatar ? (
+              <img src={profile.avatar} alt="Profile" className="avatar" />
+            ) : (
+              <div className="avatar avatar-fallback">
+                {(profile.firstName || 'U').charAt(0).toUpperCase()}
+              </div>
+            )}
             <label className="change-btn">
               Change
               <input type="file" accept="image/*" onChange={handleFile} />
@@ -102,7 +108,6 @@ const Profile = () => {
                 <button type="submit" className="btn-save">Save Profile</button>
                 <button type="button" className="btn-cancel" onClick={() => {
                   setProfile(initial)
-                  setPreview(initial.avatar)
                 }}>Reset</button>
               </div>
             </form>

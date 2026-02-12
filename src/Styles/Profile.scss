@@ -34,6 +34,14 @@ $light-gray: #f6f8fb;
         background: $light-gray;
       }
 
+      .avatar-fallback {
+        display: grid;
+        place-items: center;
+        color: $dark-blue;
+        font-weight: 700;
+        font-size: 34px;
+      }
+
       .change-btn {
         display: inline-block;
         padding: 8px 12px;

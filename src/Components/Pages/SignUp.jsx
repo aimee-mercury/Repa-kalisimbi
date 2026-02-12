@@ -4,6 +4,7 @@ import { AuthContext } from '../../AuthContext';
 import '../../Styles/Auth.scss';
 
 const SignUp = () => {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -31,7 +32,7 @@ const SignUp = () => {
 
     // Simulate API call
     setTimeout(() => {
-      if (signup(email, password, confirmPassword)) {
+      if (signup(name, email, password, confirmPassword)) {
         navigate('/dashboard');
       } else {
         setError('Please fill in all fields correctly');
@@ -55,6 +56,16 @@ const SignUp = () => {
           {error && <div className="error-message">{error}</div>}
 
           <form onSubmit={handleSignUp}>
+            <div className="form-group">
+              <input
+                type="text"
+                placeholder="Full name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+            </div>
+
             <div className="form-group">
               <input
                 type="email"

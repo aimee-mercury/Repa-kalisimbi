@@ -1,5 +1,5 @@
 "use client";
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, { useContext, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../AuthContext";
 import "../../Styles/Sidebar.scss";
@@ -7,19 +7,30 @@ import "../../Styles/Sidebar.scss";
 export default function Sidebar() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { logout } = useContext(AuthContext);
-  const [productsOpen, setProductsOpen] = useState(false);
+  const { logout, user } = useContext(AuthContext);
 
   const isProductsActive = useMemo(
     () => location.pathname.startsWith("/dashboard/products"),
     [location.pathname]
   );
+  const [productsOpen, setProductsOpen] = useState(isProductsActive);
+  const showProductsOpen = productsOpen || isProductsActive;
 
-  useEffect(() => {
-    if (isProductsActive) {
-      setProductsOpen(true);
-    }
-  }, [isProductsActive]);
+  const profile = useMemo(() => {
+    const savedSettings = JSON.parse(localStorage.getItem("settingsProfile") || "{}");
+    const fullName = `${savedSettings.firstName || ""} ${savedSettings.lastName || ""}`.trim();
+    const avatar =
+      user?.avatar ||
+      (savedSettings.avatar && !String(savedSettings.avatar).includes("/Images/profile.jpg")
+        ? savedSettings.avatar
+        : "");
+
+    return {
+      name: fullName || user?.name || "User",
+      email: user?.email || savedSettings.email || "",
+      avatar,
+    };
+  }, [user]);
 
   const go = (path) => () => navigate(path);
   const handleLogout = () => {
@@ -29,13 +40,15 @@ export default function Sidebar() {
 
   return (
     <aside className="sidebar">
-      {/* Logo */}
       <div className="sidebar-logo">
-        <div className="logo-box">▼</div>
+        <img
+          src="/Images/REPA LOGO.png"
+          alt="Repa Technology Logo"
+          style={{ width: "30px", height: "auto" }}
+        />
         <span>Repa Technology</span>
       </div>
 
-      {/* Menu */}
       <nav className="sidebar-menu">
         <SidebarItem
           icon="⬜"
@@ -51,9 +64,9 @@ export default function Sidebar() {
         >
           <span className="icon">📦</span>
           <span className="label">Products</span>
-          <span className={`arrow ${productsOpen ? "open" : ""}`}>⌄</span>
+          <span className={`arrow ${showProductsOpen ? "open" : ""}`}>⌄</span>
         </button>
-        <div className={`sidebar-submenu ${productsOpen ? "open" : ""}`}>
+        <div className={`sidebar-submenu ${showProductsOpen ? "open" : ""}`}>
           <SidebarSubItem
             label="New Product"
             active={location.pathname === "/dashboard/products/new"}
@@ -99,12 +112,15 @@ export default function Sidebar() {
         <SidebarItem icon="➡️" label="Logout" onClick={handleLogout} />
       </nav>
 
-      {/* User */}
       <div className="sidebar-user">
-        <img src="https://i.pravatar.cc/40" alt="User" />
+        {profile.avatar ? (
+          <img src={profile.avatar} alt="User" />
+        ) : (
+          <div className="avatar-placeholder">{profile.name.charAt(0).toUpperCase()}</div>
+        )}
         <div>
-          <strong>Michael Smith</strong>
-          <span>michaelsmith12@gmail.com</span>
+          <strong>{profile.name}</strong>
+          <span>{profile.email || "No email"}</span>
         </div>
       </div>
     </aside>
