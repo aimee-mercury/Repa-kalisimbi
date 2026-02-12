@@ -12,6 +12,7 @@ const Login = () => {
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
   const location = useLocation();
+  const from = location.state?.from || '/dashboard';
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -21,7 +22,7 @@ const Login = () => {
     // Simulate API call
     setTimeout(() => {
       if (login(email, password)) {
-        navigate('/dashboard');
+        navigate(from, { replace: true });
       } else {
         setError('Please enter both email and password');
       }

@@ -23,54 +23,62 @@ import ProductReport from './Components/Dashboard/Pages/ProductReport'
 // Protected route wrapper
 const ProtectedRoute = ({ element }) => {
   const { isLoggedIn, loading } = useContext(AuthContext);
+  const location = useLocation();
   
   if (loading) {
     return <div style={{ textAlign: 'center', padding: '40px' }}>Loading...</div>;
   }
   
-  return isLoggedIn ? element : <Navigate to="/login" />;
+  return isLoggedIn ? element : <Navigate to="/login" state={{ from: location.pathname }} replace />;
 };
 
 function AppRoutes() {
   const { isLoggedIn, loading } = useContext(AuthContext);
   const location = useLocation();
-  const hideHeader = location.pathname.startsWith('/dashboard');
+  const hideHeader =
+    location.pathname.startsWith('/dashboard') ||
+    location.pathname === '/login' ||
+    location.pathname === '/signup';
 
   if (loading) {
     return <div style={{ textAlign: 'center', padding: '40px' }}>Loading...</div>;
   }
 
-  // If not logged in, show login/signup pages without header
-  if (!isLoggedIn) {
-    return (
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="*" element={<Navigate to="/login" />} />
-      </Routes>
-    );
-  }
-
-  // If logged in, show main app with header
   return (
     <div className="landing-page">
       {!hideHeader && <Header />}
       <Routes>
         <Route path="/" element={<HomeHero />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/dashboard/analytics" element={<Analytics />} />
-        <Route path="/dashboard/history" element={<History />} />
-        <Route path="/dashboard/notifications" element={<Notifications />} />
-        <Route path="/dashboard/settings" element={<Settings />} />
-        <Route path="/dashboard/products/new" element={<NewProduct />} />
-        <Route path="/dashboard/products/add" element={<AddProduct />} />
-        <Route path="/dashboard/products/report" element={<ProductReport />} />
         <Route path="/product" element={<ProductPage />} />
         <Route path="/category" element={<Category />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/profile" element={<Profile />} />
-        <Route path="/login" element={<Navigate to="/dashboard" />} />
-        <Route path="/signup" element={<Navigate to="/dashboard" />} />
+        <Route path="/login" element={isLoggedIn ? <Navigate to="/dashboard" /> : <Login />} />
+        <Route path="/signup" element={isLoggedIn ? <Navigate to="/dashboard" /> : <SignUp />} />
+        <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />} />} />
+        <Route
+          path="/dashboard/analytics"
+          element={<ProtectedRoute element={<Analytics />} />}
+        />
+        <Route path="/dashboard/history" element={<ProtectedRoute element={<History />} />} />
+        <Route
+          path="/dashboard/notifications"
+          element={<ProtectedRoute element={<Notifications />} />}
+        />
+        <Route path="/dashboard/settings" element={<ProtectedRoute element={<Settings />} />} />
+        <Route
+          path="/dashboard/products/new"
+          element={<ProtectedRoute element={<NewProduct />} />}
+        />
+        <Route
+          path="/dashboard/products/add"
+          element={<ProtectedRoute element={<AddProduct />} />}
+        />
+        <Route
+          path="/dashboard/products/report"
+          element={<ProtectedRoute element={<ProductReport />} />}
+        />
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </div>
   );

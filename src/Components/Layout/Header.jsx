@@ -13,7 +13,7 @@ const Header = () => {
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    window.location.href = '/';
   };
 
   return (
@@ -23,9 +23,14 @@ const Header = () => {
         <div className="header__top-bar">
           <p>Free Shipping on Orders Over $50!</p>
           <div className="top-bar-links">
-            <a href="#">Home</a>
+            <a href="/" onClick={(e) => { e.preventDefault(); navigate('/'); }}>Home</a>
             <a href="#">About</a>
-            <a href="#">Login/Register</a>
+            <a href="/login" onClick={(e) => { e.preventDefault(); navigate('/login'); }}>
+              Login
+            </a>
+            <a href="/signup" onClick={(e) => { e.preventDefault(); navigate('/signup'); }}>
+              Sign Up
+            </a>
             <a href="#">EN/USD</a>
           </div>
         </div>
@@ -48,11 +53,11 @@ const Header = () => {
         </div>
 
         <div className="header__actions">
-          <button onClick={() => navigate('/profile')} className="account-info">
+          <button onClick={() => navigate(user ? '/profile' : '/login')} className="account-info">
             <User size={20} />
             <div className="account-details">
               <span className="account-label">Account</span>
-              {user && <span className="account-name">{user.email}</span>}
+              <span className="account-name">{user?.email || 'Login to Dashboard'}</span>
             </div>
           </button>
           <button className="wishlist-btn">
@@ -62,9 +67,11 @@ const Header = () => {
             <ShoppingCart size={20} />
             <span className="badge">{cartCount}</span>
           </button>
-          <button className="logout-btn" onClick={handleLogout} title="Logout">
-            <LogOut size={18} />
-          </button>
+          {user && (
+            <button className="logout-btn" onClick={handleLogout} title="Logout">
+              <LogOut size={18} />
+            </button>
+          )}
         </div>
       </div>
 
