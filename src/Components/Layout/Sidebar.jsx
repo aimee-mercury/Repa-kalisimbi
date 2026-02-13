@@ -73,7 +73,7 @@ export default function Sidebar() {
             onClick={go("/dashboard/products/new")}
           />
           <SidebarSubItem
-            label="Add Product"
+            label="Post Product"
             active={location.pathname === "/dashboard/products/add"}
             onClick={go("/dashboard/products/add")}
           />

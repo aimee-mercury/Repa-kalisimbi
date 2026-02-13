@@ -1,8 +1,11 @@
 import React, { useMemo, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import DashboardHeader from "../../Layout/Layout";
 import Sidebar from "../../Layout/Sidebar";
 import "../../../Styles/Home.scss";
 import "../../../Styles/NewProduct.scss";
+
+const LANDING_PRODUCTS_KEY = "landingPostedProducts";
 
 const fallbackProducts = [
   {
@@ -58,6 +61,8 @@ const fallbackProducts = [
 export default function NewProduct() {
   const PRODUCTS_PER_PAGE = 4;
   const [currentPage, setCurrentPage] = useState(1);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const products = useMemo(() => {
     const localProducts = JSON.parse(
@@ -68,11 +73,45 @@ export default function NewProduct() {
   }, []);
 
   const title = useMemo(() => {
-    const topCategory = products[0]?.category || "Laptop";
-    return `${topCategory} Products`;
-  }, [products]);
+    const selectedSection =
+      location.state?.sourceSection || products[0]?.sourceSection || "Best Deals";
+    return `${selectedSection} Products`;
+  }, [location.state, products]);
 
   const formatPrice = (value) => `$${Number(value || 0).toFixed(2)}`;
+
+  const safeSetStorage = (key, value) => {
+    try {
+      localStorage.setItem(key, value);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  const handleAddToHome = (product) => {
+    const currentLandingProducts = JSON.parse(
+      localStorage.getItem(LANDING_PRODUCTS_KEY) || "[]"
+    );
+
+    const landingProduct = {
+      id: `home-${product.id || "product"}-${currentLandingProducts.length + 1}`,
+      name: product.name,
+      image: product.image || "/Images/lap.jpg",
+      price: Number(product.price) || 0,
+      rating: 5,
+      sourceSection: product.sourceSection || location.state?.sourceSection || "Best Deals",
+      onSale: (product.sourceSection || "").toLowerCase().includes("hot"),
+    };
+
+    safeSetStorage(
+      LANDING_PRODUCTS_KEY,
+      JSON.stringify([landingProduct, ...currentLandingProducts].slice(0, 50))
+    );
+
+    navigate("/", { state: { homeSection: landingProduct.sourceSection } });
+  };
+
   const totalPages = Math.max(1, Math.ceil(products.length / PRODUCTS_PER_PAGE));
   const currentProducts = products.slice(
     (currentPage - 1) * PRODUCTS_PER_PAGE,
@@ -117,6 +156,9 @@ export default function NewProduct() {
                   <div className="meta-line">
                     <span className="stars">★★★★★</span>
                     <span className="sku">{product.sku || "SKU 1231452485251"}</span>
+                    <span className="source-tag">
+                      {product.sourceSection || location.state?.sourceSection || "Best Deals"}
+                    </span>
                   </div>
                   <h2>{product.name}</h2>
                   <ul>
@@ -146,7 +188,11 @@ export default function NewProduct() {
                   </div>
 
                   <div className="actions-line">
-                    <button type="button" className="cart-btn">
+                    <button
+                      type="button"
+                      className="cart-btn"
+                      onClick={() => handleAddToHome(product)}
+                    >
                       Add to Home
                     </button>
                     <button type="button" className="wish-btn">
@@ -178,3 +224,4 @@ export default function NewProduct() {
     </div>
   );
 }
+

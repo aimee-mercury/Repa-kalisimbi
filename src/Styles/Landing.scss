@@ -81,7 +81,8 @@ $light-bg: #f6f8fb;
   &__grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 20px;
+    column-gap: 20px;
+    row-gap: 46px;
     grid-auto-rows: 1fr; /* ensure rows are equal height so cards match */
   }
 }
@@ -279,7 +280,8 @@ $light-bg: #f6f8fb;
   &__grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 20px;
+    column-gap: 20px;
+    row-gap: 46px;
   }
 }
 
@@ -491,7 +493,8 @@ $light-bg: #f6f8fb;
   &__grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 20px;
+    column-gap: 20px;
+    row-gap: 46px;
   }
 }
 
@@ -587,7 +590,8 @@ $light-bg: #f6f8fb;
   &__grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 20px;
+    column-gap: 20px;
+    row-gap: 46px;
   }
 }
 
