@@ -1,0 +1,263 @@
+body.dashboard-dark {
+  background: #0b1220;
+  color: #e5e7eb;
+}
+
+body.dashboard-dark .dashboard-main h1,
+body.dashboard-dark .dashboard-main h2,
+body.dashboard-dark .dashboard-main h3,
+body.dashboard-dark .dashboard-main h4,
+body.dashboard-dark .dashboard-main h5,
+body.dashboard-dark .dashboard-main h6,
+body.dashboard-dark .dashboard-main strong,
+body.dashboard-dark .dashboard-main th {
+  color: #f8fafc !important;
+}
+
+body.dashboard-dark .dashboard-main p,
+body.dashboard-dark .dashboard-main span,
+body.dashboard-dark .dashboard-main label,
+body.dashboard-dark .dashboard-main li,
+body.dashboard-dark .dashboard-main td,
+body.dashboard-dark .dashboard-main small,
+body.dashboard-dark .dashboard-main a,
+body.dashboard-dark .dashboard-main button {
+  color: #e5e7eb !important;
+}
+
+body.dashboard-dark .dashboard-shell {
+  background: #0b1220;
+}
+
+body.dashboard-dark .dashboard-main {
+  background: #0b1220;
+  color: #cbd5e1;
+}
+
+body.dashboard-dark .dashboard-header {
+  background: linear-gradient(135deg, #111827 0%, #0f172a 100%);
+  border-color: #1f2a3d;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.35);
+}
+
+body.dashboard-dark .header-left .header-kicker {
+  background: #16243a;
+  color: #93c5fd;
+}
+
+body.dashboard-dark .header-left h2 {
+  color: #f8fafc;
+}
+
+body.dashboard-dark .header-left p,
+body.dashboard-dark .meta-chip {
+  color: #94a3b8;
+}
+
+body.dashboard-dark .meta-chip {
+  background: #0f172a;
+  border-color: #1e293b;
+}
+
+body.dashboard-dark .meta-chip.active {
+  background: rgba(16, 185, 129, 0.14);
+  border-color: rgba(16, 185, 129, 0.4);
+  color: #6ee7b7;
+}
+
+body.dashboard-dark .meta-action-btn {
+  background: #1d4ed8;
+  border-color: #60a5fa;
+  color: #f8fbff !important;
+}
+
+body.dashboard-dark .meta-action-btn.is-dark {
+  background: #f8fafc;
+  color: #0f172a;
+  border-color: #f8fafc;
+}
+
+body.dashboard-dark .user-info,
+body.dashboard-dark .panel,
+body.dashboard-dark .stat-card,
+body.dashboard-dark .deal-card,
+body.dashboard-dark .notification-card,
+body.dashboard-dark .settings-card,
+body.dashboard-dark .add-product-page .add-card,
+body.dashboard-dark .new-product-page .product-row,
+body.dashboard-dark .summary-card,
+body.dashboard-dark .close-card {
+  background: #111827;
+  border-color: #1f2a3d;
+  color: #dbe7f5;
+}
+
+body.dashboard-dark .page-title,
+body.dashboard-dark .settings-title,
+body.dashboard-dark .notifications-title,
+body.dashboard-dark .panel-header h3,
+body.dashboard-dark .summary-card strong,
+body.dashboard-dark .close-card h4,
+body.dashboard-dark .new-product-page h1,
+body.dashboard-dark .add-product-page .add-card h2,
+body.dashboard-dark .settings-card-head h3,
+body.dashboard-dark .settings-modal-head h3,
+body.dashboard-dark .product-report-page h3,
+body.dashboard-dark .notification-title {
+  color: #f8fafc;
+}
+
+body.dashboard-dark .stat-label,
+body.dashboard-dark .notification-message,
+body.dashboard-dark .notification-subtitle,
+body.dashboard-dark .report-head p,
+body.dashboard-dark .summary-card span,
+body.dashboard-dark .close-card p,
+body.dashboard-dark .settings-card .info-item span,
+body.dashboard-dark .profile-info .location,
+body.dashboard-dark .new-product-page p,
+body.dashboard-dark .new-product-page .meta-line,
+body.dashboard-dark .new-product-page .icons-line,
+body.dashboard-dark .add-product-page .field-label,
+body.dashboard-dark .add-product-page .radio-row label,
+body.dashboard-dark .add-product-page .chip,
+body.dashboard-dark .report-table td,
+body.dashboard-dark .settings-page p {
+  color: #94a3b8;
+}
+
+body.dashboard-dark .settings-card .info-item strong,
+body.dashboard-dark .new-product-page .product-info h2,
+body.dashboard-dark .new-product-page .product-right .price-line strong,
+body.dashboard-dark .new-product-page .source-tag,
+body.dashboard-dark .add-product-page .field-input,
+body.dashboard-dark .add-product-page .field-textarea,
+body.dashboard-dark .modal-grid input,
+body.dashboard-dark .modal-grid select,
+body.dashboard-dark .notification-title span,
+body.dashboard-dark .report-table th,
+body.dashboard-dark .settings-modal-head .close-btn {
+  color: #e2e8f0;
+}
+
+body.dashboard-dark .orders-table .row {
+  background: #0f172a;
+  color: #cbd5e1;
+}
+
+body.dashboard-dark .orders-table .row.header {
+  color: #94a3b8;
+}
+
+body.dashboard-dark .sidebar {
+  background: #0f172a;
+  border-right-color: #1e293b;
+}
+
+body.dashboard-dark .sidebar-logo,
+body.dashboard-dark .sidebar-user strong {
+  color: #e2e8f0;
+}
+
+body.dashboard-dark .sidebar-item,
+body.dashboard-dark .sidebar-subitem,
+body.dashboard-dark .sidebar-user span {
+  color: #94a3b8;
+}
+
+body.dashboard-dark .sidebar-item:hover,
+body.dashboard-dark .sidebar-subitem:hover {
+  background: #111827;
+}
+
+body.dashboard-dark .sidebar-item.active,
+body.dashboard-dark .sidebar-subitem.active {
+  background: #1e293b;
+  color: #93c5fd;
+}
+
+body.dashboard-dark .sidebar-user {
+  border-top-color: #1e293b;
+}
+
+body.dashboard-dark .sidebar-toggle {
+  background: #0f172a;
+  border-color: #1e293b;
+  color: #e2e8f0;
+}
+
+body.dashboard-dark .field-input,
+body.dashboard-dark .field-textarea,
+body.dashboard-dark .modal-grid input,
+body.dashboard-dark .modal-grid select,
+body.dashboard-dark .settings-modal,
+body.dashboard-dark .category-modal,
+body.dashboard-dark .report-table th,
+body.dashboard-dark .report-table td,
+body.dashboard-dark .new-product-page .wish-btn,
+body.dashboard-dark .add-product-page .post-product-nav button {
+  background: #0f172a;
+  color: #dbe7f5;
+  border-color: #22314a;
+}
+
+body.dashboard-dark .field-label,
+body.dashboard-dark .modal-grid span,
+body.dashboard-dark .profile-info p {
+  color: #9fb0c7;
+}
+
+body.dashboard-dark .report-table th {
+  background: #111827;
+}
+
+body.dashboard-dark .add-product-page .main-preview,
+body.dashboard-dark .add-product-page .thumb-btn,
+body.dashboard-dark .add-product-page .more-thumb,
+body.dashboard-dark .profile-image-wrap img,
+body.dashboard-dark .profile-image-wrap .profile-placeholder {
+  background: #0f172a;
+  border-color: #22314a;
+}
+
+body.dashboard-dark .settings-card-head {
+  border-bottom-color: #1f2a3d;
+}
+
+body.dashboard-dark .notifications-mark-btn,
+body.dashboard-dark .export-actions button,
+body.dashboard-dark .new-product-page .pagination button,
+body.dashboard-dark .ghost-btn,
+body.dashboard-dark .draft-btn {
+  background: #0f172a;
+  color: #dbe7f5;
+  border-color: #22314a;
+}
+
+body.dashboard-dark .notifications-mark-btn:disabled {
+  opacity: 0.55;
+}
+
+/* Keep status badges readable in dark mode */
+body.dashboard-dark .status {
+  color: #f8fafc !important;
+  border: 1px solid transparent;
+}
+
+body.dashboard-dark .status.pending {
+  background: #78350f !important;
+  border-color: #f59e0b;
+  color: #fef3c7 !important;
+}
+
+body.dashboard-dark .status.followup {
+  background: #312e81 !important;
+  border-color: #6366f1;
+  color: #e0e7ff !important;
+}
+
+body.dashboard-dark .status.processing {
+  background: #14532d !important;
+  border-color: #22c55e;
+  color: #dcfce7 !important;
+}

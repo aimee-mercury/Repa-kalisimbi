@@ -1,85 +1,95 @@
 import './App.css'
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom'
+import { useContext } from 'react'
+import { CartProvider } from './CartContext'
+import { CurrencyProvider } from './CurrencyContext'
+import { AuthProvider, AuthContext } from './AuthContext'
+import Header from './Components/Layout/Header'
+import HomeHero from './Components/Pages/Landing'
+import ProductPage from './Components/Pages/Product'
+import Category from './Components/Pages/Category'
+import Cart from './Components/Pages/Cart'
+import Profile from './Components/Pages/Profile'
+import Login from './Components/Pages/Login'
+import SignUp from './Components/Pages/SignUp'
+import Dashboard from './Components/Dashboard/Home'
+import Notifications from './Components/Dashboard/Pages/Notifications'
+import Settings from './Components/Dashboard/Pages/Settings'
+import NewProduct from './Components/Dashboard/Pages/NewProduct'
+import AddProduct from './Components/Dashboard/Pages/AddProduct'
+import ProductReport from './Components/Dashboard/Pages/ProductReport'
+
+// Protected route wrapper
+const ProtectedRoute = ({ element }) => {
+  const { isLoggedIn, loading } = useContext(AuthContext);
+  const location = useLocation();
+  
+  if (loading) {
+    return <div style={{ textAlign: 'center', padding: '40px' }}>Loading...</div>;
+  }
+  
+  return isLoggedIn ? element : <Navigate to="/login" state={{ from: location.pathname }} replace />;
+};
+
+function AppRoutes() {
+  const { isLoggedIn, loading } = useContext(AuthContext);
+  const location = useLocation();
+  const hideHeader =
+    location.pathname.startsWith('/dashboard') ||
+    location.pathname === '/login' ||
+    location.pathname === '/signup';
+
+  if (loading) {
+    return <div style={{ textAlign: 'center', padding: '40px' }}>Loading...</div>;
+  }
+
+  return (
+    <div className="landing-page">
+      {!hideHeader && <Header />}
+      <Routes>
+        <Route path="/" element={<HomeHero />} />
+        <Route path="/product" element={<ProductPage />} />
+        <Route path="/category" element={<Category />} />
+        <Route path="/category/:categoryKey" element={<Category />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/login" element={isLoggedIn ? <Navigate to="/dashboard" /> : <Login />} />
+        <Route path="/signup" element={isLoggedIn ? <Navigate to="/dashboard" /> : <SignUp />} />
+        <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />} />} />
+        <Route
+          path="/dashboard/notifications"
+          element={<ProtectedRoute element={<Notifications />} />}
+        />
+        <Route path="/dashboard/settings" element={<ProtectedRoute element={<Settings />} />} />
+        <Route
+          path="/dashboard/products/new"
+          element={<ProtectedRoute element={<NewProduct />} />}
+        />
+        <Route
+          path="/dashboard/products/add"
+          element={<ProtectedRoute element={<AddProduct />} />}
+        />
+        <Route
+          path="/dashboard/products/report"
+          element={<ProtectedRoute element={<ProductReport />} />}
+        />
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
+    </div>
+  );
+}
 
 function App() {
   return (
-    <div className="landing-page">
-      {/* Navbar */}
-      <nav className="navbar">
-        <div className="logo-text">REPA KALISIMBI</div>
-        <div className="nav-links">
-          <a href="#home">Home</a>
-          <a href="#services">Services</a>
-          <a href="#about">About</a>
-          <a href="#contact">Contact</a>
-        </div>
-      </nav>
-
-      {/* Hero Section */}
-      <header id="home" className="hero">
-        <h1>Excellence in Every Venture, Impacting the Future.</h1>
-        <p>
-          Repa Kalisimbi Group Limited is a premier multi-sector conglomerate dedicated to providing innovative solutions and sustainable growth across Africa and beyond.
-        </p>
-        <button className="cta-button">Partner With Us</button>
-      </header>
-
-      {/* Services Section */}
-      <section id="services" className="section">
-        <h2 className="section-title">Our Expertise</h2>
-        <div className="services-grid">
-          <div className="service-card">
-            <span className="service-icon">🏗️</span>
-            <h3>Real Estate & Infrastructure</h3>
-            <p>Developing modern, sustainable living and commercial spaces that redefine urban landscapes.</p>
-          </div>
-          <div className="service-card">
-            <span className="service-icon">🌍</span>
-            <h3>International Trade</h3>
-            <p>Connecting global markets with high-quality commodities and seamless logistics solutions.</p>
-          </div>
-          <div className="service-card">
-            <span className="service-icon">💡</span>
-            <h3>Consultancy & Advisory</h3>
-            <p>Providing strategic insights and business solutions to help organizations scale efficiently.</p>
-          </div>
-        </div>
-      </section>
-
-      {/* About Section */}
-      <section id="about" className="section about">
-        <h2 className="section-title">About Our Group</h2>
-        <div className="about-content">
-          <p>
-            Founded on the principles of integrity and innovation, Repa Kalisimbi Group Limited has grown into a diverse investment holding company. We believe in the power of synergy and long-term partnerships to create lasting value for our stakeholders and the communities we serve.
-          </p>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer id="contact" className="footer">
-        <div className="footer-grid">
-          <div className="footer-col">
-            <h4>Repa Kalisimbi</h4>
-            <p>Excellence. Innovation. Growth.</p>
-          </div>
-          <div className="footer-col">
-            <h4>Quick Links</h4>
-            <a href="#home">Home</a>
-            <a href="#services">Services</a>
-            <a href="#about">About</a>
-          </div>
-          <div className="footer-col">
-            <h4>Contact</h4>
-            <p>Email: info@repakalisimbi.com</p>
-            <p>Phone: +250 788 000 000</p>
-            <p>Location: Kigali, Rwanda</p>
-          </div>
-        </div>
-        <div className="footer-bottom">
-          <p>&copy; {new Date().getFullYear()} Repa Kalisimbi Group Limited. All rights reserved.</p>
-        </div>
-      </footer>
-    </div>
+    <AuthProvider>
+      <CartProvider>
+        <CurrencyProvider>
+          <Router>
+            <AppRoutes />
+          </Router>
+        </CurrencyProvider>
+      </CartProvider>
+    </AuthProvider>
   )
 }
 

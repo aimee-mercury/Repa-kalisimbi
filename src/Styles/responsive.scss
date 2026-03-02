@@ -1,0 +1,151 @@
+/* Global responsive hardening across public and dashboard pages */
+
+img,
+video {
+  max-width: 100%;
+}
+
+@media (max-width: 640px) {
+  .home,
+  .category-page,
+  .product-page,
+  .cart-page,
+  .profile-page {
+    padding: 14px;
+  }
+
+  .flash-sale__products {
+    grid-template-columns: 1fr;
+  }
+
+  .features {
+    grid-template-columns: 1fr;
+  }
+
+  .header__logo .brand {
+    font-size: 19px;
+  }
+
+  .header__actions {
+    gap: 8px;
+  }
+
+  .header__actions button {
+    padding: 6px;
+  }
+
+  .filters-section .view-toggle {
+    width: 100%;
+  }
+
+  .filters-section .view-toggle .toggle-btn {
+    flex: 1;
+  }
+
+  .product-gallery .thumbnails {
+    overflow-x: auto;
+    padding-bottom: 2px;
+  }
+
+  .product-gallery .thumbnails img {
+    width: 64px;
+    height: 64px;
+    flex: 0 0 64px;
+  }
+
+  .tabs-section .tabs-header {
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .tabs-section .tabs-header .tab {
+    flex: 0 0 auto;
+  }
+
+  .spec-table .spec-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-page .profile-sidebar {
+    padding: 14px;
+  }
+
+  .profile-page .profile-main .account-details {
+    padding: 14px;
+  }
+
+  .new-product-page .product-right .actions-line {
+    width: 100%;
+  }
+
+  .new-product-page .product-right .actions-line .cart-btn {
+    min-width: 0;
+  }
+
+  .auth-container .auth-right {
+    padding: 24px 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header__top {
+    padding: 10px 12px;
+  }
+
+  .header__top-bar {
+    padding: 8px 10px;
+  }
+
+  .header__nav {
+    padding: 8px 10px;
+  }
+
+  .deals h2,
+  .popular-search h2,
+  .hot-sale h2,
+  .recently-viewed h2 {
+    font-size: 18px;
+  }
+
+  .flash-sale {
+    padding: 14px;
+  }
+
+  .flash-sale__text h2 {
+    font-size: 24px;
+  }
+
+  .countdown {
+    gap: 6px;
+    font-size: 16px;
+  }
+
+  .time-unit {
+    padding: 8px 10px;
+  }
+
+  .time-unit strong {
+    font-size: 16px;
+  }
+
+  .dashboard-main {
+    padding: 70px 12px 16px;
+  }
+
+  .stats-row {
+    grid-template-columns: 1fr;
+  }
+
+  .panel {
+    padding: 12px;
+  }
+
+  .profile-page .profile-sidebar .avatar-wrap .avatar {
+    width: 96px;
+    height: 96px;
+  }
+
+  .profile-page .profile-sidebar .name {
+    font-size: 16px;
+  }
+}
