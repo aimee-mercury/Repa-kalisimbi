@@ -288,12 +288,37 @@
       align-items: flex-start;
     }
 
+    .top-actions {
+      width: 100%;
+      flex-wrap: wrap;
+    }
+
+    .top-actions button {
+      flex: 1 1 160px;
+    }
+
     .add-product-grid {
       grid-template-columns: 1fr;
     }
 
     .field-row {
       grid-template-columns: 1fr;
+    }
+  }
+}
+
+@media (max-width: 560px) {
+  .add-product-page {
+    .add-card {
+      padding: 12px;
+    }
+
+    .add-card h2 {
+      font-size: 18px;
+    }
+
+    .thumb-row {
+      grid-template-columns: repeat(3, 1fr);
     }
   }
 }

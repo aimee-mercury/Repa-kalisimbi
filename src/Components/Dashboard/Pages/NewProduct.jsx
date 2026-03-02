@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from "react";
 import DashboardHeader from "../../Layout/Layout";
 import Sidebar from "../../Layout/Sidebar";
+import { useCurrency } from "../../../CurrencyContext";
 import "../../../Styles/Home.scss";
 import "../../../Styles/NewProduct.scss";
 
@@ -56,6 +57,7 @@ const fallbackProducts = [
 ];
 
 export default function NewProduct() {
+  const { formatCurrency } = useCurrency();
   const PRODUCTS_PER_PAGE = 4;
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -72,7 +74,7 @@ export default function NewProduct() {
     return `${topCategory} Products`;
   }, [products]);
 
-  const formatPrice = (value) => `$${Number(value || 0).toFixed(2)}`;
+  const formatPrice = (value) => formatCurrency(Number(value || 0));
   const totalPages = Math.max(1, Math.ceil(products.length / PRODUCTS_PER_PAGE));
   const currentProducts = products.slice(
     (currentPage - 1) * PRODUCTS_PER_PAGE,
@@ -178,3 +180,4 @@ export default function NewProduct() {
     </div>
   );
 }
+

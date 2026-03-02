@@ -2,6 +2,7 @@ import React from "react";
 import DashboardHeader from "../Layout/Layout";
 import Sidebar from "../Layout/Sidebar";
 import "../../Styles/Home.scss";
+import { useCurrency } from "../../CurrencyContext";
 
 const deals = [
   {
@@ -37,6 +38,8 @@ const deals = [
 ];
 
 export default function Dashboard() {
+  const { formatCurrency } = useCurrency();
+
   return (
     <div className="dashboard-shell">
       <Sidebar />
@@ -45,38 +48,37 @@ export default function Dashboard() {
 
         <h1 className="page-title">Dashboard</h1>
 
-        {/* STATS */}
         <section className="stats-row">
           <div className="stat-card">
-            <div className="stat-icon">🧾</div>
+            <div className="stat-icon">O</div>
             <div>
               <p className="stat-label">Pending Orders</p>
               <h3 className="stat-value">234</h3>
             </div>
           </div>
           <div className="stat-card">
-            <div className="stat-icon blue">🧩</div>
+            <div className="stat-icon blue">P</div>
             <div>
               <p className="stat-label">Total Products</p>
               <h3 className="stat-value">109</h3>
             </div>
           </div>
           <div className="stat-card">
-            <div className="stat-icon orange">🏷️</div>
+            <div className="stat-icon orange">S</div>
             <div>
               <p className="stat-label">Total SKUs</p>
               <h3 className="stat-value">1232</h3>
             </div>
           </div>
           <div className="stat-card">
-            <div className="stat-icon violet">👥</div>
+            <div className="stat-icon violet">C</div>
             <div>
               <p className="stat-label">Total Customers</p>
               <h3 className="stat-value">109</h3>
             </div>
           </div>
           <div className="stat-card">
-            <div className="stat-icon green">🏷️</div>
+            <div className="stat-icon green">A</div>
             <div>
               <p className="stat-label">Active Coupon</p>
               <h3 className="stat-value">1232</h3>
@@ -84,7 +86,6 @@ export default function Dashboard() {
           </div>
         </section>
 
-        {/* BEST DEALS */}
         <div className="deals">
           <h2>Best Deals</h2>
           <div className="deals__grid">
@@ -92,17 +93,13 @@ export default function Dashboard() {
               <div className="deal-card" key={index}>
                 <img src={item.image} alt={item.name} />
                 <h3>{item.name}</h3>
-                <div className="rating">
-                  {"★".repeat(item.rating)}
-                  {"☆".repeat(5 - item.rating)}
-                </div>
-                <span className="price">{item.price}</span>
+                <div className="rating">{"?".repeat(item.rating)}{"?".repeat(5 - item.rating)}</div>
+                <span className="price">{formatCurrency(item.price)}</span>
               </div>
             ))}
           </div>
         </div>
 
-        {/* BOTTOM GRID */}
         <section className="dashboard-grid bottom">
           <div className="panel recent-orders">
             <div className="panel-header">
@@ -121,28 +118,28 @@ export default function Dashboard() {
                 <span>ORD1034</span>
                 <span>Asif Mahmud</span>
                 <span>2</span>
-                <span>৳1750</span>
+                <span>{formatCurrency(1750)}</span>
                 <span className="status pending">Pending</span>
               </div>
               <div className="row">
                 <span>ORD1033</span>
                 <span>Istak Ahmed</span>
                 <span>3</span>
-                <span>$1322</span>
+                <span>{formatCurrency(1322)}</span>
                 <span className="status followup">Follow Up</span>
               </div>
               <div className="row">
                 <span>ORD1032</span>
                 <span>Khaled Sylliah</span>
                 <span>5</span>
-                <span>$864</span>
+                <span>{formatCurrency(864)}</span>
                 <span className="status processing">Processing</span>
               </div>
               <div className="row">
                 <span>ORD1031</span>
                 <span>Sabbir</span>
                 <span>1</span>
-                <span>$1542</span>
+                <span>{formatCurrency(1542)}</span>
                 <span className="status pending">Pending</span>
               </div>
             </div>

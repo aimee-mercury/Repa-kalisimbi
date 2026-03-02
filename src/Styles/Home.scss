@@ -246,11 +246,24 @@
 }
 
 @media (max-width: 900px) {
-  .dashboard-shell {
-    flex-direction: column;
+  .dashboard-main {
+    padding: 72px 16px 18px;
   }
 
-  .dashboard-main {
-    padding: 18px;
+  .orders-table .row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 8px;
+  }
+
+  .orders-table .row span {
+    overflow-wrap: anywhere;
+  }
+
+  .orders-table .row.header {
+    display: none;
+  }
+
+  .deals__grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   }
 }

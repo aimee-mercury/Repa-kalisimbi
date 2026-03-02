@@ -1,12 +1,14 @@
 import React, { useState, useContext } from "react";
 import { Star, Heart, Share2, Minus, Plus } from "lucide-react";
 import { CartContext } from "../../CartContext";
+import { useCurrency } from "../../CurrencyContext";
 import { useLocation } from 'react-router-dom'
 import "../../Styles/Product.scss";
 import Footer from "../Layout/Footer";
 
 const ProductPage = () => {
   const { addToCart } = useContext(CartContext);
+  const { formatCurrency } = useCurrency();
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("specification");
   const [selectedColor, setSelectedColor] = useState("Off White");
@@ -143,7 +145,7 @@ const ProductPage = () => {
   };
 
   const handleBuyNow = () => {
-    const message = `Hi! I'm interested in purchasing:\n\n*Product:* ${product.title}\n*Price:* $${product.price.toFixed(2)}\n*Color:* ${selectedColor}\n*Quantity:* ${quantity}\n\nPlease provide more details and proceed with the order.`;
+    const message = `Hi! I'm interested in purchasing:\n\n*Product:* ${product.title}\n*Price:* ${formatCurrency(product.price)}\n*Color:* ${selectedColor}\n*Quantity:* ${quantity}\n\nPlease provide more details and proceed with the order.`;
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/250732659689?text=${encodedMessage}`;
     window.open(whatsappUrl, '_blank');
@@ -198,8 +200,8 @@ const ProductPage = () => {
 
             {/* Price */}
             <div className="price-section">
-              <span className="price">${product.price.toFixed(2)}</span>
-              <span className="original-price">${product.originalPrice.toFixed(2)}</span>
+              <span className="price">{formatCurrency(product.price)}</span>
+              <span className="original-price">{formatCurrency(product.originalPrice)}</span>
             </div>
 
             {/* Product Info */}
@@ -393,9 +395,9 @@ const ProductPage = () => {
                   <span>({prod.reviews})</span>
                 </div>
                 <div className="price-small">
-                  <span className="price">${prod.price}</span>
+                  <span className="price">{formatCurrency(prod.price)}</span>
                   {prod.originalPrice && (
-                    <span className="original">${prod.originalPrice}</span>
+                    <span className="original">{formatCurrency(prod.originalPrice)}</span>
                   )}
                 </div>
               </div>

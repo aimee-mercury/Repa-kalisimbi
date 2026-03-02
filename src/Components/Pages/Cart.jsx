@@ -1,13 +1,15 @@
 import React, { useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Trash2, Plus, Minus } from 'lucide-react'
+import { Trash2, Plus, Minus, ShoppingCart, Headset, ShieldCheck, Truck } from 'lucide-react'
 import { CartContext } from '../../CartContext'
+import { useCurrency } from '../../CurrencyContext'
 import Footer from '../Layout/Footer'
 import '../../Styles/Cart.scss'
 
 const Cart = () => {
   const navigate = useNavigate()
   const { cartItems, removeFromCart, updateQuantity, getTotalPrice } = useContext(CartContext)
+  const { formatCurrency } = useCurrency()
 
   const handleContinueShopping = () => {
     navigate('/category')
@@ -18,7 +20,9 @@ const Cart = () => {
       <div className="cart-page">
         <div className="empty-cart">
           <div className="empty-cart-content">
-            <div className="empty-icon">🛒</div>
+            <div className="empty-icon">
+              <ShoppingCart size={56} />
+            </div>
             <h2>Your Cart is Empty</h2>
             <p>Start shopping to add items to your cart</p>
             <button className="btn-continue" onClick={handleContinueShopping}>
@@ -53,26 +57,24 @@ const Cart = () => {
             </div>
 
             <div className="cart-items">
-              {cartItems.map(item => (
+              {cartItems.map((item) => (
                 <div key={item.id} className="cart-item">
-                  <div className="col-product">
+                  <div className="col-product" data-label="Product">
                     <div className="product-info">
                       <img src={item.image} alt={item.name} />
                       <div className="product-details">
                         <div className="category">{item.category || 'PRODUCT'}</div>
                         <h3>{item.name}</h3>
-                        {item.selectedColor && (
-                          <p className="variant">Variant: {item.selectedColor}</p>
-                        )}
+                        {item.selectedColor && <p className="variant">Variant: {item.selectedColor}</p>}
                       </div>
                     </div>
                   </div>
 
-                  <div className="col-price">
-                    ${item.price.toFixed(2)}
+                  <div className="col-price" data-label="Price">
+                    {formatCurrency(item.price)}
                   </div>
 
-                  <div className="col-qty">
+                  <div className="col-qty" data-label="Qty">
                     <div className="quantity-control">
                       <button
                         onClick={() => updateQuantity(item.id, item.quantity - 1)}
@@ -87,11 +89,11 @@ const Cart = () => {
                     </div>
                   </div>
 
-                  <div className="col-total">
-                    ${(item.price * item.quantity).toFixed(2)}
+                  <div className="col-total" data-label="Total">
+                    {formatCurrency(item.price * item.quantity)}
                   </div>
 
-                  <div className="col-action">
+                  <div className="col-action" data-label="Action">
                     <button
                       className="btn-remove"
                       onClick={() => removeFromCart(item.id)}
@@ -111,7 +113,7 @@ const Cart = () => {
 
               <div className="summary-row">
                 <span>Subtotal:</span>
-                <span>${getTotalPrice().toFixed(2)}</span>
+                <span>{formatCurrency(getTotalPrice())}</span>
               </div>
 
               <div className="summary-row">
@@ -128,7 +130,7 @@ const Cart = () => {
 
               <div className="summary-total">
                 <span>Total:</span>
-                <span className="total-price">${getTotalPrice().toFixed(2)}</span>
+                <span className="total-price">{formatCurrency(getTotalPrice())}</span>
               </div>
 
               <button className="btn-checkout">Proceed to Checkout</button>
@@ -139,21 +141,27 @@ const Cart = () => {
 
             <div className="features-section">
               <div className="feature">
-                <div className="feature-icon">📞</div>
+                <div className="feature-icon">
+                  <Headset size={22} />
+                </div>
                 <div className="feature-text">
                   <strong>Responsive</strong>
                   <p>Customer service 24/7</p>
                 </div>
               </div>
               <div className="feature">
-                <div className="feature-icon">✓</div>
+                <div className="feature-icon">
+                  <ShieldCheck size={22} />
+                </div>
                 <div className="feature-text">
                   <strong>Secure</strong>
                   <p>Certified marketplace since 2017</p>
                 </div>
               </div>
               <div className="feature">
-                <div className="feature-icon">🚚</div>
+                <div className="feature-icon">
+                  <Truck size={22} />
+                </div>
                 <div className="feature-text">
                   <strong>Shipping</strong>
                   <p>Free, fast and reliable worldwide</p>

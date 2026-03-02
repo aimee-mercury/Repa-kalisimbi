@@ -1,6 +1,15 @@
 "use client";
-import React, { useContext, useMemo, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import {
+  LayoutDashboard,
+  Boxes,
+  LineChart,
+  History,
+  Bell,
+  Settings,
+  LogOut,
+} from "lucide-react";
 import { AuthContext } from "../../AuthContext";
 import "../../Styles/Sidebar.scss";
 
@@ -13,8 +22,14 @@ export default function Sidebar() {
     () => location.pathname.startsWith("/dashboard/products"),
     [location.pathname]
   );
+
   const [productsOpen, setProductsOpen] = useState(isProductsActive);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const showProductsOpen = productsOpen || isProductsActive;
+
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [location.pathname]);
 
   const profile = useMemo(() => {
     const savedSettings = JSON.parse(localStorage.getItem("settingsProfile") || "{}");
@@ -32,98 +47,126 @@ export default function Sidebar() {
     };
   }, [user]);
 
-  const go = (path) => () => navigate(path);
+  const go = (path) => () => {
+    setMobileOpen(false);
+    navigate(path);
+  };
+
   const handleLogout = () => {
+    setMobileOpen(false);
     logout();
     window.location.replace("/");
   };
 
   return (
-    <aside className="sidebar">
-      <div className="sidebar-logo">
-        <img
-          src="/Images/REPA LOGO.png"
-          alt="Repa Technology Logo"
-          style={{ width: "30px", height: "auto" }}
-        />
-        <span>Repa Technology</span>
-      </div>
+    <>
+      <button
+        type="button"
+        className={`sidebar-toggle ${mobileOpen ? "open" : ""}`}
+        aria-label={mobileOpen ? "Close menu" : "Open menu"}
+        onClick={() => setMobileOpen((prev) => !prev)}
+      >
+        Menu
+      </button>
 
-      <nav className="sidebar-menu">
-        <SidebarItem
-          icon="⬜"
-          label="Dashboard"
-          active={location.pathname === "/dashboard"}
-          onClick={go("/dashboard")}
-        />
-
+      {mobileOpen && (
         <button
           type="button"
-          className={`sidebar-item ${isProductsActive ? "active" : ""}`}
-          onClick={() => setProductsOpen((v) => !v)}
-        >
-          <span className="icon">📦</span>
-          <span className="label">Products</span>
-          <span className={`arrow ${showProductsOpen ? "open" : ""}`}>⌄</span>
-        </button>
-        <div className={`sidebar-submenu ${showProductsOpen ? "open" : ""}`}>
-          <SidebarSubItem
-            label="New Product"
-            active={location.pathname === "/dashboard/products/new"}
-            onClick={go("/dashboard/products/new")}
+          className="sidebar-backdrop"
+          aria-label="Close sidebar"
+          onClick={() => setMobileOpen(false)}
+        />
+      )}
+
+      <aside className={`sidebar ${mobileOpen ? "open" : ""}`}>
+        <div className="sidebar-logo">
+          <img
+            src="/Images/REPA LOGO.png"
+            alt="Repa Technology Logo"
+            style={{ width: "30px", height: "auto" }}
           />
-          <SidebarSubItem
-            label="Add Product"
-            active={location.pathname === "/dashboard/products/add"}
-            onClick={go("/dashboard/products/add")}
-          />
-          <SidebarSubItem
-            label="Report"
-            active={location.pathname === "/dashboard/products/report"}
-            onClick={go("/dashboard/products/report")}
-          />
+          <span>Repa Technology</span>
         </div>
 
-        <SidebarItem
-          icon="📈"
-          label="Analytics"
-          active={location.pathname === "/dashboard/analytics"}
-          onClick={go("/dashboard/analytics")}
-        />
-        <SidebarItem
-          icon="🕘"
-          label="History"
-          active={location.pathname === "/dashboard/history"}
-          onClick={go("/dashboard/history")}
-        />
-        <SidebarItem
-          icon="🔔"
-          label="Notifications"
-          badge="2"
-          active={location.pathname === "/dashboard/notifications"}
-          onClick={go("/dashboard/notifications")}
-        />
-        <SidebarItem
-          icon="⚙️"
-          label="Settings"
-          active={location.pathname === "/dashboard/settings"}
-          onClick={go("/dashboard/settings")}
-        />
-        <SidebarItem icon="➡️" label="Logout" onClick={handleLogout} />
-      </nav>
+        <nav className="sidebar-menu">
+          <SidebarItem
+            icon={<LayoutDashboard size={18} />}
+            label="Dashboard"
+            active={location.pathname === "/dashboard"}
+            onClick={go("/dashboard")}
+          />
 
-      <div className="sidebar-user">
-        {profile.avatar ? (
-          <img src={profile.avatar} alt="User" />
-        ) : (
-          <div className="avatar-placeholder">{profile.name.charAt(0).toUpperCase()}</div>
-        )}
-        <div>
-          <strong>{profile.name}</strong>
-          <span>{profile.email || "No email"}</span>
+          <button
+            type="button"
+            className={`sidebar-item ${isProductsActive ? "active" : ""}`}
+            onClick={() => setProductsOpen((v) => !v)}
+          >
+            <span className="icon">
+              <Boxes size={18} />
+            </span>
+            <span className="label">Products</span>
+            <span className={`arrow ${showProductsOpen ? "open" : ""}`}>v</span>
+          </button>
+
+          <div className={`sidebar-submenu ${showProductsOpen ? "open" : ""}`}>
+            <SidebarSubItem
+              label="New Product"
+              active={location.pathname === "/dashboard/products/new"}
+              onClick={go("/dashboard/products/new")}
+            />
+            <SidebarSubItem
+              label="Add Product"
+              active={location.pathname === "/dashboard/products/add"}
+              onClick={go("/dashboard/products/add")}
+            />
+            <SidebarSubItem
+              label="Report"
+              active={location.pathname === "/dashboard/products/report"}
+              onClick={go("/dashboard/products/report")}
+            />
+          </div>
+
+          <SidebarItem
+            icon={<LineChart size={18} />}
+            label="Analytics"
+            active={location.pathname === "/dashboard/analytics"}
+            onClick={go("/dashboard/analytics")}
+          />
+          <SidebarItem
+            icon={<History size={18} />}
+            label="History"
+            active={location.pathname === "/dashboard/history"}
+            onClick={go("/dashboard/history")}
+          />
+          <SidebarItem
+            icon={<Bell size={18} />}
+            label="Notifications"
+            badge="2"
+            active={location.pathname === "/dashboard/notifications"}
+            onClick={go("/dashboard/notifications")}
+          />
+          <SidebarItem
+            icon={<Settings size={18} />}
+            label="Settings"
+            active={location.pathname === "/dashboard/settings"}
+            onClick={go("/dashboard/settings")}
+          />
+          <SidebarItem icon={<LogOut size={18} />} label="Logout" onClick={handleLogout} />
+        </nav>
+
+        <div className="sidebar-user">
+          {profile.avatar ? (
+            <img src={profile.avatar} alt="User" />
+          ) : (
+            <div className="avatar-placeholder">{profile.name.charAt(0).toUpperCase()}</div>
+          )}
+          <div>
+            <strong>{profile.name}</strong>
+            <span>{profile.email || "No email"}</span>
+          </div>
         </div>
-      </div>
-    </aside>
+      </aside>
+    </>
   );
 }
 
