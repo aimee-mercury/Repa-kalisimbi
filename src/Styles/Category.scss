@@ -49,14 +49,14 @@ $muted: #6b7280;
       color: $dark-blue;
     }
 
-    select {
+    select,
+    input {
       padding: 10px 12px;
       border: 1px solid #ddd;
       border-radius: 6px;
       font-size: 13px;
       color: $dark-blue;
       background: white;
-      cursor: pointer;
       transition: border-color 0.2s;
 
       &:hover {
@@ -67,6 +67,10 @@ $muted: #6b7280;
         outline: none;
         border-color: $coral;
       }
+    }
+
+    select {
+      cursor: pointer;
     }
   }
 

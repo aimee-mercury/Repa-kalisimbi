@@ -44,6 +44,11 @@
     background: #f8fafc;
     border-color: #c8d3df;
   }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
 }
 
 .notifications-group {
@@ -69,6 +74,14 @@
   align-items: center;
   justify-content: space-between;
   gap: 14px;
+}
+
+.notification-card.unread {
+  border-left: 4px solid #0f766e;
+}
+
+.notification-card.read {
+  opacity: 0.75;
 }
 
 .notification-main {
@@ -121,16 +134,6 @@
   line-height: 1.4;
 }
 
-.notification-view {
-  border: none;
-  background: transparent;
-  color: #0f766e;
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  flex-shrink: 0;
-}
-
 @media (max-width: 760px) {
   .notifications-head {
     flex-direction: column;
@@ -142,7 +145,4 @@
     flex-direction: column;
   }
 
-  .notification-view {
-    padding-left: 0;
-  }
 }

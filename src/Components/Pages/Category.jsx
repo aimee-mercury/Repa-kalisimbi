@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation, useParams } from 'react-router-dom'
 import { Star, Grid3x3, List, ChevronLeft, ChevronRight } from 'lucide-react'
 import Footer from '../Layout/Footer'
 import '../../Styles/Category.scss'
@@ -168,9 +168,18 @@ const parsePriceRange = (range) => {
   return { min, max }
 }
 
+const toSlug = (value = '') =>
+  String(value)
+    .trim()
+    .toLowerCase()
+    .replace(/&/g, 'and')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+
 const Category = () => {
   const navigate = useNavigate()
   const location = useLocation()
+  const { categoryKey } = useParams()
   const { formatCurrency } = useCurrency()
 
   const categories = useMemo(
@@ -178,10 +187,22 @@ const Category = () => {
     []
   )
 
-  const requestedCategory = location?.state?.category
+  const categoryBySlug = useMemo(
+    () =>
+      categories.reduce((acc, categoryName) => {
+        acc[toSlug(categoryName)] = categoryName
+        return acc
+      }, {}),
+    [categories]
+  )
+
+  const requestedCategory =
+    categoryBySlug[categoryKey] || location?.state?.category
+  const requestedSearch = String(location?.state?.search || '').trim()
   const initialCategory = categories.includes(requestedCategory) ? requestedCategory : 'All Categories'
 
   const [selectedCategory, setSelectedCategory] = useState(initialCategory)
+  const [searchTerm, setSearchTerm] = useState(requestedSearch)
   const [priceRange, setPriceRange] = useState('All Prices')
   const [sortBy, setSortBy] = useState('Popularity')
   const [viewMode, setViewMode] = useState('grid')
@@ -196,6 +217,11 @@ const Category = () => {
     setCurrentPage(1)
   }, [requestedCategory, categories])
 
+  useEffect(() => {
+    setSearchTerm(requestedSearch)
+    setCurrentPage(1)
+  }, [requestedSearch])
+
   const priceRanges = [
     '$0 - $500',
     '$500 - $1,000',
@@ -207,11 +233,30 @@ const Category = () => {
 
   const sortOptions = ['Popularity', 'Price: Low to High', 'Price: High to Low', 'Newest', 'Best Rating']
 
+  const categoryBannerMap = useMemo(() => {
+    const map = { 'All Categories': '/Images/comp.jpg' }
+    productsCatalog.forEach((product) => {
+      if (!map[product.category]) {
+        map[product.category] = product.image
+      }
+    })
+    return map
+  }, [])
+
   const filteredProducts = useMemo(() => {
     let filtered = [...productsCatalog]
 
     if (selectedCategory !== 'All Categories') {
       filtered = filtered.filter((p) => p.category === selectedCategory)
+    }
+
+    const query = searchTerm.trim().toLowerCase()
+    if (query) {
+      filtered = filtered.filter(
+        (p) =>
+          p.name.toLowerCase().includes(query) ||
+          p.category.toLowerCase().includes(query)
+      )
     }
 
     const { min, max } = parsePriceRange(priceRange)
@@ -236,9 +281,9 @@ const Category = () => {
     }
 
     return filtered
-  }, [selectedCategory, priceRange, sortBy])
+  }, [selectedCategory, searchTerm, priceRange, sortBy])
 
-  const bannerImage = location?.state?.image || null
+  const bannerImage = location?.state?.image || categoryBannerMap[selectedCategory] || null
 
   const totalPages = Math.max(1, Math.ceil(filteredProducts.length / itemsPerPage))
   const safeCurrentPage = Math.min(currentPage, totalPages)
@@ -264,6 +309,19 @@ const Category = () => {
 
       <div className="filters-section">
         <div className="filters-container">
+          <div className="filter-group">
+            <label>Search</label>
+            <input
+              type="text"
+              value={searchTerm}
+              placeholder="Search products..."
+              onChange={(e) => {
+                setSearchTerm(e.target.value)
+                setCurrentPage(1)
+              }}
+            />
+          </div>
+
           <div className="filter-group">
             <label>All Categories</label>
             <select

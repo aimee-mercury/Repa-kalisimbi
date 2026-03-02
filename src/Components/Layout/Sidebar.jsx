@@ -4,13 +4,12 @@ import { useLocation, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
   Boxes,
-  LineChart,
-  History,
   Bell,
   Settings,
   LogOut,
 } from "lucide-react";
 import { AuthContext } from "../../AuthContext";
+import { getWebsiteUnreadCount } from "../../utils/notifications";
 import "../../Styles/Sidebar.scss";
 
 export default function Sidebar() {
@@ -25,11 +24,24 @@ export default function Sidebar() {
 
   const [productsOpen, setProductsOpen] = useState(isProductsActive);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [unreadNotifications, setUnreadNotifications] = useState(() =>
+    getWebsiteUnreadCount()
+  );
   const showProductsOpen = productsOpen || isProductsActive;
 
   useEffect(() => {
     setMobileOpen(false);
   }, [location.pathname]);
+
+  useEffect(() => {
+    const syncUnread = () => setUnreadNotifications(getWebsiteUnreadCount());
+    window.addEventListener("storage", syncUnread);
+    window.addEventListener("website_notifications_updated", syncUnread);
+    return () => {
+      window.removeEventListener("storage", syncUnread);
+      window.removeEventListener("website_notifications_updated", syncUnread);
+    };
+  }, []);
 
   const profile = useMemo(() => {
     const savedSettings = JSON.parse(localStorage.getItem("settingsProfile") || "{}");
@@ -85,10 +97,15 @@ export default function Sidebar() {
             alt="Repa Technology Logo"
             style={{ width: "30px", height: "auto" }}
           />
-          <SidebarSubItem
-            label="Post Product"
-            active={location.pathname === "/dashboard/products/add"}
-            onClick={go("/dashboard/products/add")}
+          <span>Repa Technology</span>
+        </div>
+
+        <nav className="sidebar-menu">
+          <SidebarItem
+            icon={<LayoutDashboard size={18} />}
+            label="Dashboard"
+            active={location.pathname === "/dashboard"}
+            onClick={go("/dashboard")}
           />
 
           <button
@@ -122,21 +139,9 @@ export default function Sidebar() {
           </div>
 
           <SidebarItem
-            icon={<LineChart size={18} />}
-            label="Analytics"
-            active={location.pathname === "/dashboard/analytics"}
-            onClick={go("/dashboard/analytics")}
-          />
-          <SidebarItem
-            icon={<History size={18} />}
-            label="History"
-            active={location.pathname === "/dashboard/history"}
-            onClick={go("/dashboard/history")}
-          />
-          <SidebarItem
             icon={<Bell size={18} />}
             label="Notifications"
-            badge="2"
+            badge={unreadNotifications > 0 ? String(unreadNotifications) : ""}
             active={location.pathname === "/dashboard/notifications"}
             onClick={go("/dashboard/notifications")}
           />

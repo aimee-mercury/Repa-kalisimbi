@@ -3,6 +3,7 @@ import { Star, Heart, Share2, Minus, Plus } from "lucide-react";
 import { CartContext } from "../../CartContext";
 import { useCurrency } from "../../CurrencyContext";
 import { useLocation } from 'react-router-dom'
+import { pushWebsiteNotification } from "../../utils/notifications";
 import "../../Styles/Product.scss";
 import Footer from "../Layout/Footer";
 
@@ -147,8 +148,24 @@ const ProductPage = () => {
   const handleBuyNow = () => {
     const message = `Hi! I'm interested in purchasing:\n\n*Product:* ${product.title}\n*Price:* ${formatCurrency(product.price)}\n*Color:* ${selectedColor}\n*Quantity:* ${quantity}\n\nPlease provide more details and proceed with the order.`;
     const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/250732659689?text=${encodedMessage}`;
+    const supportNumber = "250732659689";
+    const whatsappUrl = `https://wa.me/${supportNumber}?text=${encodedMessage}`;
+    pushWebsiteNotification({
+      type: "contact",
+      title: "Customer Contacted Support Number",
+      message: `${product.title} enquiry was sent to +${supportNumber}.`,
+      meta: { supportNumber, product: product.title, quantity },
+    });
     window.open(whatsappUrl, '_blank');
+  };
+
+  const handleLikeProduct = () => {
+    pushWebsiteNotification({
+      type: "like",
+      title: "Product Liked",
+      message: `${product.title} was liked on the website.`,
+      meta: { product: product.title },
+    });
   };
 
   return (
@@ -278,6 +295,9 @@ const ProductPage = () => {
               </div>
               <button className="btn-buy-now" onClick={handleBuyNow}>Buy Now</button>
               <button className="btn-add-cart" onClick={handleAddToCart}>
+                Add To Cart
+              </button>
+              <button className="btn-like" onClick={handleLikeProduct}>
                 <Heart size={18} />
               </button>
             </div>

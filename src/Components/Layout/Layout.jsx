@@ -1,10 +1,37 @@
 "use client";
-import React, { useContext, useMemo } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
+import { Moon, Sun } from "lucide-react";
 import { AuthContext } from "../../AuthContext";
 import "../../Styles/layout.scss";
 
+const DASHBOARD_THEME_KEY = "dashboard_theme_mode";
+
 export default function DashboardHeader() {
   const { user } = useContext(AuthContext);
+  const [themeMode, setThemeMode] = useState(() => {
+    const saved = localStorage.getItem(DASHBOARD_THEME_KEY);
+    return saved === "dark" ? "dark" : "light";
+  });
+  const todayLabel = useMemo(
+    () =>
+      new Date().toLocaleDateString("en-GB", {
+        weekday: "short",
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      }),
+    []
+  );
+
+  useEffect(() => {
+    localStorage.setItem(DASHBOARD_THEME_KEY, themeMode);
+    const isDark = themeMode === "dark";
+    document.body.classList.toggle("dashboard-dark", isDark);
+    return () => {
+      document.body.classList.remove("dashboard-dark");
+    };
+  }, [themeMode]);
+
   const profile = useMemo(() => {
     const savedSettings = JSON.parse(localStorage.getItem("settingsProfile") || "{}");
     const fullName = `${savedSettings.firstName || ""} ${savedSettings.lastName || ""}`.trim();
@@ -22,19 +49,26 @@ export default function DashboardHeader() {
 
   return (
     <header className="dashboard-header">
-      {/* Left */}
       <div className="header-left">
-        <h2>Repa Technology</h2>
-        <p>Overview of all Repa Technology Activities.</p>
+        <div className="header-kicker">Dashboard Overview</div>
+        <h2>Repa Technology Control Center</h2>
+        <p>Track sales, stock, and customer activity in one responsive workspace.</p>
       </div>
 
-      {/* Right */}
       <div className="header-right">
-        <button className="icon-btn">✉️</button>
-        <button className="icon-btn">
-          🔔
-          <span className="notif-dot"></span>
-        </button>
+        <div className="header-meta">
+          <span className="meta-chip">{todayLabel}</span>
+          <span className="meta-chip active">Store Online</span>
+          <button
+            type="button"
+            className={`meta-action-btn theme-toggle ${themeMode === "dark" ? "is-dark" : ""}`}
+            onClick={() => setThemeMode((prev) => (prev === "dark" ? "light" : "dark"))}
+            aria-label={themeMode === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+            title={themeMode === "dark" ? "Light mode" : "Dark mode"}
+          >
+            {themeMode === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+          </button>
+        </div>
 
         <div className="user-info">
           {profile.avatar ? (

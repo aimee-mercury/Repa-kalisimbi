@@ -13,7 +13,7 @@ const Footer = () => {
         <div className="container footer-newsletter__inner">
           <div className="newsletter-text">
             <h3>Sign Up for Newsletter</h3>
-            <p>Subscribe to get information about products and coupons.</p>
+            <p>Get exclusive deals, new arrivals, and weekly offers before everyone else.</p>
           </div>
 
           <form className="newsletter-form" onSubmit={(e) => e.preventDefault()}>
@@ -29,8 +29,12 @@ const Footer = () => {
             <span className="brand">Repa Technology</span>
           </div>
           <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dignissim neque
-            condimentum lacus dapibus.
+            Shop with confidence at Repa Technology. We combine verified quality, fair prices,
+            and fast support to make every order simple and secure.
+          </p>
+          <p>
+            Trusted by customers for quick delivery, genuine products, and reliable after-sales
+            service.
           </p>
           <div className="socials">
             <a href="#" aria-label="facebook" className="social-link">
@@ -81,6 +85,7 @@ const Footer = () => {
 
           <div className="col col-contact">
             <h5>Contact</h5>
+            <p>Need help now? Our team is ready to assist with orders and product choices.</p>
             <p>
               Call us: <a href="tel:+1234567890">+1 234 567 890</a>
             </p>

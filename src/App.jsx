@@ -13,8 +13,6 @@ import Profile from './Components/Pages/Profile'
 import Login from './Components/Pages/Login'
 import SignUp from './Components/Pages/SignUp'
 import Dashboard from './Components/Dashboard/Home'
-import Analytics from './Components/Dashboard/Pages/Analytics'
-import History from './Components/Dashboard/Pages/History'
 import Notifications from './Components/Dashboard/Pages/Notifications'
 import Settings from './Components/Dashboard/Pages/Settings'
 import NewProduct from './Components/Dashboard/Pages/NewProduct'
@@ -52,16 +50,12 @@ function AppRoutes() {
         <Route path="/" element={<HomeHero />} />
         <Route path="/product" element={<ProductPage />} />
         <Route path="/category" element={<Category />} />
+        <Route path="/category/:categoryKey" element={<Category />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/login" element={isLoggedIn ? <Navigate to="/dashboard" /> : <Login />} />
         <Route path="/signup" element={isLoggedIn ? <Navigate to="/dashboard" /> : <SignUp />} />
         <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />} />} />
-        <Route
-          path="/dashboard/analytics"
-          element={<ProtectedRoute element={<Analytics />} />}
-        />
-        <Route path="/dashboard/history" element={<ProtectedRoute element={<History />} />} />
         <Route
           path="/dashboard/notifications"
           element={<ProtectedRoute element={<Notifications />} />}

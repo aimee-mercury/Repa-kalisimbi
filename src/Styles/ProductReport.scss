@@ -1,0 +1,172 @@
+.product-report-page {
+  margin-top: 18px;
+  display: grid;
+  gap: 16px;
+}
+
+.report-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+
+  p {
+    margin: 4px 0 0;
+    color: #64748b;
+    font-size: 13px;
+  }
+}
+
+.export-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+
+  button {
+    border: 1px solid #dbe3ee;
+    background: #ffffff;
+    color: #0f172a;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 10px;
+    padding: 10px 14px;
+    cursor: pointer;
+  }
+
+  .primary {
+    background: #1e3a5f;
+    border-color: #1e3a5f;
+    color: #ffffff;
+  }
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.summary-card {
+  background: #ffffff;
+  border: 1px solid #e8edf5;
+  border-radius: 12px;
+  padding: 12px;
+  display: grid;
+  gap: 4px;
+
+  span {
+    font-size: 12px;
+    color: #64748b;
+  }
+
+  strong {
+    font-size: 20px;
+    color: #0f172a;
+  }
+}
+
+.close-panel h3,
+.report-table-wrap h3 {
+  margin: 0 0 10px;
+  font-size: 15px;
+  color: #0f172a;
+}
+
+.close-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.close-card {
+  border: 1px solid #e8edf5;
+  border-radius: 12px;
+  padding: 12px;
+
+  h4 {
+    margin: 0 0 8px;
+    color: #0f172a;
+    font-size: 14px;
+  }
+
+  p {
+    margin: 4px 0;
+    color: #334155;
+    font-size: 13px;
+
+    span {
+      color: #64748b;
+    }
+  }
+}
+
+.report-table-scroll {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.report-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 760px;
+
+  th,
+  td {
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 1px solid #e9edf4;
+    font-size: 13px;
+    color: #334155;
+  }
+
+  th {
+    color: #0f172a;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    background: #f8fafc;
+  }
+}
+
+.empty-state {
+  color: #64748b;
+  font-size: 13px;
+}
+
+@media (max-width: 1200px) {
+  .summary-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .report-head {
+    flex-direction: column;
+  }
+
+  .export-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .close-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .export-actions {
+    button {
+      width: 100%;
+    }
+  }
+}

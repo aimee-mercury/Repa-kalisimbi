@@ -369,6 +369,8 @@ const recentlyViewed = [
 ];
 
 const LANDING_PRODUCTS_KEY = "landingPostedProducts";
+const FLASH_SALE_END_KEY = "landingFlashSaleEndAt";
+const FLASH_SALE_DURATION_MS = 7 * 24 * 60 * 60 * 1000;
 const SECTION_NAMES = [
   "Best Deals",
   "Top !o Selected",
@@ -390,6 +392,7 @@ const HomeHero = () => {
   const { formatCurrency } = useCurrency();
   const topProductsGridRef = React.useRef(null);
   const [activeSlide, setActiveSlide] = React.useState(0);
+  const [flashRemaining, setFlashRemaining] = React.useState(null);
 
   React.useEffect(() => {
     const timer = window.setInterval(() => {
@@ -397,6 +400,37 @@ const HomeHero = () => {
     }, 5000);
 
     return () => window.clearInterval(timer);
+  }, []);
+
+  React.useEffect(() => {
+    const storedEnd = Number(localStorage.getItem(FLASH_SALE_END_KEY));
+    const flashSaleEndAt =
+      Number.isFinite(storedEnd) && storedEnd > 0
+        ? storedEnd
+        : Date.now() + FLASH_SALE_DURATION_MS;
+
+    if (!storedEnd) {
+      localStorage.setItem(FLASH_SALE_END_KEY, String(flashSaleEndAt));
+    }
+
+    const tick = () => {
+      const diff = flashSaleEndAt - Date.now();
+      if (diff <= 0) {
+        setFlashRemaining(null);
+        return;
+      }
+
+      const days = Math.floor(diff / (24 * 60 * 60 * 1000));
+      const hours = Math.floor((diff % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
+      const mins = Math.floor((diff % (60 * 60 * 1000)) / (60 * 1000));
+      const secs = Math.floor((diff % (60 * 1000)) / 1000);
+
+      setFlashRemaining({ days, hours, mins, secs });
+    };
+
+    tick();
+    const countdown = window.setInterval(tick, 1000);
+    return () => window.clearInterval(countdown);
   }, []);
 
   const currentHero = heroSlides[activeSlide];
@@ -443,6 +477,8 @@ const HomeHero = () => {
   const handleAddToCart = (product) => {
     navigate("/product", { state: { product } });
   };
+
+  const pad2 = (value) => String(value).padStart(2, "0");
 
   return (
     <section className="home">
@@ -506,7 +542,7 @@ const HomeHero = () => {
       {/* Top 10 Selected Products */}
       <div className="top-products">
         <div className="top-products-header">
-          <h2>Top 10 selected Products On the Week</h2>
+          <h2>Top 10 Selected Products of the Week</h2>
           <div className="top-products-arrows">
             <button onClick={() => scrollTopProducts("left")}>‹</button>
             <button onClick={() => scrollTopProducts("right")}>›</button>
@@ -515,6 +551,7 @@ const HomeHero = () => {
         <div className="top-products__grid" ref={topProductsGridRef}>
           {topSelectedItems.map((item, index) => (
             <div className="top-product-card" key={index}>
+              <span className="top-rank">#{String(index + 1).padStart(2, "0")}</span>
               <img src={item.image} alt={item.name} />
               <h3>{item.name}</h3>
               <div className="rating">
@@ -546,57 +583,62 @@ const HomeHero = () => {
       </div>
 
       {/* Features */}
-      <div className="features">
-        <div className="feature-item">
-          <div className="feature-icon">📦</div>
-          <h4>Free Delivery</h4>
-          <p>1000 mins away</p>
+      <section className="features">
+        <div className="features-head">
+          <h2>Why customers choose Repa Technology</h2>
         </div>
-        <div className="feature-item">
-          <div className="feature-icon">⭐</div>
-          <h4>Best Quality</h4>
-          <p>Guaranted 100%</p>
+        <div className="features-grid">
+          <article className="feature-card">
+            <span className="feature-badge">24H</span>
+            <h4>Same-Day Dispatch</h4>
+            <p>Orders confirmed before 2 PM are prepared and shipped the same day.</p>
+          </article>
+          <article className="feature-card">
+            <span className="feature-badge">QC</span>
+            <h4>Verified Quality</h4>
+            <p>Each device is tested and checked before reaching your hands.</p>
+          </article>
+          <article className="feature-card">
+            <span className="feature-badge">1Y</span>
+            <h4>1 Year Warranty</h4>
+            <p>Clear warranty support with fast replacement on eligible products.</p>
+          </article>
+          <article className="feature-card">
+            <span className="feature-badge">SUP</span>
+            <h4>Real Support Team</h4>
+            <p>Need help choosing or tracking an order? We answer quickly.</p>
+          </article>
+          <article className="feature-card">
+            <span className="feature-badge">SEC</span>
+            <h4>Secure Checkout</h4>
+            <p>Protected payment flow with trusted processing and safe records.</p>
+          </article>
         </div>
-        <div className="feature-item">
-          <div className="feature-icon">⏱️</div>
-          <h4>1 Year</h4>
-          <p>Warranty</p>
-        </div>
-        <div className="feature-item">
-          <div className="feature-icon">💬</div>
-          <h4>Feedback</h4>
-          <p>We listen you</p>
-        </div>
-        <div className="feature-item">
-          <div className="feature-icon">💳</div>
-          <h4>Payment</h4>
-          <p>Secure true</p>
-        </div>
-      </div>
+      </section>
 
       {/* Flash Sale */}
-      <div className="flash-sale">
+      {flashRemaining && <div className="flash-sale">
         <div className="flash-sale__content">
           <div className="flash-sale__text">
             <h2>Flash Sale</h2>
             <div className="countdown">
               <span className="time-unit">
-                <strong>05</strong>
+                <strong>{pad2(flashRemaining.days)}</strong>
                 <small>Days</small>
               </span>
               <span className="separator">:</span>
               <span className="time-unit">
-                <strong>42</strong>
+                <strong>{pad2(flashRemaining.hours)}</strong>
                 <small>Hours</small>
               </span>
               <span className="separator">:</span>
               <span className="time-unit">
-                <strong>19</strong>
+                <strong>{pad2(flashRemaining.mins)}</strong>
                 <small>Mins</small>
               </span>
               <span className="separator">:</span>
               <span className="time-unit">
-                <strong>54</strong>
+                <strong>{pad2(flashRemaining.secs)}</strong>
                 <small>Secs</small>
               </span>
             </div>
@@ -616,7 +658,7 @@ const HomeHero = () => {
           </div>
         </div>
         <button className="flash-sale__btn">Shop Now</button>
-      </div>
+      </div>}
 
       {/* Hot Sale */}
       <div className="hot-sale">

@@ -143,6 +143,7 @@ export default function AddProduct() {
 
     const product = {
       id: `prod-${Date.now()}`,
+      createdAt: new Date().toISOString(),
       name: formData.name,
       description: formData.description,
       category: formData.category,
@@ -153,6 +154,7 @@ export default function AddProduct() {
       oldPrice,
       price: finalPrice || oldPrice,
       stock: Number(formData.stock) || 0,
+      soldUnits: 0,
       discountType: formData.discountType,
       sourceSection: selectedPostNav,
       status: Number(formData.stock) > 0 ? "IN STOCK" : "OUT OF STOCK",

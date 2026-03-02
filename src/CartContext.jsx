@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react'
+import { pushWebsiteNotification } from './utils/notifications'
 
 export const CartContext = createContext()
 
@@ -24,6 +25,16 @@ export const CartProvider = ({ children }) => {
     } else {
       setCartItems([...cartItems, { ...product, quantity }])
     }
+
+    pushWebsiteNotification({
+      type: 'add_to_cart',
+      title: 'Product Added to Cart',
+      message: `${product?.name || product?.title || 'Product'} x${quantity} was added to cart.`,
+      meta: {
+        productId: product?.id || '',
+        quantity
+      }
+    })
   }
 
   const removeFromCart = (productId) => {
