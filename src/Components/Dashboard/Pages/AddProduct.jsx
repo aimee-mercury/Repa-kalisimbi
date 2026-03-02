@@ -8,10 +8,18 @@ import "../../../Styles/AddProduct.scss";
 const DEFAULT_PRODUCT_IMAGE = "/Images/lap.jpg";
 const MAX_STORED_IMAGE_SIZE = 220000;
 const MAX_SAVED_PRODUCTS = 40;
+const POST_PRODUCT_NAV_ITEMS = [
+  "Best Deals",
+  "Top !o Selected",
+  "Popular Search",
+  "Hot Sale",
+  "Recently",
+];
 
 export default function AddProduct() {
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
+  const [selectedPostNav, setSelectedPostNav] = useState(POST_PRODUCT_NAV_ITEMS[0]);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [categories, setCategories] = useState([
     "Laptop",
@@ -146,6 +154,7 @@ export default function AddProduct() {
       price: finalPrice || oldPrice,
       stock: Number(formData.stock) || 0,
       discountType: formData.discountType,
+      sourceSection: selectedPostNav,
       status: Number(formData.stock) > 0 ? "IN STOCK" : "OUT OF STOCK",
     };
 
@@ -153,7 +162,11 @@ export default function AddProduct() {
     const didPersist = persistProductsSafely([product, ...existingProducts]);
 
     navigate("/dashboard/products/new", {
-      state: { savedProduct: product, storageFallback: !didPersist },
+      state: {
+        savedProduct: product,
+        storageFallback: !didPersist,
+        sourceSection: selectedPostNav,
+      },
     });
   };
 
@@ -162,6 +175,7 @@ export default function AddProduct() {
       ...formData,
       image: getSafeImageForStorage(formData.image),
       description: String(formData.description || "").slice(0, 320),
+      sourceSection: selectedPostNav,
     };
 
     if (!safeSetStorage("dashboardProductDraft", JSON.stringify(draftPayload))) {
@@ -201,7 +215,24 @@ export default function AddProduct() {
         <DashboardHeader />
         <div className="add-product-page">
           <div className="add-product-top">
-            <h1 className="page-title">Add New Product</h1>
+            <div className="add-product-title-wrap">
+              <h1 className="page-title">Post Product</h1>
+              <nav className="post-product-nav" aria-label="Post product quick links">
+                <ul>
+                  {POST_PRODUCT_NAV_ITEMS.map((item) => (
+                    <li key={item}>
+                      <button
+                        type="button"
+                        className={selectedPostNav === item ? "active" : ""}
+                        onClick={() => setSelectedPostNav(item)}
+                      >
+                        {item}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            </div>
             <div className="top-actions">
               <button type="button" className="draft-btn" onClick={handleSaveDraft}>
                 Save Draft

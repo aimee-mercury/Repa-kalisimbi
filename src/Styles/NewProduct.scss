@@ -72,6 +72,7 @@
     .meta-line {
       display: flex;
       align-items: center;
+      flex-wrap: wrap;
       gap: 10px;
       font-size: 11px;
       color: #9ca3af;
@@ -81,6 +82,14 @@
     .stars {
       color: #1e3a5f;
       letter-spacing: 1px;
+    }
+
+    .source-tag {
+      background: #e8effd;
+      color: #1e3a5f;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-weight: 600;
     }
 
     h2 {

@@ -368,6 +368,23 @@ const recentlyViewed = [
   },
 ];
 
+const LANDING_PRODUCTS_KEY = "landingPostedProducts";
+const SECTION_NAMES = [
+  "Best Deals",
+  "Top !o Selected",
+  "Popular Search",
+  "Hot Sale",
+  "Recently",
+];
+
+const toLandingCard = (product = {}) => ({
+  name: product.name || "New Product",
+  price: `$${Number(product.price || 0).toFixed(2)}`,
+  rating: Number(product.rating || 5),
+  image: product.image || "/Images/lap.jpg",
+  onSale: (product.sourceSection || "").toLowerCase() === "hot sale",
+});
+
 const HomeHero = () => {
   const navigate = useNavigate();
   const { formatCurrency } = useCurrency();
@@ -383,6 +400,35 @@ const HomeHero = () => {
   }, []);
 
   const currentHero = heroSlides[activeSlide];
+
+  const postedBySection = React.useMemo(() => {
+    const initial = SECTION_NAMES.reduce((acc, sectionName) => {
+      acc[sectionName] = [];
+      return acc;
+    }, {});
+
+    try {
+      const postedProducts = JSON.parse(
+        localStorage.getItem(LANDING_PRODUCTS_KEY) || "[]"
+      );
+
+      return postedProducts.reduce((acc, product) => {
+        const sectionName = SECTION_NAMES.includes(product.sourceSection)
+          ? product.sourceSection
+          : "Best Deals";
+        acc[sectionName].push(toLandingCard(product));
+        return acc;
+      }, initial);
+    } catch {
+      return initial;
+    }
+  }, []);
+
+  const dealsItems = [...postedBySection["Best Deals"], ...deals];
+  const topSelectedItems = [...postedBySection["Top !o Selected"], ...topProducts];
+  const popularSearchItems = [...postedBySection["Popular Search"], ...popularSearch];
+  const hotSaleItems = [...postedBySection["Hot Sale"], ...hotSaleProducts];
+  const recentlyItems = [...postedBySection.Recently, ...recentlyViewed];
 
   const scrollTopProducts = (direction) => {
     if (topProductsGridRef.current) {
@@ -443,7 +489,7 @@ const HomeHero = () => {
         <h2>Best Deals</h2>
 
         <div className="deals__grid">
-          {deals.map((item, index) => (
+          {dealsItems.map((item, index) => (
             <div className="deal-card" key={index}>
               <img src={item.image} alt={item.name} />
               <h3>{item.name}</h3>
@@ -467,7 +513,7 @@ const HomeHero = () => {
           </div>
         </div>
         <div className="top-products__grid" ref={topProductsGridRef}>
-          {topProducts.map((item, index) => (
+          {topSelectedItems.map((item, index) => (
             <div className="top-product-card" key={index}>
               <img src={item.image} alt={item.name} />
               <h3>{item.name}</h3>
@@ -485,7 +531,7 @@ const HomeHero = () => {
       <div className="popular-search">
         <h2>Popular Search</h2>
         <div className="popular-search__grid">
-          {popularSearch.map((item, index) => (
+          {popularSearchItems.map((item, index) => (
             <div className="product-card" key={index}>
               <img src={item.image} alt={item.name} />
               <h3>{item.name}</h3>
@@ -578,7 +624,7 @@ const HomeHero = () => {
           <span className="hot-icon">🔥</span> Hot Sale!
         </h2>
         <div className="hot-sale__grid">
-          {hotSaleProducts.map((item, index) => (
+          {hotSaleItems.map((item, index) => (
             <div className="hot-product-card" key={index}>
               {item.onSale && <span className="sale-badge">Sale</span>}
               <img src={item.image} alt={item.name} />
@@ -603,7 +649,7 @@ const HomeHero = () => {
       <div className="recently-viewed">
         <h2>Recently viewed</h2>
         <div className="recently-viewed__grid">
-          {recentlyViewed.map((item, index) => (
+          {recentlyItems.map((item, index) => (
             <div className="recent-card" key={index}>
               <img src={item.image} alt={item.name} />
               <h4>{item.name}</h4>

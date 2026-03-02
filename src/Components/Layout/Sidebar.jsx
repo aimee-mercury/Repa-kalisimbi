@@ -85,15 +85,10 @@ export default function Sidebar() {
             alt="Repa Technology Logo"
             style={{ width: "30px", height: "auto" }}
           />
-          <span>Repa Technology</span>
-        </div>
-
-        <nav className="sidebar-menu">
-          <SidebarItem
-            icon={<LayoutDashboard size={18} />}
-            label="Dashboard"
-            active={location.pathname === "/dashboard"}
-            onClick={go("/dashboard")}
+          <SidebarSubItem
+            label="Post Product"
+            active={location.pathname === "/dashboard/products/add"}
+            onClick={go("/dashboard/products/add")}
           />
 
           <button
