@@ -2,6 +2,140 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import "../../Styles/Landing.scss";
 import Footer from "../Layout/Footer";
+import { useCurrency } from "../../CurrencyContext";
+
+const heroSlides = [
+  {
+    tag: "Featured Device",
+    title: "Apple Watch Series 9",
+    version: "Version: GPS 45mm",
+    description:
+      "Powerful health tracking, bright display, and seamless iPhone integration for everyday performance.",
+    price: "$429.00",
+    image:
+      "https://images.unsplash.com/photo-1546868871-7041f2a55e12?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    tag: "Top Pick",
+    title: "Sony WH-1000XM5",
+    version: "Version: XM5 Wireless",
+    description:
+      "Industry-leading noise cancellation with premium comfort, battery life, and studio-grade sound quality.",
+    price: "$399.00",
+    image:
+      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    tag: "New Arrival",
+    title: "Samsung Galaxy S24 Ultra",
+    version: "Version: 12GB / 256GB",
+    description:
+      "Flagship AI smartphone with premium camera system, fast performance, and all-day battery reliability.",
+    price: "$1,299.00",
+    image:
+      "https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    tag: "Pro Laptop",
+    title: "MacBook Pro 14",
+    version: "Version: M3 / 16GB / 512GB",
+    description:
+      "High-performance laptop built for creative workflows, development, and long battery life.",
+    price: "$1,999.00",
+    image:
+      "https://images.unsplash.com/photo-1517336714739-489689fd1ca8?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    tag: "Gaming Power",
+    title: "ASUS ROG Zephyrus G14",
+    version: "Version: Ryzen 9 / RTX 4060",
+    description:
+      "Portable gaming machine with high refresh display and strong thermal performance.",
+    price: "$1,599.00",
+    image:
+      "https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    tag: "Audio Premium",
+    title: "AirPods Pro 2nd Gen",
+    version: "Version: USB-C Charging Case",
+    description:
+      "Compact earbuds with active noise cancellation and adaptive transparency mode.",
+    price: "$249.00",
+    image:
+      "https://images.unsplash.com/photo-1606220588913-b3aacb4d2f46?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    tag: "Home Entertainment",
+    title: "LG OLED evo C3",
+    version: "Version: 55-inch 4K",
+    description:
+      "Cinema-level color and contrast with smart TV features and smooth gaming visuals.",
+    price: "$1,299.00",
+    image:
+      "https://images.unsplash.com/photo-1593784991095-a205069470b6?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    tag: "Creator Gear",
+    title: "Sony Alpha A7 IV",
+    version: "Version: 33MP Mirrorless",
+    description:
+      "Professional camera for crisp photos, advanced autofocus, and 4K video output.",
+    price: "$2,499.00",
+    image:
+      "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    tag: "Work Setup",
+    title: "Dell UltraSharp Monitor",
+    version: "Version: 27-inch QHD",
+    description:
+      "Color-accurate display designed for productivity, editing, and multi-window work.",
+    price: "$479.00",
+    image:
+      "https://images.unsplash.com/photo-1527443224154-c4d1b0f7d6dc?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    tag: "Smart Home",
+    title: "Amazon Echo Show 8",
+    version: "Version: 3rd Generation",
+    description:
+      "Voice-controlled smart display for video calls, music, reminders, and home control.",
+    price: "$149.00",
+    image:
+      "https://images.unsplash.com/photo-1589492477829-5e65395b66cc?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    tag: "Mobile Flagship",
+    title: "Google Pixel 8 Pro",
+    version: "Version: 12GB / 128GB",
+    description:
+      "AI-powered smartphone with a premium camera system and smooth Android experience.",
+    price: "$899.00",
+    image:
+      "https://images.unsplash.com/photo-1580910051074-3eb694886505?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    tag: "Portable Audio",
+    title: "JBL Charge 5",
+    version: "Version: Bluetooth Waterproof",
+    description:
+      "Rugged wireless speaker with powerful bass and long battery for outdoor use.",
+    price: "$179.00",
+    image:
+      "https://images.unsplash.com/photo-1545454675-3531b543be5d?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    tag: "Productivity Pick",
+    title: "iPad Air",
+    version: "Version: M2 / 256GB",
+    description:
+      "Lightweight tablet for study, design, note-taking, and media with strong performance.",
+    price: "$749.00",
+    image:
+      "https://images.unsplash.com/photo-1561154464-82e9adf32764?auto=format&fit=crop&w=1200&q=80",
+  },
+];
 
 const deals = [
   {
@@ -253,7 +387,19 @@ const toLandingCard = (product = {}) => ({
 
 const HomeHero = () => {
   const navigate = useNavigate();
+  const { formatCurrency } = useCurrency();
   const topProductsGridRef = React.useRef(null);
+  const [activeSlide, setActiveSlide] = React.useState(0);
+
+  React.useEffect(() => {
+    const timer = window.setInterval(() => {
+      setActiveSlide((prev) => (prev + 1) % heroSlides.length);
+    }, 5000);
+
+    return () => window.clearInterval(timer);
+  }, []);
+
+  const currentHero = heroSlides[activeSlide];
 
   const postedBySection = React.useMemo(() => {
     const initial = SECTION_NAMES.reduce((acc, sectionName) => {
@@ -301,15 +447,41 @@ const HomeHero = () => {
   return (
     <section className="home">
       {/* Hero Banner */}
-       <section className="hero container">
+      <section className="hero container">
         <div className="hero-text">
-          <small>Hot Products</small>
-          <h1>Fill your desk full of technology</h1>
-          <p>Start from <strong>$45.00</strong></p>
-          <button>Learn More</button>
+          <small>{currentHero.tag}</small>
+          <h1>{currentHero.title}</h1>
+          <p className="hero-version">{currentHero.version}</p>
+          <p className="hero-description">{currentHero.description}</p>
+          <p>
+            Start from <strong>{formatCurrency(currentHero.price)}</strong>
+          </p>
+          <div className="hero-actions">
+            <button
+              type="button"
+              onClick={() =>
+                handleAddToCart({
+                  name: currentHero.title,
+                  price: currentHero.price,
+                  rating: 5,
+                  image: currentHero.image,
+                })
+              }
+            >
+              Shop Now
+            </button>
+            <button
+              type="button"
+              className="hero-outline-btn"
+              onClick={() => navigate("/category")}
+            >
+              Learn More
+            </button>
+          </div>
         </div>
-
-        <img src="/Images/comp.jpg" alt="Hero" />
+        <div className="hero-image-wrap">
+          <img src={currentHero.image} alt={currentHero.title} />
+        </div>
       </section>
 
       {/* Best Deals */}
@@ -325,7 +497,7 @@ const HomeHero = () => {
                 {"★".repeat(item.rating)}
                 {"☆".repeat(5 - item.rating)}
               </div>
-              <span className="price">{item.price}</span>
+              <span className="price">{formatCurrency(item.price)}</span>
             </div>
           ))}
         </div>
@@ -349,7 +521,7 @@ const HomeHero = () => {
                 {"★".repeat(item.rating)}
                 {"☆".repeat(5 - item.rating)}
               </div>
-              <span className="price">{item.price}</span>
+              <span className="price">{formatCurrency(item.price)}</span>
             </div>
           ))}
         </div>
@@ -367,7 +539,7 @@ const HomeHero = () => {
                 {"★".repeat(item.rating)}
                 {"☆".repeat(5 - item.rating)}
               </div>
-              <span className="price">{item.price}</span>
+              <span className="price">{formatCurrency(item.price)}</span>
             </div>
           ))}
         </div>
@@ -438,7 +610,7 @@ const HomeHero = () => {
                   {"★".repeat(item.rating)}
                   {"☆".repeat(5 - item.rating)}
                 </div>
-                <span className="price">{item.price}</span>
+                <span className="price">{formatCurrency(item.price)}</span>
               </div>
             ))}
           </div>
@@ -461,7 +633,7 @@ const HomeHero = () => {
                 {"★".repeat(item.rating)}
                 {"☆".repeat(5 - item.rating)}
               </div>
-              <span className="price">{item.price}</span>
+              <span className="price">{formatCurrency(item.price)}</span>
               <button 
                 className="add-to-cart"
                 onClick={() => handleAddToCart(item)}
@@ -485,7 +657,7 @@ const HomeHero = () => {
                 {"★".repeat(item.rating)}
                 {"☆".repeat(5 - item.rating)}
               </div>
-              <span className="price">{item.price}</span>
+              <span className="price">{formatCurrency(item.price)}</span>
             </div>
           ))}
         </div>

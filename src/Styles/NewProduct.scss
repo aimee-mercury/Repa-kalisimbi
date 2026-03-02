@@ -228,5 +228,22 @@
     .product-image {
       height: 190px;
     }
+
+    .product-right .icons-line {
+      flex-wrap: wrap;
+      row-gap: 6px;
+    }
+
+    .product-right .price-line strong {
+      font-size: 24px;
+    }
+
+    .product-right .actions-line {
+      flex-wrap: wrap;
+    }
+
+    .product-right .cart-btn {
+      min-width: 180px;
+    }
   }
 }

@@ -2,6 +2,7 @@ import './App.css'
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { useContext } from 'react'
 import { CartProvider } from './CartContext'
+import { CurrencyProvider } from './CurrencyContext'
 import { AuthProvider, AuthContext } from './AuthContext'
 import Header from './Components/Layout/Header'
 import HomeHero from './Components/Pages/Landing'
@@ -88,9 +89,11 @@ function App() {
   return (
     <AuthProvider>
       <CartProvider>
-        <Router>
-          <AppRoutes />
-        </Router>
+        <CurrencyProvider>
+          <Router>
+            <AppRoutes />
+          </Router>
+        </CurrencyProvider>
       </CartProvider>
     </AuthProvider>
   )

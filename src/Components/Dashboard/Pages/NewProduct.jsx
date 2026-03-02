@@ -2,6 +2,7 @@ import React, { useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import DashboardHeader from "../../Layout/Layout";
 import Sidebar from "../../Layout/Sidebar";
+import { useCurrency } from "../../../CurrencyContext";
 import "../../../Styles/Home.scss";
 import "../../../Styles/NewProduct.scss";
 
@@ -59,6 +60,7 @@ const fallbackProducts = [
 ];
 
 export default function NewProduct() {
+  const { formatCurrency } = useCurrency();
   const PRODUCTS_PER_PAGE = 4;
   const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate();

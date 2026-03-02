@@ -96,3 +96,37 @@
     color: #64748b;
   }
 }
+
+@media (max-width: 900px) {
+  .dashboard-header {
+    height: auto;
+    min-height: 80px;
+    padding: 14px 14px 14px 62px;
+    align-items: flex-start;
+    gap: 12px;
+    flex-direction: column;
+  }
+
+  .header-right {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .header-left h2 {
+    font-size: 18px;
+  }
+
+  .header-left p {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 640px) {
+  .user-info {
+    padding-left: 10px;
+
+    div {
+      display: none;
+    }
+  }
+}

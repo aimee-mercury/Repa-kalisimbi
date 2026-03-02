@@ -19,10 +19,6 @@ $light-bg: #f6f8fb;
   margin-bottom: 40px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04);
 
-  img {
-    width: 100%;
-  }
-
   button {
     margin-top: 20px;
     background: #222;
@@ -63,9 +59,44 @@ $light-bg: #f6f8fb;
     color: #555;
   }
 
+  .hero-version {
+    font-size: 14px;
+    color: #475569;
+    margin: 6px 0 10px;
+    font-weight: 600;
+  }
+
+  .hero-description {
+    max-width: 540px;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .hero-outline-btn {
+    background: transparent;
+    color: $dark-blue;
+    border: 1px solid #cad2de;
+  }
+
   strong {
     color: $blue-accent;
     font-weight: 700;
+  }
+}
+
+.hero-image-wrap {
+  position: relative;
+
+  img {
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+    border-radius: 14px;
   }
 }
 
@@ -137,11 +168,16 @@ $light-bg: #f6f8fb;
 @media (max-width: 768px) {
   .hero {
     grid-template-columns: 1fr;
-    text-align: center;
+    text-align: left;
+    padding: 20px;
 
     &__image {
       margin-top: 20px;
     }
+  }
+
+  .hero-image-wrap img {
+    height: 220px;
   }
 }
 
@@ -654,8 +690,25 @@ $light-bg: #f6f8fb;
 }
 
 @media (max-width: 768px) {
+  .home {
+    padding: 18px 14px;
+  }
+
   .features {
     grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    padding: 14px;
+  }
+
+  .top-products {
+    flex-direction: column;
+    gap: 12px;
+
+    .top-products-header {
+      width: 100%;
+      padding-right: 0;
+      justify-content: space-between;
+    }
   }
 
   .countdown {
@@ -664,5 +717,9 @@ $light-bg: #f6f8fb;
 
   .hot-product-card .add-to-cart {
     width: 100%;
+  }
+
+  .flash-sale {
+    padding: 18px;
   }
 }
