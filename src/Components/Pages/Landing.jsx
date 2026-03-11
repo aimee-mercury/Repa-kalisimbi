@@ -478,6 +478,17 @@ const HomeHero = () => {
     navigate("/product", { state: { product } });
   };
 
+  const openProductDetails = (product) => {
+    navigate("/product", { state: { product } });
+  };
+
+  const handleCardKeyDown = (event, product) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      openProductDetails(product);
+    }
+  };
+
   const pad2 = (value) => String(value).padStart(2, "0");
 
   return (
@@ -526,7 +537,14 @@ const HomeHero = () => {
 
         <div className="deals__grid">
           {dealsItems.map((item, index) => (
-            <div className="deal-card" key={index}>
+            <div
+              className="deal-card clickable-card"
+              key={index}
+              role="button"
+              tabIndex={0}
+              onClick={() => openProductDetails(item)}
+              onKeyDown={(event) => handleCardKeyDown(event, item)}
+            >
               <img src={item.image} alt={item.name} />
               <h3>{item.name}</h3>
               <div className="rating">
@@ -550,7 +568,14 @@ const HomeHero = () => {
         </div>
         <div className="top-products__grid" ref={topProductsGridRef}>
           {topSelectedItems.map((item, index) => (
-            <div className="top-product-card" key={index}>
+            <div
+              className="top-product-card clickable-card"
+              key={index}
+              role="button"
+              tabIndex={0}
+              onClick={() => openProductDetails(item)}
+              onKeyDown={(event) => handleCardKeyDown(event, item)}
+            >
               <span className="top-rank">#{String(index + 1).padStart(2, "0")}</span>
               <img src={item.image} alt={item.name} />
               <h3>{item.name}</h3>
@@ -569,7 +594,14 @@ const HomeHero = () => {
         <h2>Popular Search</h2>
         <div className="popular-search__grid">
           {popularSearchItems.map((item, index) => (
-            <div className="product-card" key={index}>
+            <div
+              className="product-card clickable-card"
+              key={index}
+              role="button"
+              tabIndex={0}
+              onClick={() => openProductDetails(item)}
+              onKeyDown={(event) => handleCardKeyDown(event, item)}
+            >
               <img src={item.image} alt={item.name} />
               <h3>{item.name}</h3>
               <div className="rating">
@@ -645,7 +677,14 @@ const HomeHero = () => {
           </div>
           <div className="flash-sale__products">
             {hotSaleProducts.slice(0, 2).map((item, index) => (
-              <div className="flash-product" key={index}>
+              <div
+                className="flash-product clickable-card"
+                key={index}
+                role="button"
+                tabIndex={0}
+                onClick={() => openProductDetails(item)}
+                onKeyDown={(event) => handleCardKeyDown(event, item)}
+              >
                 <img src={item.image} alt={item.name} />
                 <h4>{item.name}</h4>
                 <div className="rating">
@@ -667,7 +706,14 @@ const HomeHero = () => {
         </h2>
         <div className="hot-sale__grid">
           {hotSaleItems.map((item, index) => (
-            <div className="hot-product-card" key={index}>
+            <div
+              className="hot-product-card clickable-card"
+              key={index}
+              role="button"
+              tabIndex={0}
+              onClick={() => openProductDetails(item)}
+              onKeyDown={(event) => handleCardKeyDown(event, item)}
+            >
               {item.onSale && <span className="sale-badge">Sale</span>}
               <img src={item.image} alt={item.name} />
               <h3>{item.name}</h3>
@@ -678,7 +724,10 @@ const HomeHero = () => {
               <span className="price">{formatCurrency(item.price)}</span>
               <button 
                 className="add-to-cart"
-                onClick={() => handleAddToCart(item)}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  handleAddToCart(item);
+                }}
               >
                 Add to Cart
               </button>
@@ -692,7 +741,14 @@ const HomeHero = () => {
         <h2>Recently viewed</h2>
         <div className="recently-viewed__grid">
           {recentlyItems.map((item, index) => (
-            <div className="recent-card" key={index}>
+            <div
+              className="recent-card clickable-card"
+              key={index}
+              role="button"
+              tabIndex={0}
+              onClick={() => openProductDetails(item)}
+              onKeyDown={(event) => handleCardKeyDown(event, item)}
+            >
               <img src={item.image} alt={item.name} />
               <h4>{item.name}</h4>
               <div className="rating">

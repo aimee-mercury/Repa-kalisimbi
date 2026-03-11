@@ -164,6 +164,15 @@ $light-bg: #f6f8fb;
   }
 }
 
+.clickable-card {
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 3px solid rgba(30, 58, 95, 0.28);
+    outline-offset: 3px;
+  }
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .hero {
