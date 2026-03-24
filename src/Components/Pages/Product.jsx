@@ -27,6 +27,7 @@ const ProductPage = () => {
     size: "15.7 x 11 x 1.0 inches (W x D x H)",
     weight: "6.28 pounds",
     delivery: "Worldwide",
+    postalCode: "10001",
     colors: ["Off White", "Space Gray", "Jet Black"],
     images: [
       "/Images/comp1.jpg",
@@ -57,6 +58,7 @@ const ProductPage = () => {
       size: passed.size ?? defaultProduct.size,
       weight: passed.weight ?? defaultProduct.weight,
       delivery: passed.delivery ?? defaultProduct.delivery,
+      postalCode: passed.postalCode ?? defaultProduct.postalCode,
       colors: passed.colors ?? defaultProduct.colors,
       images: passed.images ?? (passed.image ? [passed.image] : defaultProduct.images),
     }
@@ -128,13 +130,16 @@ const ProductPage = () => {
 
   const handleAddToCart = () => {
     const productToAdd = {
-      id: Math.random(),
+      id: product.id || product.title,
+      sourceProductId: product.id || null,
       title: product.title,
       name: product.title,
       price: product.price,
       originalPrice: product.originalPrice,
       image: product.images[0],
-      category: 'LAPTOP',
+      category: product.category || 'LAPTOP',
+      postalCode: product.postalCode || '',
+      sourceSection: product.sourceSection || null,
       selectedColor: selectedColor,
       rating: product.rating,
       reviews: product.reviews,
@@ -146,7 +151,7 @@ const ProductPage = () => {
   };
 
   const handleBuyNow = () => {
-    const message = `Hi! I'm interested in purchasing:\n\n*Product:* ${product.title}\n*Price:* ${formatCurrency(product.price)}\n*Color:* ${selectedColor}\n*Quantity:* ${quantity}\n\nPlease provide more details and proceed with the order.`;
+    const message = `Hi! I'm interested in purchasing:\n\n*Product:* ${product.title}\n*Price:* ${formatCurrency(product.price)}\n*Postal Code:* ${product.postalCode || "N/A"}\n*Color:* ${selectedColor}\n*Quantity:* ${quantity}\n\nPlease provide more details and proceed with the order.`;
     const encodedMessage = encodeURIComponent(message);
     const supportNumber = "250732659689";
     const whatsappUrl = `https://wa.me/${supportNumber}?text=${encodedMessage}`;
@@ -238,6 +243,10 @@ const ProductPage = () => {
               <div className="info-item">
                 <label>Delivery</label>
                 <value>{product.delivery}</value>
+              </div>
+              <div className="info-item">
+                <label>Postal Code</label>
+                <value>{product.postalCode || "Not provided"}</value>
               </div>
               <div className="info-item">
                 <label>Variant</label>

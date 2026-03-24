@@ -8,11 +8,18 @@ import '../../Styles/Cart.scss'
 
 const Cart = () => {
   const navigate = useNavigate()
-  const { cartItems, removeFromCart, updateQuantity, getTotalPrice } = useContext(CartContext)
+  const { cartItems, removeFromCart, updateQuantity, getTotalPrice, checkout } = useContext(CartContext)
   const { formatCurrency } = useCurrency()
 
   const handleContinueShopping = () => {
     navigate('/category')
+  }
+
+  const handleCheckout = () => {
+    const didCheckout = checkout()
+    if (didCheckout) {
+      navigate('/')
+    }
   }
 
   if (cartItems.length === 0) {
@@ -133,7 +140,7 @@ const Cart = () => {
                 <span className="total-price">{formatCurrency(getTotalPrice())}</span>
               </div>
 
-              <button className="btn-checkout">Proceed to Checkout</button>
+              <button className="btn-checkout" onClick={handleCheckout}>Proceed to Checkout</button>
               <button className="btn-continue-shopping" onClick={handleContinueShopping}>
                 Continue Shopping
               </button>

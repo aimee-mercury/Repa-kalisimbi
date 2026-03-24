@@ -2,11 +2,11 @@ import React, { useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import DashboardHeader from "../../Layout/Layout";
 import Sidebar from "../../Layout/Sidebar";
-import { useCurrency } from "../../../CurrencyContext";
 import "../../../Styles/Home.scss";
 import "../../../Styles/NewProduct.scss";
 
 const LANDING_PRODUCTS_KEY = "landingPostedProducts";
+const DASHBOARD_PRODUCTS_KEY = "dashboardProducts";
 
 const fallbackProducts = [
   {
@@ -60,19 +60,20 @@ const fallbackProducts = [
 ];
 
 export default function NewProduct() {
-  const { formatCurrency } = useCurrency();
   const PRODUCTS_PER_PAGE = 4;
   const [currentPage, setCurrentPage] = useState(1);
+  const [editingProductId, setEditingProductId] = useState(null);
+  const [editedPrice, setEditedPrice] = useState("");
+  const [priceMessage, setPriceMessage] = useState({ type: "", text: "" });
+  const [products, setProducts] = useState(() => {
+    const localProducts = JSON.parse(
+      localStorage.getItem(DASHBOARD_PRODUCTS_KEY) || "[]"
+    );
+    const initialProducts = localProducts.length > 0 ? localProducts : fallbackProducts;
+    return initialProducts.filter((product) => Number(product.stock || 0) > 0);
+  });
   const navigate = useNavigate();
   const location = useLocation();
-
-  const products = useMemo(() => {
-    const localProducts = JSON.parse(
-      localStorage.getItem("dashboardProducts") || "[]"
-    );
-    if (localProducts.length > 0) return localProducts;
-    return fallbackProducts;
-  }, []);
 
   const title = useMemo(() => {
     const selectedSection =
@@ -81,6 +82,7 @@ export default function NewProduct() {
   }, [location.state, products]);
 
   const formatPrice = (value) => `$${Number(value || 0).toFixed(2)}`;
+  const parsePriceValue = (value) => Number(String(value).replace(/[^0-9.]/g, "")) || 0;
 
   const safeSetStorage = (key, value) => {
     try {
@@ -97,10 +99,11 @@ export default function NewProduct() {
     );
 
     const landingProduct = {
-      id: `home-${product.id || "product"}-${currentLandingProducts.length + 1}`,
+      id: product.id || `home-product-${currentLandingProducts.length + 1}`,
       name: product.name,
-      image: product.image || "/Images/lap.jpg",
+      image: product.image || "",
       price: Number(product.price) || 0,
+      stock: Number(product.stock || 0),
       rating: 5,
       sourceSection: product.sourceSection || location.state?.sourceSection || "Best Deals",
       onSale: (product.sourceSection || "").toLowerCase().includes("hot"),
@@ -113,6 +116,87 @@ export default function NewProduct() {
 
     navigate("/", { state: { homeSection: landingProduct.sourceSection } });
   };
+
+  const handleStartPriceEdit = (product) => {
+    setEditingProductId(product.id);
+    setEditedPrice(String(product.price ?? ""));
+    setPriceMessage({ type: "", text: "" });
+  };
+
+  const handleCancelPriceEdit = () => {
+    setEditingProductId(null);
+    setEditedPrice("");
+    setPriceMessage({ type: "", text: "" });
+  };
+
+  const handleSavePrice = (product) => {
+    const nextPrice = parsePriceValue(editedPrice);
+    if (nextPrice <= 0) {
+      setPriceMessage({ type: "error", text: "Enter a valid price." });
+      return;
+    }
+
+    try {
+      const dashboardProducts = JSON.parse(
+        localStorage.getItem(DASHBOARD_PRODUCTS_KEY) || "[]"
+      );
+      const landingProducts = JSON.parse(
+        localStorage.getItem(LANDING_PRODUCTS_KEY) || "[]"
+      );
+
+      const nextDashboardProducts = dashboardProducts.map((item) =>
+        item.id === product.id
+          ? {
+              ...item,
+              oldPrice:
+                Number(item.oldPrice || item.price || 0) === Number(item.price || 0)
+                  ? Number(item.price || 0)
+                  : Number(item.oldPrice || 0),
+              price: nextPrice,
+            }
+          : item
+      );
+
+      const nextLandingProducts = landingProducts.map((item) =>
+        item.id === product.id
+          ? {
+              ...item,
+              price: nextPrice,
+            }
+          : item
+      );
+
+      safeSetStorage(DASHBOARD_PRODUCTS_KEY, JSON.stringify(nextDashboardProducts));
+      safeSetStorage(LANDING_PRODUCTS_KEY, JSON.stringify(nextLandingProducts));
+      setProducts(nextDashboardProducts.filter((item) => Number(item.stock || 0) > 0));
+      setEditingProductId(null);
+      setEditedPrice("");
+      setPriceMessage({ type: "success", text: "Price updated." });
+      window.dispatchEvent(new Event("storage"));
+    } catch {
+      setPriceMessage({ type: "error", text: "Price update failed." });
+    }
+  };
+
+  React.useEffect(() => {
+    const syncProducts = () => {
+      try {
+        const localProducts = JSON.parse(
+          localStorage.getItem(DASHBOARD_PRODUCTS_KEY) || "[]"
+        );
+        const nextProducts = localProducts.length > 0 ? localProducts : fallbackProducts;
+        setProducts(
+          nextProducts.filter((product) => Number(product.stock || 0) > 0)
+        );
+      } catch {
+        setProducts(fallbackProducts.filter((product) => Number(product.stock || 0) > 0));
+      }
+    };
+
+    syncProducts();
+    window.addEventListener("storage", syncProducts);
+    return () => window.removeEventListener("storage", syncProducts);
+  }, []);
 
   const totalPages = Math.max(1, Math.ceil(products.length / PRODUCTS_PER_PAGE));
   const currentProducts = products.slice(
@@ -165,6 +249,7 @@ export default function NewProduct() {
                   <h2>{product.name}</h2>
                   <ul>
                     <li>{product.description || "High-performance electronic device."}</li>
+                    <li>Postal code: {product.postalCode || "Not provided"}</li>
                     <li>Free delivery and warranty support available.</li>
                   </ul>
                 </div>
@@ -186,7 +271,48 @@ export default function NewProduct() {
                     <span className="old-price">
                       {formatPrice(product.oldPrice || product.price)}
                     </span>
-                    <strong>{formatPrice(product.price)}</strong>
+                    {editingProductId === product.id ? (
+                      <div className="price-edit-box">
+                        <input
+                          type="text"
+                          className="price-edit-input"
+                          value={editedPrice}
+                          onChange={(event) => setEditedPrice(event.target.value)}
+                        />
+                        <div className="price-edit-actions">
+                          <button
+                            type="button"
+                            className="save-price-btn"
+                            onClick={() => handleSavePrice(product)}
+                          >
+                            Save Price
+                          </button>
+                          <button
+                            type="button"
+                            className="cancel-price-btn"
+                            onClick={handleCancelPriceEdit}
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        <strong>{formatPrice(product.price)}</strong>
+                        <button
+                          type="button"
+                          className="edit-price-btn"
+                          onClick={() => handleStartPriceEdit(product)}
+                        >
+                          Edit Price
+                        </button>
+                      </>
+                    )}
+                    {priceMessage.text && (
+                      <span className={`price-message ${priceMessage.type}`}>
+                        {priceMessage.text}
+                      </span>
+                    )}
                   </div>
 
                   <div className="actions-line">

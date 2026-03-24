@@ -1,14 +1,19 @@
 import React, { createContext, useState, useEffect } from 'react'
 import { pushWebsiteNotification } from './utils/notifications'
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const CartContext = createContext()
+
+const CART_ITEMS_KEY = 'cart_items'
+const DASHBOARD_PRODUCTS_KEY = 'dashboardProducts'
+const LANDING_PRODUCTS_KEY = 'landingPostedProducts'
 
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState(() => {
     try {
-      const raw = localStorage.getItem('cart_items')
+      const raw = localStorage.getItem(CART_ITEMS_KEY)
       return raw ? JSON.parse(raw) : []
-    } catch (e) {
+    } catch {
       return []
     }
   })
@@ -59,11 +64,73 @@ export const CartProvider = ({ children }) => {
     return cartItems.reduce((total, item) => total + (item.price * item.quantity), 0)
   }
 
+  const checkout = () => {
+    if (cartItems.length === 0) return false
+
+    try {
+      const dashboardProducts = JSON.parse(localStorage.getItem(DASHBOARD_PRODUCTS_KEY) || '[]')
+      const landingProducts = JSON.parse(localStorage.getItem(LANDING_PRODUCTS_KEY) || '[]')
+
+      const purchasedById = cartItems.reduce((acc, item) => {
+        const key = item.sourceProductId || item.id
+        if (!key) return acc
+        acc[key] = (acc[key] || 0) + Number(item.quantity || 0)
+        return acc
+      }, {})
+
+      const nextDashboardProducts = dashboardProducts.map((product) => {
+        const soldNow = purchasedById[product.id] || 0
+        if (!soldNow) return product
+
+        const currentStock = Number(product.stock || 0)
+        const nextStock = Math.max(0, currentStock - soldNow)
+        const currentSoldUnits = Number(product.soldUnits || 0)
+
+        return {
+          ...product,
+          stock: nextStock,
+          soldUnits: currentSoldUnits + soldNow,
+          status: nextStock > 0 ? 'IN STOCK' : 'OUT OF STOCK',
+        }
+      })
+
+      const nextLandingProducts = landingProducts
+        .map((product) => {
+          const soldNow = purchasedById[product.id] || 0
+          if (!soldNow) return product
+
+          const currentStock = Number(product.stock || 0)
+          const nextStock = Math.max(0, currentStock - soldNow)
+
+          return {
+            ...product,
+            stock: nextStock,
+          }
+        })
+        .filter((product) => Number(product.stock ?? 1) > 0)
+
+      localStorage.setItem(DASHBOARD_PRODUCTS_KEY, JSON.stringify(nextDashboardProducts))
+      localStorage.setItem(LANDING_PRODUCTS_KEY, JSON.stringify(nextLandingProducts))
+      setCartItems([])
+
+      pushWebsiteNotification({
+        type: 'order',
+        title: 'Order Completed',
+        message: `${cartItems.length} cart item(s) were checked out and stock was updated.`,
+      })
+
+      return true
+    } catch {
+      return false
+    }
+  }
+
   // Persist cart to localStorage when it changes
   useEffect(() => {
     try {
       localStorage.setItem('cart_items', JSON.stringify(cartItems))
-    } catch (e) {
+      window.dispatchEvent(new Event('storage'))
+    } catch {
       // ignore storage errors
     }
   }, [cartItems])
@@ -75,7 +142,8 @@ export const CartProvider = ({ children }) => {
       removeFromCart,
       updateQuantity,
       getTotalItems,
-      getTotalPrice
+      getTotalPrice,
+      checkout
     }}>
       {children}
     </CartContext.Provider>

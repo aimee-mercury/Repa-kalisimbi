@@ -380,6 +380,7 @@ const SECTION_NAMES = [
 ];
 
 const toLandingCard = (product = {}) => ({
+  id: product.id || `landing-${product.name || "product"}`,
   name: product.name || "New Product",
   price: `$${Number(product.price || 0).toFixed(2)}`,
   rating: Number(product.rating || 5),
@@ -393,6 +394,12 @@ const HomeHero = () => {
   const topProductsGridRef = React.useRef(null);
   const [activeSlide, setActiveSlide] = React.useState(0);
   const [flashRemaining, setFlashRemaining] = React.useState(null);
+  const [postedBySection, setPostedBySection] = React.useState(() =>
+    SECTION_NAMES.reduce((acc, sectionName) => {
+      acc[sectionName] = [];
+      return acc;
+    }, {})
+  );
 
   React.useEffect(() => {
     const timer = window.setInterval(() => {
@@ -435,27 +442,41 @@ const HomeHero = () => {
 
   const currentHero = heroSlides[activeSlide];
 
-  const postedBySection = React.useMemo(() => {
-    const initial = SECTION_NAMES.reduce((acc, sectionName) => {
-      acc[sectionName] = [];
-      return acc;
-    }, {});
-
-    try {
-      const postedProducts = JSON.parse(
-        localStorage.getItem(LANDING_PRODUCTS_KEY) || "[]"
-      );
-
-      return postedProducts.reduce((acc, product) => {
-        const sectionName = SECTION_NAMES.includes(product.sourceSection)
-          ? product.sourceSection
-          : "Best Deals";
-        acc[sectionName].push(toLandingCard(product));
+  React.useEffect(() => {
+    const syncPostedProducts = () => {
+      const initial = SECTION_NAMES.reduce((acc, sectionName) => {
+        acc[sectionName] = [];
         return acc;
-      }, initial);
-    } catch {
-      return initial;
-    }
+      }, {});
+
+      try {
+        const postedProducts = JSON.parse(
+          localStorage.getItem(LANDING_PRODUCTS_KEY) || "[]"
+        );
+
+        const nextPostedProducts = postedProducts
+          .filter((product) => Number(product.stock ?? 1) > 0)
+          .reduce((acc, product) => {
+            const sectionName = SECTION_NAMES.includes(product.sourceSection)
+              ? product.sourceSection
+              : "Best Deals";
+            acc[sectionName].push(toLandingCard(product));
+            return acc;
+          }, initial);
+
+        setPostedBySection(nextPostedProducts);
+      } catch {
+        setPostedBySection(initial);
+      }
+    };
+
+    syncPostedProducts();
+    window.addEventListener("storage", syncPostedProducts);
+    window.addEventListener("focus", syncPostedProducts);
+    return () => {
+      window.removeEventListener("storage", syncPostedProducts);
+      window.removeEventListener("focus", syncPostedProducts);
+    };
   }, []);
 
   const dealsItems = [...postedBySection["Best Deals"], ...deals];
@@ -676,7 +697,7 @@ const HomeHero = () => {
             </div>
           </div>
           <div className="flash-sale__products">
-            {hotSaleProducts.slice(0, 2).map((item, index) => (
+            {hotSaleItems.slice(0, 2).map((item, index) => (
               <div
                 className="flash-product clickable-card"
                 key={index}

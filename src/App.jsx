@@ -17,6 +17,7 @@ import Notifications from './Components/Dashboard/Pages/Notifications'
 import Settings from './Components/Dashboard/Pages/Settings'
 import NewProduct from './Components/Dashboard/Pages/NewProduct'
 import AddProduct from './Components/Dashboard/Pages/AddProduct'
+import DraftProducts from './Components/Dashboard/Pages/DraftProducts'
 import ProductReport from './Components/Dashboard/Pages/ProductReport'
 
 // Protected route wrapper
@@ -68,6 +69,10 @@ function AppRoutes() {
         <Route
           path="/dashboard/products/add"
           element={<ProtectedRoute element={<AddProduct />} />}
+        />
+        <Route
+          path="/dashboard/products/drafts"
+          element={<ProtectedRoute element={<DraftProducts />} />}
         />
         <Route
           path="/dashboard/products/report"
