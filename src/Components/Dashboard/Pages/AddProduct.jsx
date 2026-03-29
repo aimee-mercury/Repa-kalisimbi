@@ -1,13 +1,14 @@
-import React, { useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useMemo, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import DashboardHeader from "../../Layout/Layout";
 import Sidebar from "../../Layout/Sidebar";
 import "../../../Styles/Home.scss";
 import "../../../Styles/AddProduct.scss";
 
-const DEFAULT_PRODUCT_IMAGE = "/Images/lap.jpg";
 const MAX_STORED_IMAGE_SIZE = 220000;
 const MAX_SAVED_PRODUCTS = 40;
+const DRAFTS_STORAGE_KEY = "dashboardProductDrafts";
+const EMPTY_PRODUCT_IMAGE = "";
 const POST_PRODUCT_NAV_ITEMS = [
   "Best Deals",
   "Top !o Selected",
@@ -16,46 +17,72 @@ const POST_PRODUCT_NAV_ITEMS = [
   "Recently",
 ];
 
+const DEFAULT_FORM_DATA = {
+  name: "Lenovo ThinkPad X1 Carbon Gen 12",
+  description:
+    "Premium ultrabook with Intel Core Ultra processor, 14-inch anti-glare display, 16GB RAM, and 512GB NVMe SSD. Built for business productivity with lightweight carbon-fiber chassis, all-day battery life, and advanced security.",
+  storage: "512GB",
+  deviceType: "Laptop",
+  image: EMPTY_PRODUCT_IMAGE,
+  price: "$1,499",
+  stock: "42",
+  postalCode: "10001",
+  discount: "8%",
+  discountType: "Back to School Deal",
+  category: "Laptop",
+};
+
 export default function AddProduct() {
-  const fileInputRef = useRef(null);
   const navigate = useNavigate();
-  const [selectedPostNav, setSelectedPostNav] = useState(POST_PRODUCT_NAV_ITEMS[0]);
+  const location = useLocation();
+  const fileInputRef = useRef(null);
+
+  const draftToEdit = useMemo(() => {
+    try {
+      const draftId = location.state?.draftId;
+      if (!draftId) return null;
+
+      const drafts = JSON.parse(localStorage.getItem(DRAFTS_STORAGE_KEY) || "[]");
+      return drafts.find((draft) => draft.id === draftId) || null;
+    } catch {
+      return null;
+    }
+  }, [location.state]);
+
+  const [selectedPostNav, setSelectedPostNav] = useState(
+    draftToEdit?.sourceSection || POST_PRODUCT_NAV_ITEMS[0]
+  );
+  const [statusMessage, setStatusMessage] = useState(
+    draftToEdit ? "Draft loaded." : ""
+  );
+  const [errorMessage, setErrorMessage] = useState("");
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
-  const [categories, setCategories] = useState([
-    "Laptop",
-    "Desktop",
-    "Accessory",
-    "Monitor",
-  ]);
+  const [categories, setCategories] = useState(() => {
+    const baseCategories = ["Laptop", "Desktop", "Accessory", "Monitor"];
+    if (draftToEdit?.category && !baseCategories.includes(draftToEdit.category)) {
+      return [...baseCategories, draftToEdit.category];
+    }
+    return baseCategories;
+  });
   const [categoryForm, setCategoryForm] = useState({
     name: "Laptops & Computers",
     description:
       "Laptops and computers include portable and desktop systems designed for work, learning, gaming, and creative tasks. This category covers lightweight ultrabooks, high-performance workstations, and everyday PCs with reliable processing power and modern connectivity.",
   });
   const [formData, setFormData] = useState({
-    name: "Lenovo ThinkPad X1 Carbon Gen 12",
-    description:
-      "Premium ultrabook with Intel Core Ultra processor, 14-inch anti-glare display, 16GB RAM, and 512GB NVMe SSD. Built for business productivity with lightweight carbon-fiber chassis, all-day battery life, and advanced security.",
-    storage: "512GB",
-    deviceType: "Laptop",
-    image: DEFAULT_PRODUCT_IMAGE,
-    price: "$1,499",
-    stock: "42",
-    discount: "8%",
-    discountType: "Back to School Deal",
-    category: "Laptop",
+    ...DEFAULT_FORM_DATA,
+    ...(draftToEdit || {}),
+    image: draftToEdit?.image || EMPTY_PRODUCT_IMAGE,
   });
-  const [productImages, setProductImages] = useState([
-    DEFAULT_PRODUCT_IMAGE,
-    "/Images/comp.jpg",
-    "/Images/comp2.jpg",
-  ]);
+  const [productImages, setProductImages] = useState(
+    draftToEdit?.image ? [draftToEdit.image] : []
+  );
 
   const getSafeImageForStorage = (image) => {
-    if (!image) return DEFAULT_PRODUCT_IMAGE;
+    if (!image) return EMPTY_PRODUCT_IMAGE;
     if (!image.startsWith("data:")) return image;
     if (image.length <= MAX_STORED_IMAGE_SIZE) return image;
-    return DEFAULT_PRODUCT_IMAGE;
+    return EMPTY_PRODUCT_IMAGE;
   };
 
   const safeSetStorage = (key, value) => {
@@ -106,7 +133,7 @@ export default function AddProduct() {
 
           const ctx = canvas.getContext("2d");
           if (!ctx) {
-            resolve(DEFAULT_PRODUCT_IMAGE);
+            resolve(EMPTY_PRODUCT_IMAGE);
             return;
           }
 
@@ -121,6 +148,8 @@ export default function AddProduct() {
     });
 
   const handleChange = (key) => (e) => {
+    setErrorMessage("");
+    setStatusMessage("");
     setFormData((prev) => ({ ...prev, [key]: e.target.value }));
   };
 
@@ -135,6 +164,12 @@ export default function AddProduct() {
   };
 
   const handleSaveProduct = () => {
+    if (!formData.image) {
+      setErrorMessage("Upload a product image before publishing.");
+      setStatusMessage("");
+      return;
+    }
+
     const priceNumber = Number(String(formData.price).replace(/[^0-9.]/g, "")) || 0;
     const discountNumber = Number(String(formData.discount).replace(/[^0-9.]/g, "")) || 0;
     const oldPrice = priceNumber > 0 ? priceNumber : 0;
@@ -154,6 +189,7 @@ export default function AddProduct() {
       oldPrice,
       price: finalPrice || oldPrice,
       stock: Number(formData.stock) || 0,
+      postalCode: String(formData.postalCode || "").trim(),
       soldUnits: 0,
       discountType: formData.discountType,
       sourceSection: selectedPostNav,
@@ -162,6 +198,14 @@ export default function AddProduct() {
 
     const existingProducts = JSON.parse(localStorage.getItem("dashboardProducts") || "[]");
     const didPersist = persistProductsSafely([product, ...existingProducts]);
+
+    if (draftToEdit?.id) {
+      const drafts = JSON.parse(localStorage.getItem(DRAFTS_STORAGE_KEY) || "[]");
+      safeSetStorage(
+        DRAFTS_STORAGE_KEY,
+        JSON.stringify(drafts.filter((draft) => draft.id !== draftToEdit.id))
+      );
+    }
 
     navigate("/dashboard/products/new", {
       state: {
@@ -173,21 +217,35 @@ export default function AddProduct() {
   };
 
   const handleSaveDraft = () => {
+    const drafts = JSON.parse(localStorage.getItem(DRAFTS_STORAGE_KEY) || "[]");
     const draftPayload = {
+      id: draftToEdit?.id || `draft-${Date.now()}`,
+      createdAt: draftToEdit?.createdAt || new Date().toISOString(),
+      savedAt: new Date().toISOString(),
       ...formData,
       image: getSafeImageForStorage(formData.image),
       description: String(formData.description || "").slice(0, 320),
       sourceSection: selectedPostNav,
+      status: "DRAFT",
     };
 
-    if (!safeSetStorage("dashboardProductDraft", JSON.stringify(draftPayload))) {
-      const minimalDraft = {
-        ...draftPayload,
-        image: DEFAULT_PRODUCT_IMAGE,
-        description: "",
-      };
-      safeSetStorage("dashboardProductDraft", JSON.stringify(minimalDraft));
+    const nextDrafts = [
+      draftPayload,
+      ...drafts.filter((draft) => draft.id !== draftPayload.id),
+    ].slice(0, MAX_SAVED_PRODUCTS);
+
+    if (!safeSetStorage(DRAFTS_STORAGE_KEY, JSON.stringify(nextDrafts))) {
+      const compactDrafts = nextDrafts.map((draft) => ({
+        ...draft,
+        image: getSafeImageForStorage(draft.image),
+        description: String(draft.description || "").slice(0, 160),
+      }));
+      safeSetStorage(DRAFTS_STORAGE_KEY, JSON.stringify(compactDrafts));
     }
+
+    setErrorMessage("");
+    setStatusMessage("Draft saved.");
+    navigate("/dashboard/products/drafts");
   };
 
   const handleOpenImagePicker = () => {
@@ -202,9 +260,12 @@ export default function AddProduct() {
       const uploadedImage = await compressImage(file);
       if (!uploadedImage) return;
       setFormData((prev) => ({ ...prev, image: uploadedImage }));
-      setProductImages((prev) => [uploadedImage, ...prev].slice(0, 6));
+      setProductImages((prev) => [uploadedImage, ...prev.filter((img) => img !== uploadedImage)].slice(0, 6));
+      setErrorMessage("");
+      setStatusMessage("Image uploaded.");
     } catch {
-      setFormData((prev) => ({ ...prev, image: DEFAULT_PRODUCT_IMAGE }));
+      setErrorMessage("Image upload failed. Try another image.");
+      setStatusMessage("");
     }
 
     e.target.value = "";
@@ -236,6 +297,13 @@ export default function AddProduct() {
               </nav>
             </div>
             <div className="top-actions">
+              <button
+                type="button"
+                className="draft-btn"
+                onClick={() => navigate("/dashboard/products/drafts")}
+              >
+                View Drafts
+              </button>
               <button type="button" className="draft-btn" onClick={handleSaveDraft}>
                 Save Draft
               </button>
@@ -356,7 +424,16 @@ export default function AddProduct() {
             <section className="add-card right-card">
               <h2>Upload Img</h2>
               <div className="main-preview">
-                <img src={formData.image} alt="Laptop product" />
+                {formData.image ? (
+                  <img src={formData.image} alt="Selected product" />
+                ) : (
+                  <div className="empty-preview">
+                    <span>No image uploaded yet</span>
+                    <button type="button" className="upload-preview-btn" onClick={handleOpenImagePicker}>
+                      Upload Image
+                    </button>
+                  </div>
+                )}
               </div>
               <div className="thumb-row">
                 {productImages.map((img, index) => (
@@ -384,6 +461,11 @@ export default function AddProduct() {
                   onChange={handleImageUpload}
                 />
               </div>
+              {(statusMessage || errorMessage) && (
+                <p className={`product-form-message ${errorMessage ? "error" : "success"}`}>
+                  {errorMessage || statusMessage}
+                </p>
+              )}
             </section>
 
             <section className="add-card">
@@ -438,6 +520,19 @@ export default function AddProduct() {
                     <option>Holiday Promotion</option>
                     <option>Clearance Offer</option>
                   </select>
+                </div>
+              </div>
+              <div className="field-row two-col">
+                <div>
+                  <label className="field-label" htmlFor="postal-code">
+                    Postal Code
+                  </label>
+                  <input
+                    id="postal-code"
+                    className="field-input"
+                    value={formData.postalCode}
+                    onChange={handleChange("postalCode")}
+                  />
                 </div>
               </div>
             </section>

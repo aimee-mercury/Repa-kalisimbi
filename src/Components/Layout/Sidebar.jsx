@@ -30,10 +30,6 @@ export default function Sidebar() {
   const showProductsOpen = productsOpen || isProductsActive;
 
   useEffect(() => {
-    setMobileOpen(false);
-  }, [location.pathname]);
-
-  useEffect(() => {
     const syncUnread = () => setUnreadNotifications(getWebsiteUnreadCount());
     window.addEventListener("storage", syncUnread);
     window.addEventListener("website_notifications_updated", syncUnread);
@@ -130,6 +126,11 @@ export default function Sidebar() {
               label="Add Product"
               active={location.pathname === "/dashboard/products/add"}
               onClick={go("/dashboard/products/add")}
+            />
+            <SidebarSubItem
+              label="Drafts"
+              active={location.pathname === "/dashboard/products/drafts"}
+              onClick={go("/dashboard/products/drafts")}
             />
             <SidebarSubItem
               label="Report"
