@@ -80,8 +80,12 @@ export default function DraftProducts() {
               {drafts.map((draft) => (
                 <article className="draft-card" key={draft.id}>
                   <div className="draft-image-wrap">
-                    {draft.image ? (
-                      <img src={draft.image} alt={draft.name} className="draft-image" />
+                    {draft.image || (Array.isArray(draft.images) ? draft.images[0] : "") ? (
+                      <img
+                        src={draft.image || draft.images?.[0]}
+                        alt={draft.name}
+                        className="draft-image"
+                      />
                     ) : (
                       <div className="draft-image-empty">No image</div>
                     )}
