@@ -9,31 +9,31 @@ const deals = [
     name: "Wireless Headphones",
     price: "$79.99",
     rating: 5,
-    image: "/Images/comp2.jpg",
+    image: "",
   },
   {
     name: "Bluetooth Speaker",
     price: "$39.99",
     rating: 4,
-    image: "/Images/comp3.jpg",
+    image: "",
   },
   {
     name: "Gaming Mouse",
     price: "$29.99",
     rating: 4,
-    image: "/Images/comp3.jpg",
+    image: "",
   },
   {
     name: "Smart Watch",
     price: "$49.99",
     rating: 4,
-    image: "/Images/comp1.jpg",
+    image: "",
   },
   {
     name: "Smart Watch",
     price: "$49.99",
     rating: 4,
-    image: "/Images/comp1.jpg",
+    image: "",
   },
 ];
 
@@ -91,7 +91,11 @@ export default function Dashboard() {
           <div className="deals__grid">
             {deals.map((item, index) => (
               <div className="deal-card" key={index}>
-                <img src={item.image} alt={item.name} />
+                {item.image ? (
+                  <img src={item.image} alt={item.name} />
+                ) : (
+                  <div className="deal-image-placeholder">No image</div>
+                )}
                 <h3>{item.name}</h3>
                 <div className="rating">{"?".repeat(item.rating)}{"?".repeat(5 - item.rating)}</div>
                 <span className="price">{formatCurrency(item.price)}</span>
