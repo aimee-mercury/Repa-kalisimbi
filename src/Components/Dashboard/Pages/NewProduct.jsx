@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import DashboardHeader from '../../Layout/Layout'
 import Sidebar from '../../Layout/Sidebar'
@@ -53,8 +47,8 @@ export default function NewProduct() {
   }, [readStorageArray])
 
   const [products, setProducts] = useState(() => loadDashboardProducts())
-  const [homePosts, setHomePosts] = useState(() =>
-    readStorageArray(LANDING_PRODUCTS_KEY).value,
+  const [homePosts, setHomePosts] = useState(
+    () => readStorageArray(LANDING_PRODUCTS_KEY).value,
   )
   const [imageEditor, setImageEditor] = useState(null)
   const imageUploadRef = useRef(null)
@@ -75,7 +69,9 @@ export default function NewProduct() {
   const isSoldOut = useCallback(
     (product) =>
       Number(product.stock || 0) <= 0 ||
-      String(product.status || '').toUpperCase().includes('OUT'),
+      String(product.status || '')
+        .toUpperCase()
+        .includes('OUT'),
     [],
   )
 
@@ -98,7 +94,8 @@ export default function NewProduct() {
   }
 
   const normalizeImages = (item) => {
-    if (Array.isArray(item?.images) && item.images.length > 0) return item.images
+    if (Array.isArray(item?.images) && item.images.length > 0)
+      return item.images
     if (item?.image) return [item.image]
     return []
   }
@@ -171,10 +168,9 @@ export default function NewProduct() {
     try {
       const uploaded = await compressImage(file)
       if (!uploaded) return
-      updateEditorImages((prev) => [
-        uploaded,
-        ...prev.filter((img) => img !== uploaded),
-      ].slice(0, 6))
+      updateEditorImages((prev) =>
+        [uploaded, ...prev.filter((img) => img !== uploaded)].slice(0, 6),
+      )
     } catch {
       // ignore upload errors in the modal
     } finally {
@@ -262,10 +258,10 @@ export default function NewProduct() {
     safeSetStorage(
       LANDING_PRODUCTS_KEY,
       JSON.stringify(
-        [landingProduct, ...currentLandingProducts.filter((p) => p.id !== landingProduct.id)].slice(
-          0,
-          50,
-        ),
+        [
+          landingProduct,
+          ...currentLandingProducts.filter((p) => p.id !== landingProduct.id),
+        ].slice(0, 50),
       ),
     )
 
@@ -364,7 +360,9 @@ export default function NewProduct() {
               price: updatedFields.price,
               stock: updatedFields.stock,
               sourceSection: updatedFields.sourceSection || item.sourceSection,
-              onSale: String(updatedFields.sourceSection || item.sourceSection || '')
+              onSale: String(
+                updatedFields.sourceSection || item.sourceSection || '',
+              )
                 .toLowerCase()
                 .includes('hot'),
             }
@@ -434,13 +432,19 @@ export default function NewProduct() {
 
   const soldOutCount = useMemo(
     () =>
-      products.reduce((count, product) => count + (isSoldOut(product) ? 1 : 0), 0),
+      products.reduce(
+        (count, product) => count + (isSoldOut(product) ? 1 : 0),
+        0,
+      ),
     [isSoldOut, products],
   )
 
   const inStockCount = useMemo(
     () =>
-      products.reduce((count, product) => count + (!isSoldOut(product) ? 1 : 0), 0),
+      products.reduce(
+        (count, product) => count + (!isSoldOut(product) ? 1 : 0),
+        0,
+      ),
     [isSoldOut, products],
   )
 
@@ -507,9 +511,10 @@ export default function NewProduct() {
     }
   }, [readStorageArray])
 
-  const postedIds = useMemo(() => new Set(homePosts.map((item) => item.id)), [
-    homePosts,
-  ])
+  const postedIds = useMemo(
+    () => new Set(homePosts.map((item) => item.id)),
+    [homePosts],
+  )
 
   const handleRemoveFromHome = (productId) => {
     const shouldRemove = window.confirm('Remove this product from Home?')
@@ -664,14 +669,19 @@ export default function NewProduct() {
             <div className='home-posts-head'>
               <div>
                 <h2>Posted to Home</h2>
-                <p>{homePosts.length} product(s) currently visible on the website home page.</p>
+                <p>
+                  {homePosts.length} product(s) currently visible on the website
+                  home page.
+                </p>
               </div>
               <button
                 type='button'
                 className='clear-home-btn'
                 disabled={homePosts.length === 0}
                 onClick={() => {
-                  const shouldClear = window.confirm('Remove ALL posted Home products?')
+                  const shouldClear = window.confirm(
+                    'Remove ALL posted Home products?',
+                  )
                   if (!shouldClear) return
                   safeSetStorage(LANDING_PRODUCTS_KEY, JSON.stringify([]))
                   setHomePosts([])
@@ -684,7 +694,10 @@ export default function NewProduct() {
 
             {homePosts.length === 0 ? (
               <div className='home-posts-empty'>
-                <p>Nothing posted to Home yet. Use “Add to Home” on a product below.</p>
+                <p>
+                  Nothing posted to Home yet. Use “Add to Home” on a product
+                  below.
+                </p>
               </div>
             ) : (
               <div className='home-posts-list'>
@@ -711,7 +724,9 @@ export default function NewProduct() {
                         </span>
                       </div>
                       <h3>{item.name || 'Untitled product'}</h3>
-                      <p className='home-post-price'>{formatPrice(item.price)}</p>
+                      <p className='home-post-price'>
+                        {formatPrice(item.price)}
+                      </p>
                     </div>
                     <div className='home-post-actions'>
                       <button
@@ -819,7 +834,9 @@ export default function NewProduct() {
                             className='cart-btn'
                             onClick={() => handleAddToHome(product)}
                           >
-                            {postedIds.has(product.id) ? 'Update Home' : 'Add to Home'}
+                            {postedIds.has(product.id)
+                              ? 'Update Home'
+                              : 'Add to Home'}
                           </button>
                         )}
                         {postedIds.has(product.id) && (
@@ -888,11 +905,7 @@ export default function NewProduct() {
               }}
               role='presentation'
             >
-              <div
-                className='product-editor-modal'
-                role='dialog'
-                aria-modal='true'
-              >
+              <div className='product-editor-modal'>
                 <div className='product-editor-head'>
                   <div>
                     <h2>Edit Product</h2>
@@ -985,9 +998,10 @@ export default function NewProduct() {
                       >
                         {(SOURCE_SECTIONS.includes(productEditor.sourceSection)
                           ? SOURCE_SECTIONS
-                          : [productEditor.sourceSection, ...SOURCE_SECTIONS].filter(
-                              Boolean,
-                            )
+                          : [
+                              productEditor.sourceSection,
+                              ...SOURCE_SECTIONS,
+                            ].filter(Boolean)
                         ).map((section) => (
                           <option key={section} value={section}>
                             {section}
@@ -1070,12 +1084,16 @@ export default function NewProduct() {
               }}
               role='presentation'
             >
-              <div className='image-editor-modal' role='dialog' aria-modal='true'>
+              <div className='image-editor-modal'>
                 <div className='image-editor-head'>
                   <div>
                     <h2>Edit Images</h2>
                     <p>
-                      {imageEditor.name} ({imageEditor.source === 'home' ? 'Home post' : 'Dashboard product'})
+                      {imageEditor.name} (
+                      {imageEditor.source === 'home'
+                        ? 'Home post'
+                        : 'Dashboard product'}
+                      )
                     </p>
                   </div>
                   <button
@@ -1093,7 +1111,9 @@ export default function NewProduct() {
                     {imageEditor.images[0] ? (
                       <img src={imageEditor.images[0]} alt='Primary' />
                     ) : (
-                      <div className='image-editor-empty'>No image selected</div>
+                      <div className='image-editor-empty'>
+                        No image selected
+                      </div>
                     )}
                   </div>
 
