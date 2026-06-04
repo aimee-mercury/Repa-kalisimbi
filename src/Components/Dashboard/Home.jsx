@@ -5,36 +5,11 @@ import "../../Styles/Home.scss";
 import { useCurrency } from "../../CurrencyContext";
 
 const deals = [
-  {
-    name: "Wireless Headphones",
-    price: "$79.99",
-    rating: 5,
-    image: "/Images/comp2.jpg",
-  },
-  {
-    name: "Bluetooth Speaker",
-    price: "$39.99",
-    rating: 4,
-    image: "/Images/comp3.jpg",
-  },
-  {
-    name: "Gaming Mouse",
-    price: "$29.99",
-    rating: 4,
-    image: "/Images/comp3.jpg",
-  },
-  {
-    name: "Smart Watch",
-    price: "$49.99",
-    rating: 4,
-    image: "/Images/comp1.jpg",
-  },
-  {
-    name: "Smart Watch",
-    price: "$49.99",
-    rating: 4,
-    image: "/Images/comp1.jpg",
-  },
+  { name: "Wireless Headphones", price: "$79.99", rating: 5, image: "/Images/comp2.jpg" },
+  { name: "Bluetooth Speaker", price: "$39.99", rating: 4, image: "/Images/comp3.jpg" },
+  { name: "Gaming Mouse", price: "$29.99", rating: 4, image: "/Images/comp3.jpg" },
+  { name: "Smart Watch", price: "$49.99", rating: 4, image: "/Images/comp1.jpg" },
+  { name: "Smart Watch", price: "$49.99", rating: 4, image: "/Images/comp1.jpg" },
 ];
 
 export default function Dashboard() {
@@ -93,7 +68,10 @@ export default function Dashboard() {
               <div className="deal-card" key={index}>
                 <img src={item.image} alt={item.name} />
                 <h3>{item.name}</h3>
-                <div className="rating">{"?".repeat(item.rating)}{"?".repeat(5 - item.rating)}</div>
+                <div className="rating">
+                  {"★".repeat(item.rating)}
+                  {"☆".repeat(5 - item.rating)}
+                </div>
                 <span className="price">{formatCurrency(item.price)}</span>
               </div>
             ))}
@@ -104,7 +82,9 @@ export default function Dashboard() {
           <div className="panel recent-orders">
             <div className="panel-header">
               <h3>Recent Orders</h3>
-              <button className="ghost-btn">See All</button>
+              <button type="button" className="ghost-btn">
+                See All
+              </button>
             </div>
             <div className="orders-table">
               <div className="row header">

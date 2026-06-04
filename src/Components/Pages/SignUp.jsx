@@ -1,41 +1,40 @@
-import React, { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../AuthContext';
-import '../../Styles/Auth.scss';
+import React, { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../AuthContext";
+import "../../Styles/Auth.scss";
 
 const SignUp = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [acceptTerms, setAcceptTerms] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { signup } = useContext(AuthContext);
 
   const handleSignUp = (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
     if (!acceptTerms) {
-      setError('You must accept the Terms of Service and Privacy Policy');
+      setError("You must accept the Terms of Service and Privacy Policy");
       return;
     }
 
     if (password !== confirmPassword) {
-      setError('Passwords do not match');
+      setError("Passwords do not match");
       return;
     }
 
     setLoading(true);
 
-    // Simulate API call
     setTimeout(() => {
       if (signup(name, email, password, confirmPassword)) {
-        navigate('/dashboard');
+        navigate("/dashboard");
       } else {
-        setError('Please fill in all fields correctly');
+        setError("Please fill in all fields correctly");
       }
       setLoading(false);
     }, 500);
@@ -51,7 +50,7 @@ const SignUp = () => {
       <div className="auth-right">
         <div className="auth-form-wrapper">
           <h2>Create an Account</h2>
-          <p>Hello there, Let's start your journey with us.</p>
+          <p>Start your Repa Technology account and manage everything in one place.</p>
 
           {error && <div className="error-message">{error}</div>}
 
@@ -85,7 +84,9 @@ const SignUp = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
-                <span className="password-toggle">👁</span>
+                <span className="password-toggle" aria-hidden="true">
+                  Show
+                </span>
               </div>
             </div>
 
@@ -98,7 +99,9 @@ const SignUp = () => {
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
                 />
-                <span className="password-toggle">👁</span>
+                <span className="password-toggle" aria-hidden="true">
+                  Show
+                </span>
               </div>
             </div>
 
@@ -109,29 +112,19 @@ const SignUp = () => {
                 onChange={(e) => setAcceptTerms(e.target.checked)}
               />
               <span>
-                I accept the{' '}
-                <a href="#" className="link">
-                  Terms of Service
-                </a>{' '}
-                and{' '}
-                <a href="#" className="link">
-                  Privacy Policy
-                </a>
+                I accept the <a href="#" className="link">Terms of Service</a> and{" "}
+                <a href="#" className="link">Privacy Policy</a>
               </span>
             </label>
 
             <button type="submit" className="btn-signup" disabled={loading}>
-              {loading ? 'Creating account...' : 'Sign up'}
+              {loading ? "Creating account..." : "Sign up"}
             </button>
           </form>
 
           <div className="auth-footer">
             <span>Already have an account?</span>
-            <button
-              type="button"
-              onClick={() => navigate('/login')}
-              className="btn-link"
-            >
+            <button type="button" onClick={() => navigate("/login")} className="btn-link">
               Login now
             </button>
           </div>
