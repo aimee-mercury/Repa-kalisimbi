@@ -8,12 +8,13 @@ $brand-2: #2563eb;
 
 .header {
   width: 100%;
-  background: $surface;
-  border-bottom: 1px solid $line;
+  background: rgba(255, 255, 255, 0.9);
+  border-bottom: 1px solid #dde7f2;
   position: sticky;
   top: 0;
   z-index: 40;
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+  box-shadow: 0 18px 42px rgba(15, 23, 42, 0.08);
+  backdrop-filter: blur(18px);
 
   &__top-bar {
     padding: 8px 30px;
@@ -21,8 +22,8 @@ $brand-2: #2563eb;
     justify-content: space-between;
     align-items: center;
     gap: 12px;
-    background: linear-gradient(90deg, #f7faff 0%, #f1f5ff 100%);
-    border-bottom: 1px solid #ebf0f7;
+    background: linear-gradient(90deg, #eef5ff 0%, #f8fbff 100%);
+    border-bottom: 1px solid #e1eaf4;
 
     p {
       margin: 0;
@@ -45,7 +46,7 @@ $brand-2: #2563eb;
         text-decoration: none;
         color: $ink-soft;
         background: $surface;
-        border: 1px solid #dbe5f1;
+        border: 1px solid #d6e1ee;
         border-radius: 999px;
         padding: 5px 10px;
         font-size: 12px;
@@ -62,7 +63,7 @@ $brand-2: #2563eb;
   }
 
   &__top {
-    padding: 14px 30px;
+    padding: 16px 30px;
     display: grid;
     grid-template-columns: auto minmax(260px, 1fr) auto;
     align-items: center;
@@ -81,7 +82,7 @@ $brand-2: #2563eb;
     }
 
     .brand {
-      font-size: 21px;
+      font-size: 22px;
       font-weight: 800;
       letter-spacing: -0.01em;
       white-space: nowrap;
@@ -104,8 +105,8 @@ $brand-2: #2563eb;
   &__search {
     display: flex;
     align-items: center;
-    background: $surface-soft;
-    border: 1px solid #dbe5f2;
+    background: linear-gradient(180deg, #f8fbff 0%, #f2f7fc 100%);
+    border: 1px solid #d7e3ef;
     border-radius: 999px;
     overflow: hidden;
     height: 46px;
@@ -124,7 +125,7 @@ $brand-2: #2563eb;
 
     button {
       border: none;
-      background: linear-gradient(135deg, $brand, $brand-2);
+      background: linear-gradient(135deg, #12365a, #2d6fb9);
       color: #fff;
       height: 46px;
       padding: 0 16px;
@@ -142,7 +143,7 @@ $brand-2: #2563eb;
 
     button {
       border: 1px solid #dbe5f2;
-      background: $surface-soft;
+      background: linear-gradient(180deg, #ffffff 0%, #f5f8fc 100%);
       color: $ink;
       border-radius: 10px;
       padding: 8px;
@@ -185,7 +186,7 @@ $brand-2: #2563eb;
       position: absolute;
       top: -7px;
       right: -7px;
-      background: $brand;
+      background: linear-gradient(135deg, #12365a, #2d6fb9);
       color: #fff;
       font-size: 10px;
       font-weight: 700;
@@ -202,9 +203,9 @@ $brand-2: #2563eb;
   }
 
   &__nav {
-    padding: 10px 30px 12px;
+    padding: 10px 30px 14px;
     border-top: 1px solid #edf2f7;
-    background: #fff;
+    background: rgba(255, 255, 255, 0.84);
 
     ul {
       list-style: none;
@@ -219,7 +220,7 @@ $brand-2: #2563eb;
 
     .nav-item {
       border: 1px solid #dbe5f2;
-      background: #f8fbff;
+      background: linear-gradient(180deg, #ffffff 0%, #f5f9fe 100%);
       color: $ink-soft;
       font-size: 13px;
       font-weight: 600;
@@ -234,7 +235,7 @@ $brand-2: #2563eb;
       &.active-nav {
         color: #fff;
         border-color: $brand;
-        background: linear-gradient(135deg, $brand, $brand-2);
+        background: linear-gradient(135deg, #12365a, #2d6fb9);
       }
 
       .nav-thumb {

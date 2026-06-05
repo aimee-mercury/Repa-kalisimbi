@@ -4,7 +4,90 @@ body * {
     background-color 0.28s ease,
     color 0.28s ease,
     border-color 0.28s ease,
-    box-shadow 0.28s ease;
+    box-shadow 0.28s ease,
+    transform 0.28s ease;
+}
+
+::selection {
+  background: rgba(23, 59, 99, 0.15);
+  color: var(--color-brand-strong);
+}
+
+#root {
+  isolation: isolate;
+}
+
+.landing-page {
+  min-height: 100vh;
+}
+
+.home,
+.category-page,
+.product-page,
+.cart-page,
+.profile-page,
+.auth-container {
+  position: relative;
+}
+
+.home h2,
+.category-page h2,
+.product-page h2,
+.cart-page h2,
+.profile-page h2 {
+  letter-spacing: -0.02em;
+}
+
+.clickable-card:hover,
+.product-card:hover,
+.related-card:hover,
+.deal-card:hover,
+.top-product-card:hover,
+.hot-product-card:hover,
+.recent-card:hover,
+.flash-product:hover,
+.feature-card:hover,
+.stat-card:hover,
+.panel:hover {
+  transform: translateY(-4px);
+}
+
+.site-panel {
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(14px);
+}
+
+.home .hero,
+.top-products,
+.features,
+.flash-sale,
+.category-banner,
+.filters-section,
+.product-gallery .main-image,
+.product-card,
+.related-card,
+.cart-items-section .cart-item,
+.cart-summary .summary-box,
+.cart-summary .feature,
+.profile-sidebar,
+.profile-main .account-details,
+.profile-main .card,
+.dashboard-header,
+.sidebar,
+.stat-card,
+.panel,
+.deal-card,
+.top-product-card,
+.product-card,
+.flash-product,
+.hot-product-card,
+.recent-card,
+.footer-main,
+.newsletter-section {
+  backdrop-filter: blur(14px);
 }
 
 @keyframes siteFadeLift {
@@ -27,8 +110,6 @@ body.site-light .profile-container {
   animation: siteFadeLift 0.45s ease both;
 }
 
-/* Keep website backgrounds as designed.
-   Dark mode is handled mainly in dashboard styles to avoid bad-looking public page backgrounds. */
 body.site-dark {
   color-scheme: dark;
 }

@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useMemo, useState } from "react";
+/* eslint-disable react-refresh/only-export-components */
+import React, { createContext, useContext, useState } from "react";
 
 const CurrencyContext = createContext(null);
 
@@ -38,10 +39,7 @@ export function CurrencyProvider({ children }) {
     return `$${amount.toFixed(2)}`;
   };
 
-  const value = useMemo(
-    () => ({ currency, toggleCurrency, formatCurrency, convertAmount, parseAmount }),
-    [currency]
-  );
+  const value = { currency, toggleCurrency, formatCurrency, convertAmount, parseAmount };
 
   return <CurrencyContext.Provider value={value}>{children}</CurrencyContext.Provider>;
 }

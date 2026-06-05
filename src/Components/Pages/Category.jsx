@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useNavigate, useLocation, useParams } from 'react-router-dom'
 import { Star, Grid3x3, List, ChevronLeft, ChevronRight } from 'lucide-react'
 import Footer from '../Layout/Footer'
@@ -209,19 +209,6 @@ const Category = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 12
 
-  useEffect(() => {
-    const nextCategory = categories.includes(requestedCategory)
-      ? requestedCategory
-      : 'All Categories'
-    setSelectedCategory(nextCategory)
-    setCurrentPage(1)
-  }, [requestedCategory, categories])
-
-  useEffect(() => {
-    setSearchTerm(requestedSearch)
-    setCurrentPage(1)
-  }, [requestedSearch])
-
   const priceRanges = [
     '$0 - $500',
     '$500 - $1,000',
@@ -289,12 +276,6 @@ const Category = () => {
   const safeCurrentPage = Math.min(currentPage, totalPages)
   const startIdx = (safeCurrentPage - 1) * itemsPerPage
   const paginatedProducts = filteredProducts.slice(startIdx, startIdx + itemsPerPage)
-
-  useEffect(() => {
-    if (currentPage > totalPages) {
-      setCurrentPage(totalPages)
-    }
-  }, [currentPage, totalPages])
 
   const startDisplay = filteredProducts.length === 0 ? 0 : startIdx + 1
   const endDisplay = Math.min(startIdx + itemsPerPage, filteredProducts.length)

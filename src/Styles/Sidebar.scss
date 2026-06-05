@@ -2,13 +2,14 @@
   width: 260px;
   flex: 0 0 260px;
   min-height: 100%;
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.92);
   display: flex;
   flex-direction: column;
-  border-right: 1px solid #eef2f6;
+  border-right: 1px solid #dce6f1;
   padding: 20px;
   font-family: Inter, system-ui, sans-serif;
   z-index: 50;
+  box-shadow: 12px 0 36px rgba(16, 32, 51, 0.05);
 }
 
 .sidebar-toggle {
@@ -66,12 +67,12 @@
   transition: 0.2s;
 
   &:hover {
-    background: #f1f5f9;
+    background: #eef4fb;
   }
 
   &.active {
-    background: #eef4ff;
-    color: #2f66ff;
+    background: #e8f1fb;
+    color: #173b63;
     font-weight: 600;
   }
 
@@ -132,12 +133,12 @@
 
   &:hover {
     background: #f1f5f9;
-    color: #2f66ff;
+    color: #173b63;
   }
 
   &.active {
-    background: #eef4ff;
-    color: #2f66ff;
+    background: #e8f1fb;
+    color: #173b63;
   }
 
   .dot {

@@ -1,30 +1,29 @@
-import React, { useState, useContext } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { AuthContext } from '../../AuthContext';
-import '../../Styles/Auth.scss';
+import React, { useContext, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../AuthContext";
+import "../../Styles/Auth.scss";
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
   const location = useLocation();
-  const from = location.state?.from || '/dashboard';
+  const from = location.state?.from || "/dashboard";
 
   const handleLogin = (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setLoading(true);
 
-    // Simulate API call
     setTimeout(() => {
       if (login(email, password)) {
         navigate(from, { replace: true });
       } else {
-        setError('Please enter both email and password');
+        setError("Please enter both email and password");
       }
       setLoading(false);
     }, 500);
@@ -39,8 +38,8 @@ const Login = () => {
 
       <div className="auth-right">
         <div className="auth-form-wrapper">
-          <h2>Welcome Back!</h2>
-          <p>Get access to your Orders, Wishlist Easily</p>
+          <h2>Welcome Back</h2>
+          <p>Access your orders, saved items, and dashboard in one place.</p>
 
           {error && <div className="error-message">{error}</div>}
 
@@ -64,7 +63,9 @@ const Login = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
-                <span className="password-toggle">👁</span>
+                <span className="password-toggle" aria-hidden="true">
+                  Show
+                </span>
               </div>
             </div>
 
@@ -83,18 +84,14 @@ const Login = () => {
             </div>
 
             <button type="submit" className="btn-signin" disabled={loading}>
-              {loading ? 'Signing in...' : 'Sign in'}
+              {loading ? "Signing in..." : "Sign in"}
             </button>
           </form>
 
           <div className="auth-footer">
             <span>Don't have an account?</span>
-            <button
-              type="button"
-              onClick={() => navigate('/signup')}
-              className="btn-link"
-            >
-              Get Started
+            <button type="button" onClick={() => navigate("/signup")} className="btn-link">
+              Get started
             </button>
           </div>
         </div>

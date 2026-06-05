@@ -9,32 +9,31 @@ const deals = [
     name: 'Wireless Headphones',
     price: '$79.99',
     rating: 5,
-    image: '',
+    image: '/Images/comp2.jpg',
   },
-
   {
     name: 'Bluetooth Speaker',
     price: '$39.99',
     rating: 4,
-    image: '',
+    image: '/Images/comp3.jpg',
   },
   {
     name: 'Gaming Mouse',
     price: '$29.99',
     rating: 4,
-    image: '',
+    image: '/Images/comp3.jpg',
   },
   {
     name: 'Smart Watch',
     price: '$49.99',
     rating: 4,
-    image: '',
+    image: '/Images/comp1.jpg',
   },
   {
     name: 'Smart Watch',
     price: '$49.99',
     rating: 4,
-    image: '',
+    image: '/Images/comp1.jpg',
   },
 ]
 
@@ -99,8 +98,8 @@ export default function Dashboard() {
                 )}
                 <h3>{item.name}</h3>
                 <div className='rating'>
-                  {'?'.repeat(item.rating)}
-                  {'?'.repeat(5 - item.rating)}
+                  {'★'.repeat(item.rating)}
+                  {'☆'.repeat(5 - item.rating)}
                 </div>
                 <span className='price'>{formatCurrency(item.price)}</span>
               </div>
@@ -112,7 +111,9 @@ export default function Dashboard() {
           <div className='panel recent-orders'>
             <div className='panel-header'>
               <h3>Recent Orders</h3>
-              <button className='ghost-btn'>See All</button>
+              <button type='button' className='ghost-btn'>
+                See All
+              </button>
             </div>
             <div className='orders-table'>
               <div className='row header'>

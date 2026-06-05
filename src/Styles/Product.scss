@@ -5,7 +5,7 @@ $coral: #1e3a5f;
 $muted: #6b7280;
 
 .product-page {
-  background: white;
+  background: transparent;
   padding: 20px 40px;
 }
 
@@ -39,10 +39,11 @@ $muted: #6b7280;
     position: relative;
     margin-bottom: 16px;
     background: white;
-    border-radius: 12px;
+    border-radius: 22px;
     overflow: hidden;
     aspect-ratio: 1 / 1;
-    border: 1px solid #edf2f7;
+    border: 1px solid #dce6f1;
+    box-shadow: 0 18px 34px rgba(16, 32, 51, 0.08);
 
     img {
       width: 100%;
@@ -57,7 +58,7 @@ $muted: #6b7280;
       top: 12px;
       right: 12px;
       background: white;
-      border: 1px solid #ddd;
+      border: 1px solid #d4dfeb;
       width: 36px;
       height: 36px;
       border-radius: 50%;
@@ -183,7 +184,7 @@ $muted: #6b7280;
 
           &.active {
             border-color: $coral;
-            background: rgba(255, 107, 66, 0.1);
+            background: rgba(23, 59, 99, 0.08);
             color: $coral;
           }
         }
@@ -233,8 +234,8 @@ $muted: #6b7280;
     .quantity-selector {
       display: flex;
       align-items: center;
-      border: 1px solid #ddd;
-      border-radius: 6px;
+      border: 1px solid #d4dfeb;
+      border-radius: 12px;
       overflow: hidden;
 
       button {
@@ -265,12 +266,13 @@ $muted: #6b7280;
       background: $coral;
       color: white;
       border: none;
-      border-radius: 6px;
+      border-radius: 999px;
+      box-shadow: 0 16px 28px rgba(23, 59, 99, 0.18);
       font-weight: 600;
       cursor: pointer;
 
       &:hover {
-        background: darken($coral, 10%);
+        background: #17324f;
       }
     }
 
@@ -278,7 +280,7 @@ $muted: #6b7280;
       padding: 12px 18px;
       background: white;
       border: 2px solid $coral;
-      border-radius: 6px;
+      border-radius: 999px;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -295,7 +297,7 @@ $muted: #6b7280;
       padding: 12px 16px;
       background: white;
       border: 2px solid $coral;
-      border-radius: 6px;
+      border-radius: 999px;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -523,7 +525,10 @@ $muted: #6b7280;
 
 /* NEWSLETTER */
 .newsletter-section {
-  background: $light-gray;
+  background: rgba(255, 255, 255, 0.86);
+  border: 1px solid #dce6f1;
+  border-radius: 26px;
+  box-shadow: 0 18px 42px rgba(16, 32, 51, 0.08);
   padding: 50px 40px;
   margin: 60px 0;
 
@@ -558,7 +563,7 @@ $muted: #6b7280;
       cursor: pointer;
 
       &:hover {
-        background: darken($coral, 10%);
+        background: #17324f;
       }
     }
   }
@@ -570,6 +575,18 @@ $muted: #6b7280;
       border-radius: 12px;
     }
   }
+}
+
+.cart-message {
+  margin-top: 16px;
+  padding: 12px 16px;
+  background: linear-gradient(135deg, #0f8f63, #12a978);
+  color: white;
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  box-shadow: 0 16px 28px rgba(15, 143, 99, 0.2);
 }
 
 /* RESPONSIVE */

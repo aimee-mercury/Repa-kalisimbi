@@ -50,8 +50,22 @@ function AppRoutes() {
       <Routes>
         <Route path="/" element={<HomeHero />} />
         <Route path="/product" element={<ProductPage />} />
-        <Route path="/category" element={<Category />} />
-        <Route path="/category/:categoryKey" element={<Category />} />
+        <Route
+          path="/category"
+          element={
+            <Category
+              key={`${location.pathname}|${location.state?.category || ''}|${location.state?.search || ''}`}
+            />
+          }
+        />
+        <Route
+          path="/category/:categoryKey"
+          element={
+            <Category
+              key={`${location.pathname}|${location.state?.category || ''}|${location.state?.search || ''}`}
+            />
+          }
+        />
         <Route path="/cart" element={<Cart />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/login" element={isLoggedIn ? <Navigate to="/dashboard" /> : <Login />} />
