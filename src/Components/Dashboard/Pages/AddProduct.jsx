@@ -18,18 +18,18 @@ const POST_PRODUCT_NAV_ITEMS = [
 ];
 
 const DEFAULT_FORM_DATA = {
-  name: "Lenovo ThinkPad X1 Carbon Gen 12",
-  description:
-    "Premium ultrabook with Intel Core Ultra processor, 14-inch anti-glare display, 16GB RAM, and 512GB NVMe SSD. Built for business productivity with lightweight carbon-fiber chassis, all-day battery life, and advanced security.",
-  storage: "512GB",
-  deviceType: "Laptop",
+  name: "",
+  description: "",
+  storage: "",
+  deviceType: "",
   image: EMPTY_PRODUCT_IMAGE,
-  price: "$1,499",
-  stock: "42",
-  postalCode: "10001",
-  discount: "8%",
-  discountType: "Back to School Deal",
-  category: "Laptop",
+  images: [],
+  price: "",
+  stock: "",
+  postalCode: "",
+  discount: "",
+  discountType: "",
+  category: "",
 };
 
 export default function AddProduct() {
@@ -72,10 +72,17 @@ export default function AddProduct() {
   const [formData, setFormData] = useState({
     ...DEFAULT_FORM_DATA,
     ...(draftToEdit || {}),
-    image: draftToEdit?.image || EMPTY_PRODUCT_IMAGE,
+    image:
+      draftToEdit?.image ||
+      (Array.isArray(draftToEdit?.images) ? draftToEdit.images[0] : "") ||
+      EMPTY_PRODUCT_IMAGE,
   });
   const [productImages, setProductImages] = useState(
-    draftToEdit?.image ? [draftToEdit.image] : []
+    Array.isArray(draftToEdit?.images) && draftToEdit.images.length > 0
+      ? draftToEdit.images
+      : draftToEdit?.image
+        ? [draftToEdit.image]
+        : []
   );
 
   const getSafeImageForStorage = (image) => {
@@ -185,6 +192,7 @@ export default function AddProduct() {
       deviceType: formData.deviceType,
       storage: formData.storage,
       image: getSafeImageForStorage(formData.image),
+      images: productImages.length > 0 ? productImages.map(getSafeImageForStorage) : [],
       sku: `SKU ${Date.now().toString().slice(-10)}`,
       oldPrice,
       price: finalPrice || oldPrice,
@@ -224,6 +232,7 @@ export default function AddProduct() {
       savedAt: new Date().toISOString(),
       ...formData,
       image: getSafeImageForStorage(formData.image),
+      images: productImages.length > 0 ? productImages.map(getSafeImageForStorage) : [],
       description: String(formData.description || "").slice(0, 320),
       sourceSection: selectedPostNav,
       status: "DRAFT",
@@ -269,6 +278,29 @@ export default function AddProduct() {
     }
 
     e.target.value = "";
+  };
+
+  const handleRemoveImage = (imageToRemove) => {
+    setProductImages((prev) => {
+      const nextImages = prev.filter((img) => img !== imageToRemove);
+
+      setFormData((prevForm) => ({
+        ...prevForm,
+        image:
+          prevForm.image === imageToRemove
+            ? nextImages[0] || EMPTY_PRODUCT_IMAGE
+            : prevForm.image,
+      }));
+
+      return nextImages;
+    });
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+
+    setStatusMessage("Image removed.");
+    setErrorMessage("");
   };
 
   return (
@@ -425,7 +457,18 @@ export default function AddProduct() {
               <h2>Upload Img</h2>
               <div className="main-preview">
                 {formData.image ? (
-                  <img src={formData.image} alt="Selected product" />
+                  <div className="image-preview-container">
+                    <img src={formData.image} alt="Selected product" />
+                    <button 
+                      type="button" 
+                      className="delete-image-btn"
+                      onClick={() => handleRemoveImage(formData.image)}
+                      aria-label="Remove selected image"
+                      title="Remove selected image"
+                    >
+                      ×
+                    </button>
+                  </div>
                 ) : (
                   <div className="empty-preview">
                     <span>No image uploaded yet</span>
@@ -435,16 +478,47 @@ export default function AddProduct() {
                   </div>
                 )}
               </div>
+              {formData.image && (
+                <div className="image-preview-actions">
+                  <button
+                    type="button"
+                    className="change-image-btn"
+                    onClick={handleOpenImagePicker}
+                  >
+                    Change Image
+                  </button>
+                  <button
+                    type="button"
+                    className="remove-image-text-btn"
+                    onClick={() => handleRemoveImage(formData.image)}
+                  >
+                    Remove Image
+                  </button>
+                </div>
+              )}
               <div className="thumb-row">
                 {productImages.map((img, index) => (
-                  <button
+                  <div
                     key={`${img}-${index}`}
-                    type="button"
-                    className={`thumb-btn ${formData.image === img ? "active" : ""}`}
-                    onClick={() => setFormData((prev) => ({ ...prev, image: img }))}
+                    className={`thumb-item ${formData.image === img ? "active" : ""}`}
                   >
-                    <img src={img} alt={`Laptop thumb ${index + 1}`} />
-                  </button>
+                    <button
+                      type="button"
+                      className={`thumb-btn ${formData.image === img ? "active" : ""}`}
+                      onClick={() => setFormData((prev) => ({ ...prev, image: img }))}
+                    >
+                      <img src={img} alt={`Product thumb ${index + 1}`} />
+                    </button>
+                    <button
+                      type="button"
+                      className="thumb-delete-btn"
+                      onClick={() => handleRemoveImage(img)}
+                      aria-label={`Remove image ${index + 1}`}
+                      title="Remove image"
+                    >
+                      X
+                    </button>
+                  </div>
                 ))}
                 <button
                   type="button"
