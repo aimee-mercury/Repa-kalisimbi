@@ -1,467 +1,269 @@
-import React, { useMemo, useState } from 'react'
-import { useNavigate, useLocation, useParams } from 'react-router-dom'
-import { Star, Grid3x3, List, ChevronLeft, ChevronRight } from 'lucide-react'
-import Footer from '../Layout/Footer'
-import '../../Styles/Category.scss'
-import { useCurrency } from '../../CurrencyContext'
+import React, { useContext, useMemo, useState } from "react";
+import { ArrowRight, Check, ChevronLeft, ChevronRight, Grid2X2, Heart, List, Search, ShoppingBag, SlidersHorizontal, Sparkles, X } from "lucide-react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import Footer from "../Layout/Footer";
+import { CartContext } from "../../CartContext";
+import { useCurrency } from "../../CurrencyContext";
+import { useWishlist } from "../../WishlistContext";
+import { CATALOG, CATEGORY_NAV, toSlug } from "../../data/catalog";
+import "../../Styles/Category.scss";
+import "../../Styles/catalog.scss";
 
-const productsCatalog = [
-  {
-    id: 1,
-    name: 'Anker 737 GaN Charger 120W',
-    category: 'Accessories',
-    price: 89.99,
-    originalPrice: 109.99,
-    image: '/Images/comp1.jpg',
-    rating: 5,
-    reviews: 245,
+const HEROES = {
+  "All Categories": {
+    eyebrow: "THE REPA COLLECTION",
+    title: <>Find your next<br /><em>favourite thing.</em></>,
+    description: "Well-made tech for work, play, and all the moments in between.",
+    image: "https://images.unsplash.com/photo-1498049794561-7780e7231661?auto=format&fit=crop&w=1500&q=85",
+    accent: "A considered edit of everyday technology.",
   },
-  {
-    id: 2,
-    name: 'Logitech MX Keys S Keyboard',
-    category: 'Accessories',
-    price: 129.99,
-    originalPrice: 149.99,
-    image: '/Images/comp2.jpg',
-    rating: 5,
-    reviews: 190,
+  Accessories: {
+    eyebrow: "THE LITTLE THINGS THAT DO A LOT",
+    title: <>Small upgrades.<br /><em>Big difference.</em></>,
+    description: "Chargers, keyboards, wearables, and the clever details that make your setup yours.",
+    image: "https://images.unsplash.com/photo-1583394838336-acd977736f90?auto=format&fit=crop&w=1500&q=85",
+    accent: "Better details for your everyday setup.",
   },
-  {
-    id: 3,
-    name: 'Apple iPhone 15 Pro 256GB',
-    category: 'Smartphones',
-    price: 1099.0,
-    originalPrice: 1199.0,
-    image: '/Images/rom.jpg',
-    rating: 5,
-    reviews: 520,
+  Smartphones: {
+    eyebrow: "MADE TO MOVE WITH YOU",
+    title: <>Your world,<br /><em>in your hands.</em></>,
+    description: "Explore thoughtful phones with the cameras, power, and all-day battery for your life.",
+    image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=1500&q=85",
+    accent: "Find the phone that feels like yours.",
   },
-  {
-    id: 4,
-    name: 'Samsung Galaxy S24 Ultra 256GB',
-    category: 'Smartphones',
-    price: 1199.0,
-    originalPrice: 1299.0,
-    image: '/Images/comp3.jpg',
-    rating: 5,
-    reviews: 460,
+  Laptops: {
+    eyebrow: "A BETTER WAY TO GET THINGS DONE",
+    title: <>Meet your next<br /><em>great idea.</em></>,
+    description: "From everyday essentials to creative powerhouses, find the right laptop for your pace.",
+    image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=1500&q=85",
+    accent: "Ready for the big work and the small wins.",
   },
-  {
-    id: 5,
-    name: 'Google Pixel 8 Pro 128GB',
-    category: 'Smartphones',
-    price: 899.0,
-    originalPrice: 999.0,
-    image: '/Images/comp.jpg',
-    rating: 4,
-    reviews: 312,
+  Gaming: {
+    eyebrow: "LEVEL UP YOUR EVERYDAY",
+    title: <>More play.<br /><em>More you.</em></>,
+    description: "Powerful gear and next-level experiences, picked for your kind of play.",
+    image: "https://images.unsplash.com/photo-1593305841991-05c297ba4575?auto=format&fit=crop&w=1500&q=85",
+    accent: "Gear up. Get in the game.",
   },
-  {
-    id: 6,
-    name: 'MacBook Pro 14 M3 512GB',
-    category: 'Laptops',
-    price: 1999.0,
-    originalPrice: 2199.0,
-    image: '/Images/lap.jpg',
-    rating: 5,
-    reviews: 231,
+  "TV & Media": {
+    eyebrow: "MAKE ROOM FOR A GOOD STORY",
+    title: <>Bring the big<br /><em>moments home.</em></>,
+    description: "Beautiful screens and smarter entertainment for movie nights, match days, and more.",
+    image: "https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=1500&q=85",
+    accent: "A little closer to the front row.",
   },
-  {
-    id: 7,
-    name: 'Dell XPS 13 Plus 512GB',
-    category: 'Laptops',
-    price: 1499.0,
-    originalPrice: 1699.0,
-    image: '/Images/comp2.jpg',
-    rating: 4,
-    reviews: 178,
+  Headphones: {
+    eyebrow: "FIND YOUR OWN FREQUENCY",
+    title: <>Turn it up.<br /><em>Tune it out.</em></>,
+    description: "Comfortable, clear, considered audio for the commute, the calls, and your quiet time.",
+    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1500&q=85",
+    accent: "A little more space for your soundtrack.",
   },
-  {
-    id: 8,
-    name: 'ASUS ROG Zephyrus G14 RTX 4060',
-    category: 'Gaming',
-    price: 1599.0,
-    originalPrice: 1799.0,
-    image: '/Images/comp3.jpg',
-    rating: 5,
-    reviews: 154,
-  },
-  {
-    id: 9,
-    name: 'PlayStation 5 Slim Digital',
-    category: 'Gaming',
-    price: 449.99,
-    originalPrice: 499.99,
-    image: '/Images/comp.jpg',
-    rating: 5,
-    reviews: 498,
-  },
-  {
-    id: 10,
-    name: 'Xbox Series X 1TB',
-    category: 'Gaming',
-    price: 499.99,
-    originalPrice: 549.99,
-    image: '/Images/comp1.jpg',
-    rating: 4,
-    reviews: 301,
-  },
-  {
-    id: 11,
-    name: 'LG C3 OLED 55-inch 4K TV',
-    category: 'TV & Media',
-    price: 1299.0,
-    originalPrice: 1499.0,
-    image: '/Images/comp.jpg',
-    rating: 5,
-    reviews: 267,
-  },
-  {
-    id: 12,
-    name: 'Samsung QN90C Neo QLED 55-inch',
-    category: 'TV & Media',
-    price: 1399.0,
-    originalPrice: 1599.0,
-    image: '/Images/head.jpg',
-    rating: 4,
-    reviews: 188,
-  },
-  {
-    id: 13,
-    name: 'Sony WH-1000XM5 Headphones',
-    category: 'Headphones',
-    price: 349.0,
-    originalPrice: 399.0,
-    image: '/Images/head.jpg',
-    rating: 5,
-    reviews: 621,
-  },
-  {
-    id: 14,
-    name: 'Bose QuietComfort Ultra',
-    category: 'Headphones',
-    price: 379.0,
-    originalPrice: 429.0,
-    image: '/Images/comp1.jpg',
-    rating: 5,
-    reviews: 287,
-  },
-  {
-    id: 15,
-    name: 'AirPods Pro 2nd Gen',
-    category: 'Headphones',
-    price: 249.0,
-    originalPrice: 279.0,
-    image: '/Images/comp2.jpg',
-    rating: 4,
-    reviews: 540,
-  },
-]
+};
 
-const parsePriceRange = (range) => {
-  if (range === 'All Prices') {
-    return { min: Number.NEGATIVE_INFINITY, max: Number.POSITIVE_INFINITY }
+const readProductArray = (key) => {
+  try {
+    const stored = JSON.parse(localStorage.getItem(key) || "[]");
+    return Array.isArray(stored) ? stored : [];
+  } catch (error) {
+    console.error(`Unable to read ${key}:`, error);
+    return [];
   }
-  const [minRaw, maxRaw] = range.split(' - ')
-  const min = Number(String(minRaw).replace(/[$,]/g, ''))
-  const max = Number(String(maxRaw).replace(/[$,]/g, ''))
-  return { min, max }
+};
+
+function ProductCard({ product, formatCurrency, onOpen, onAdd, isSaved, onWishlist }) {
+  const stock = Number.isFinite(Number(product.stock)) ? Number(product.stock) : null;
+  const discount = product.originalPrice > product.price
+    ? Math.round((1 - product.price / product.originalPrice) * 100)
+    : 0;
+  return (
+    <article className="catalog-card">
+      <button type="button" className="catalog-card-image" onClick={onOpen} aria-label={`View ${product.name}`}>
+        <img src={product.image} alt={product.name} loading="lazy" />
+        {discount > 0 && <span className="catalog-sale-badge">-{discount}%</span>}
+        {product.tags?.includes("featured") && <span className="catalog-featured-badge"><Sparkles size={12} /> REPA PICK</span>}
+      </button>
+      <button type="button" className={`catalog-heart ${isSaved ? "saved" : ""}`} aria-label={isSaved ? `Remove ${product.name} from wishlist` : `Save ${product.name}`} onClick={onWishlist}>
+        <Heart size={17} fill={isSaved ? "currentColor" : "none"} />
+      </button>
+      <div className="catalog-card-copy">
+        <span className="catalog-card-category">{product.category}</span>
+        <button type="button" className="catalog-card-name" onClick={onOpen}>{product.name}</button>
+        <div className="catalog-stars" aria-label={`${product.rating || 5} out of 5 stars`}><span>★★★★★</span><small>{Number(product.rating || 5).toFixed(1)} · {product.reviews || 0} reviews</small></div>
+        <div className="catalog-card-bottom">
+          <div><strong>{formatCurrency(product.price)}</strong>{discount > 0 && <del>{formatCurrency(product.originalPrice)}</del>}</div>
+          {stock !== null && <span className={stock > 0 ? "catalog-stock" : "catalog-stock out"}>{stock > 0 ? "In stock" : "Sold out"}</span>}
+          <button type="button" className="catalog-quick-add" aria-label={`Add ${product.name} to cart`} disabled={stock === 0} onClick={onAdd}><ShoppingBag size={16} /></button>
+        </div>
+      </div>
+    </article>
+  );
 }
 
-const toSlug = (value = '') =>
-  String(value)
-    .trim()
-    .toLowerCase()
-    .replace(/&/g, 'and')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
+export default function Category() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { categoryKey } = useParams();
+  const { formatCurrency } = useCurrency();
+  const { addToCart } = useContext(CartContext);
+  const { toggleWishlist, isSaved } = useWishlist();
+  const routeKey = `${location.key}:${categoryKey || ""}`;
+  const [searchState, setSearchState] = useState(() => ({
+    routeKey,
+    value: String(location.state?.search || ""),
+  }));
+  const searchTerm = searchState.routeKey === routeKey
+    ? searchState.value
+    : String(location.state?.search || "");
+  const setSearchTerm = (value) => setSearchState({ routeKey, value });
+  const [priceRange, setPriceRange] = useState("all");
+  const [sortBy, setSortBy] = useState("popular");
+  const [viewMode, setViewMode] = useState("grid");
+  const [pageState, setPageState] = useState(() => ({ routeKey, value: 1 }));
+  const currentPage = pageState.routeKey === routeKey ? pageState.value : 1;
+  const setCurrentPage = (value) => setPageState({
+    routeKey,
+    value: typeof value === "function" ? value(currentPage) : value,
+  });
+  const [showFilters, setShowFilters] = useState(false);
+  const [addedId, setAddedId] = useState("");
+  const itemsPerPage = 9;
 
-const Category = () => {
-  const navigate = useNavigate()
-  const location = useLocation()
-  const { categoryKey } = useParams()
-  const { formatCurrency } = useCurrency()
+  const categoryNames = useMemo(() => ["All Categories", ...CATEGORY_NAV.filter((item) => item.category !== "All Categories").map((item) => item.category)], []);
+  const slugCategory = categoryNames.find((name) => toSlug(name) === categoryKey);
+  const selectedCategory = slugCategory || (categoryNames.includes(location.state?.category) ? location.state.category : "All Categories");
 
-  const categories = useMemo(
-    () => ['All Categories', ...new Set(productsCatalog.map((p) => p.category))],
-    []
-  )
-
-  const categoryBySlug = useMemo(
-    () =>
-      categories.reduce((acc, categoryName) => {
-        acc[toSlug(categoryName)] = categoryName
-        return acc
-      }, {}),
-    [categories]
-  )
-
-  const requestedCategory =
-    categoryBySlug[categoryKey] || location?.state?.category
-  const requestedSearch = String(location?.state?.search || '').trim()
-  const initialCategory = categories.includes(requestedCategory) ? requestedCategory : 'All Categories'
-
-  const [selectedCategory, setSelectedCategory] = useState(initialCategory)
-  const [searchTerm, setSearchTerm] = useState(requestedSearch)
-  const [priceRange, setPriceRange] = useState('All Prices')
-  const [sortBy, setSortBy] = useState('Popularity')
-  const [viewMode, setViewMode] = useState('grid')
-  const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 12
-
-  const priceRanges = [
-    '$0 - $500',
-    '$500 - $1,000',
-    '$1,000 - $2,500',
-    '$2,500 - $5,000',
-    '$5,000 - $10,000',
-    'All Prices',
-  ]
-
-  const sortOptions = ['Popularity', 'Price: Low to High', 'Price: High to Low', 'Newest', 'Best Rating']
-
-  const categoryBannerMap = useMemo(() => {
-    const map = { 'All Categories': '/Images/comp.jpg' }
-    productsCatalog.forEach((product) => {
-      if (!map[product.category]) {
-        map[product.category] = product.image
-      }
-    })
-    return map
-  }, [])
+  const products = useMemo(() => {
+    const storeProducts = readProductArray("dashboardProducts")
+      .filter((product) => Number(product.stock ?? 1) > 0)
+      .map((product) => ({
+        ...product,
+        id: product.id || `dashboard-${product.name}`,
+        name: product.name || product.title || "New product",
+        image: product.image || product.images?.[0] || "/Images/lap.jpg",
+        price: Number(product.price || 0),
+        originalPrice: Number(product.oldPrice || product.originalPrice || product.price || 0),
+        category: categoryNames.includes(product.category) ? product.category : "Accessories",
+        rating: Number(product.rating || 5),
+        reviews: Number(product.reviews || 0),
+        sourceProductId: product.id,
+        sourceSection: product.sourceSection || "Store",
+      }));
+    const landingProducts = readProductArray("landingPostedProducts")
+      .filter((product) => Number(product.stock ?? 1) > 0)
+      .map((product) => ({
+        ...product,
+        id: product.id || `landing-${product.name}`,
+        name: product.name || product.title || "New product",
+        image: product.image || product.images?.[0] || "/Images/lap.jpg",
+        price: Number(product.price || 0),
+        originalPrice: Number(product.oldPrice || product.originalPrice || product.price || 0),
+        category: categoryNames.includes(product.category) ? product.category : "Accessories",
+        rating: Number(product.rating || 5),
+        reviews: Number(product.reviews || 0),
+        sourceProductId: product.id,
+        sourceSection: product.sourceSection || "Store",
+      }));
+    const storeIds = new Set(storeProducts.map((product) => String(product.id)));
+    const customProducts = [...storeProducts, ...landingProducts.filter((product) => !storeIds.has(String(product.id)))];
+    return [...customProducts, ...CATALOG];
+  }, [categoryNames]);
 
   const filteredProducts = useMemo(() => {
-    let filtered = [...productsCatalog]
-
-    if (selectedCategory !== 'All Categories') {
-      filtered = filtered.filter((p) => p.category === selectedCategory)
+    let results = products.filter((product) => selectedCategory === "All Categories" || product.category === selectedCategory);
+    const query = searchTerm.trim().toLowerCase();
+    if (query) results = results.filter((product) => `${product.name} ${product.category} ${product.brand || ""} ${product.description || ""}`.toLowerCase().includes(query));
+    if (priceRange !== "all") {
+      const [min, max] = priceRange.split("-").map(Number);
+      results = results.filter((product) => product.price >= min && product.price < max);
     }
+    return [...results].sort((a, b) => {
+      if (sortBy === "price-low") return a.price - b.price;
+      if (sortBy === "price-high") return b.price - a.price;
+      if (sortBy === "rating") return Number(b.rating || 0) - Number(a.rating || 0);
+      if (sortBy === "newest") return String(b.createdAt || "").localeCompare(String(a.createdAt || ""));
+      return Number(b.reviews || 0) - Number(a.reviews || 0);
+    });
+  }, [products, priceRange, searchTerm, selectedCategory, sortBy]);
 
-    const query = searchTerm.trim().toLowerCase()
-    if (query) {
-      filtered = filtered.filter(
-        (p) =>
-          p.name.toLowerCase().includes(query) ||
-          p.category.toLowerCase().includes(query)
-      )
-    }
+  const hero = HEROES[selectedCategory] || HEROES["All Categories"];
+  const totalPages = Math.max(1, Math.ceil(filteredProducts.length / itemsPerPage));
+  const page = Math.min(currentPage, totalPages);
+  const pageProducts = filteredProducts.slice((page - 1) * itemsPerPage, page * itemsPerPage);
 
-    const { min, max } = parsePriceRange(priceRange)
-    filtered = filtered.filter((p) => p.price >= min && p.price <= max)
+  const addProduct = (product) => {
+    addToCart({ ...product, sourceProductId: product.sourceProductId || product.id }, 1);
+    setAddedId(product.id);
+    window.setTimeout(() => setAddedId((current) => current === product.id ? "" : current), 1300);
+  };
 
-    switch (sortBy) {
-      case 'Price: Low to High':
-        filtered.sort((a, b) => a.price - b.price)
-        break
-      case 'Price: High to Low':
-        filtered.sort((a, b) => b.price - a.price)
-        break
-      case 'Newest':
-        filtered.sort((a, b) => b.id - a.id)
-        break
-      case 'Best Rating':
-        filtered.sort((a, b) => b.rating - a.rating)
-        break
-      case 'Popularity':
-      default:
-        filtered.sort((a, b) => b.reviews - a.reviews)
-    }
+  const clearFilters = () => {
+    setSearchTerm("");
+    setPriceRange("all");
+    setSortBy("popular");
+    setCurrentPage(1);
+  };
 
-    return filtered
-  }, [selectedCategory, searchTerm, priceRange, sortBy])
-
-  const bannerImage = location?.state?.image || categoryBannerMap[selectedCategory] || null
-
-  const totalPages = Math.max(1, Math.ceil(filteredProducts.length / itemsPerPage))
-  const safeCurrentPage = Math.min(currentPage, totalPages)
-  const startIdx = (safeCurrentPage - 1) * itemsPerPage
-  const paginatedProducts = filteredProducts.slice(startIdx, startIdx + itemsPerPage)
-
-  const startDisplay = filteredProducts.length === 0 ? 0 : startIdx + 1
-  const endDisplay = Math.min(startIdx + itemsPerPage, filteredProducts.length)
+  const firstResult = filteredProducts.length ? (page - 1) * itemsPerPage + 1 : 0;
+  const lastResult = Math.min(page * itemsPerPage, filteredProducts.length);
 
   return (
-    <div className="category-page">
-      {bannerImage && (
-        <div className="category-banner">
-          <img src={bannerImage} alt={selectedCategory} />
+    <main className="catalog-page">
+      <section className="catalog-hero container">
+        <div className="catalog-hero-copy">
+          <span className="catalog-eyebrow"><i /> {hero.eyebrow}</span>
+          <h1>{hero.title}</h1>
+          <p>{hero.description}</p>
+          <div className="catalog-hero-note"><Check size={16} /> Carefully selected. Ready for everyday.</div>
+          <a href="#catalog-products" className="catalog-hero-link">Explore {selectedCategory === "All Categories" ? "the collection" : selectedCategory.toLowerCase()} <ArrowRight size={17} /></a>
         </div>
-      )}
+        <div className="catalog-hero-image">
+          <img src={hero.image} alt={`${selectedCategory} collection`} fetchPriority="high" />
+          <span>{hero.accent}</span>
+        </div>
+      </section>
 
-      <div className="filters-section">
-        <div className="filters-container">
-          <div className="filter-group">
-            <label>Search</label>
-            <input
-              type="text"
-              value={searchTerm}
-              placeholder="Search products..."
-              onChange={(e) => {
-                setSearchTerm(e.target.value)
-                setCurrentPage(1)
-              }}
-            />
-          </div>
+      <section className="catalog-products container" id="catalog-products">
+        <div className="catalog-heading">
+          <div><span className="catalog-eyebrow">THE GOOD STUFF</span><h2>{selectedCategory === "All Categories" ? "Explore the collection" : selectedCategory}</h2><p>{selectedCategory === "All Categories" ? "Find something that fits the way you live." : `${hero.accent} Find the right fit for you.`}</p></div>
+          <span className="catalog-result-count">{filteredProducts.length} {filteredProducts.length === 1 ? "product" : "products"}</span>
+        </div>
 
-          <div className="filter-group">
-            <label>All Categories</label>
-            <select
-              value={selectedCategory}
-              onChange={(e) => {
-                setSelectedCategory(e.target.value)
-                setCurrentPage(1)
-              }}
-            >
-              {categories.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="filter-group">
-            <label>Price Range</label>
-            <select
-              value={priceRange}
-              onChange={(e) => {
-                setPriceRange(e.target.value)
-                setCurrentPage(1)
-              }}
-            >
-              {priceRanges.map((range) => (
-                <option key={range} value={range}>
-                  {range}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="filter-group">
-            <label>Sort By</label>
-            <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-              {sortOptions.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="results-info">
-            {selectedCategory} - Showing {startDisplay} - {endDisplay} of {filteredProducts.length} products
-          </div>
-
-          <div className="view-toggle">
-            <button
-              className={`toggle-btn ${viewMode === 'grid' ? 'active' : ''}`}
-              onClick={() => setViewMode('grid')}
-              title="Grid View"
-            >
-              <Grid3x3 size={20} />
-            </button>
-            <button
-              className={`toggle-btn ${viewMode === 'list' ? 'active' : ''}`}
-              onClick={() => setViewMode('list')}
-              title="List View"
-            >
-              <List size={20} />
-            </button>
+        <div className="catalog-toolbar">
+          <label className="catalog-search"><Search size={17} /><input type="search" value={searchTerm} placeholder="Search products, brands..." onChange={(event) => { setSearchTerm(event.target.value); setCurrentPage(1); }} />{searchTerm && <button type="button" aria-label="Clear search" onClick={() => setSearchTerm("")}><X size={15} /></button>}</label>
+          <button type="button" className={`catalog-filter-toggle ${showFilters ? "active" : ""}`} onClick={() => setShowFilters((value) => !value)}><SlidersHorizontal size={16} /> Filters</button>
+          <label className={`catalog-select-wrap ${showFilters ? "show" : ""}`}><span>Price</span><select value={priceRange} onChange={(event) => { setPriceRange(event.target.value); setCurrentPage(1); }}><option value="all">Any price</option><option value="0-100">$0 – $99</option><option value="100-500">$100 – $499</option><option value="500-1000">$500 – $999</option><option value="1000-2500">$1,000 – $2,499</option><option value="2500-100000">$2,500+</option></select></label>
+          <label className="catalog-select-wrap"><span>Sort</span><select value={sortBy} onChange={(event) => { setSortBy(event.target.value); setCurrentPage(1); }}><option value="popular">Most popular</option><option value="price-low">Price: low to high</option><option value="price-high">Price: high to low</option><option value="rating">Top rated</option><option value="newest">Newest</option></select></label>
+          <div className="catalog-view-toggle" aria-label="Product layout">
+            <button type="button" className={viewMode === "grid" ? "active" : ""} onClick={() => setViewMode("grid")} aria-label="Grid view"><Grid2X2 size={17} /></button>
+            <button type="button" className={viewMode === "list" ? "active" : ""} onClick={() => setViewMode("list")} aria-label="List view"><List size={18} /></button>
           </div>
         </div>
-      </div>
+        {(searchTerm || priceRange !== "all") && <div className="catalog-active-filters"><span>Showing {firstResult}–{lastResult} of {filteredProducts.length}</span><button type="button" onClick={clearFilters}>Clear filters <X size={13} /></button></div>}
 
-      <div className={`products-section ${viewMode}`}>
-        <div className={`products-grid ${viewMode}`}>
-          {paginatedProducts.map((product) => {
-            const discount =
-              product.originalPrice && product.originalPrice > product.price
-                ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
-                : 0
-
-            return (
-              <div
-                key={product.id}
-                className="product-card"
-                onClick={() => navigate('/product', { state: { product } })}
-                style={{ cursor: 'pointer' }}
-              >
-                {discount > 0 && <div className="discount-badge">{discount}%</div>}
-                <div className="product-image">
-                  <img src={product.image} alt={product.name} />
-                </div>
-                <div className="product-info">
-                  <div className="category-label">{product.category}</div>
-                  <h3 className="product-name">{product.name}</h3>
-                  <div className="rating">
-                    <div className="stars">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} size={14} className={i < product.rating ? 'filled' : ''} />
-                      ))}
-                    </div>
-                    <span className="review-count">({product.reviews})</span>
-                  </div>
-                  <div className="price-section">
-                    <span className="price">{formatCurrency(product.price)}</span>
-                    {product.originalPrice && (
-                      <span className="original-price">{formatCurrency(product.originalPrice)}</span>
-                    )}
-                  </div>
-                </div>
+        {pageProducts.length ? (
+          <div className={`catalog-grid ${viewMode}`}>
+            {pageProducts.map((product) => (
+              <div key={product.id} className="catalog-card-wrap">
+                <ProductCard
+                  product={product}
+                  formatCurrency={formatCurrency}
+                  onOpen={() => navigate("/product", { state: { product } })}
+                  onAdd={() => addProduct(product)}
+                  isSaved={isSaved(product.id)}
+                  onWishlist={() => toggleWishlist(product)}
+                />
+                {addedId === product.id && <span className="catalog-added-message" role="status">Added to cart <Check size={13} /></span>}
               </div>
-            )
-          })}
-        </div>
-        {paginatedProducts.length === 0 && (
-          <div className="empty-products">
-            <h3>No products found</h3>
-            <p>Try another category, price range, or sorting option.</p>
+            ))}
           </div>
-        )}
-      </div>
-
-      <div className="pagination">
-        <button
-          className="pagination-btn"
-          onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
-          disabled={safeCurrentPage === 1}
-        >
-          <ChevronLeft size={18} />
-        </button>
-
-        {[...Array(totalPages)].slice(0, 5).map((_, i) => {
-          const pageNum = i + 1
-          return (
-            <button
-              key={pageNum}
-              className={`pagination-btn ${safeCurrentPage === pageNum ? 'active' : ''}`}
-              onClick={() => setCurrentPage(pageNum)}
-            >
-              {pageNum}
-            </button>
-          )
-        })}
-
-        {totalPages > 5 && <span className="pagination-ellipsis">...</span>}
-
-        {totalPages > 5 && (
-          <button className="pagination-btn" onClick={() => setCurrentPage(totalPages)}>
-            {totalPages}
-          </button>
+        ) : (
+          <div className="catalog-empty"><div><Search size={22} /></div><h3>No matches this time</h3><p>Try a different search or clear the filters to see everything.</p><button type="button" onClick={clearFilters}>Clear filters</button></div>
         )}
 
-        <button
-          className="pagination-btn"
-          onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
-          disabled={safeCurrentPage === totalPages}
-        >
-          <ChevronRight size={18} />
-        </button>
-      </div>
-
+        {totalPages > 1 && <nav className="catalog-pagination" aria-label="Product pages"><button type="button" onClick={() => { setCurrentPage((value) => Math.max(1, value - 1)); document.getElementById("catalog-products")?.scrollIntoView({ behavior: "smooth" }); }} disabled={page === 1} aria-label="Previous page"><ChevronLeft size={18} /></button>{Array.from({ length: totalPages }, (_, index) => index + 1).map((item) => <button type="button" key={item} className={page === item ? "active" : ""} onClick={() => { setCurrentPage(item); document.getElementById("catalog-products")?.scrollIntoView({ behavior: "smooth" }); }}>{item}</button>)}<button type="button" onClick={() => { setCurrentPage((value) => Math.min(totalPages, value + 1)); document.getElementById("catalog-products")?.scrollIntoView({ behavior: "smooth" }); }} disabled={page === totalPages} aria-label="Next page"><ChevronRight size={18} /></button></nav>}
+      </section>
       <Footer />
-    </div>
-  )
+    </main>
+  );
 }
-
-export default Category

@@ -7,10 +7,7 @@ import {
   Heart,
   ShoppingCart,
   LogOut,
-  Home,
   Info,
-  LogIn,
-  UserPlus,
   Globe,
   Truck,
   Menu,
@@ -19,7 +16,7 @@ import {
 import { CartContext } from "../../CartContext";
 import { AuthContext } from "../../AuthContext";
 import { useCurrency } from "../../CurrencyContext";
-import { pushWebsiteNotification } from "../../utils/notifications";
+import { useWishlist } from "../../WishlistContext";
 
 const toSlug = (value = "") =>
   String(value)
@@ -37,6 +34,7 @@ const Header = () => {
   const { getTotalItems } = useContext(CartContext);
   const { user, logout } = useContext(AuthContext);
   const { currency, toggleCurrency } = useCurrency();
+  const { count: wishlistCount } = useWishlist();
   const cartCount = getTotalItems();
 
   const handleLogout = () => {
@@ -46,11 +44,8 @@ const Header = () => {
   };
 
   const handleWishlistClick = () => {
-    pushWebsiteNotification({
-      type: "like",
-      title: "Product Liked",
-      message: "A product was added to your wishlist from the website.",
-    });
+    setMobileOpen(false);
+    navigate("/wishlist");
   };
 
   const categoryNavItems = [
@@ -102,25 +97,9 @@ const Header = () => {
       <div className="header__top-bar">
         <p>
           <Truck size={14} />
-          <span>Free Shipping on Orders Over $50!</span>
+          <span>Tracked delivery on every order</span>
         </p>
         <div className="top-bar-links">
-          <Link to="/" onClick={() => setMobileOpen(false)}>
-            <Home size={14} />
-            <span>Home</span>
-          </Link>
-          <Link to="/category" onClick={() => setMobileOpen(false)}>
-            <Info size={14} />
-            <span>Shop</span>
-          </Link>
-          <Link to="/login" onClick={() => setMobileOpen(false)}>
-            <LogIn size={14} />
-            <span>Login</span>
-          </Link>
-          <Link to="/signup" onClick={() => setMobileOpen(false)}>
-            <UserPlus size={14} />
-            <span>Sign Up</span>
-          </Link>
           <button type="button" className="locale-chip" onClick={toggleCurrency}>
             <Globe size={14} />
             <span>{currency === "USD" ? "EN/USD" : "EN/RWF"}</span>
@@ -129,14 +108,14 @@ const Header = () => {
       </div>
 
       <div className="header__top">
-        <div className="header__logo">
+        <Link to="/" className="header__logo" onClick={() => setMobileOpen(false)} aria-label="Repa Kalisimbi home">
           <img
             src="/Images/REPA LOGO.png"
-            alt="Repa Technology Logo"
+            alt="Repa Kalisimbi Logo"
             style={{ width: "30px", height: "auto" }}
           />
-          <span className="brand">Repa Technology</span>
-        </div>
+          <span className="brand">Repa Kalisimbi</span>
+        </Link>
 
         <button
           type="button"
@@ -182,6 +161,7 @@ const Header = () => {
             onClick={handleWishlistClick}
           >
             <Heart size={20} />
+            {wishlistCount > 0 && <span className="badge wishlist-count">{wishlistCount}</span>}
           </button>
           <button type="button" className="cart" onClick={handleCartClick} aria-label="Cart">
             <ShoppingCart size={20} />
@@ -195,7 +175,7 @@ const Header = () => {
         </div>
       </div>
 
-      <nav className="header__nav">
+      <nav className="header__nav" aria-label="Shop by category">
         <ul>
           {categoryNavItems.map((item) => (
             <li key={item.label}>
@@ -226,22 +206,14 @@ const Header = () => {
         />
       )}
       <aside className={`header__mobile ${mobileOpen ? "open" : ""}`}>
+        <button type="button" className="header__mobile-close" aria-label="Close navigation menu" onClick={() => setMobileOpen(false)}>
+          <X size={18} />
+          <span>Close menu</span>
+        </button>
         <div className="mobile-top-links">
-          <Link to="/" onClick={() => setMobileOpen(false)}>
-            <Home size={14} />
-            <span>Home</span>
-          </Link>
-          <Link to="/category" onClick={() => setMobileOpen(false)}>
+          <Link to="/about" onClick={() => setMobileOpen(false)}>
             <Info size={14} />
-            <span>Shop</span>
-          </Link>
-          <Link to="/login" onClick={() => setMobileOpen(false)}>
-            <LogIn size={14} />
-            <span>Login</span>
-          </Link>
-          <Link to="/signup" onClick={() => setMobileOpen(false)}>
-            <UserPlus size={14} />
-            <span>Sign Up</span>
+            <span>About Repa</span>
           </Link>
         </div>
 
@@ -264,7 +236,8 @@ const Header = () => {
           </button>
         </div>
 
-        <div className="mobile-categories">
+        <nav className="mobile-categories" aria-label="Shop by category">
+          <span className="mobile-categories-title">Browse categories</span>
           {categoryNavItems.map((item) => (
             <button
               key={item.label}
@@ -281,7 +254,7 @@ const Header = () => {
               <span>{item.label}</span>
             </button>
           ))}
-        </div>
+        </nav>
       </aside>
     </header>
   );

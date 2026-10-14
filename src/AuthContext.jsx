@@ -18,7 +18,7 @@ const trySetStorage = (key, value) => {
 const readStoredUser = () => {
   if (typeof window === 'undefined') return null;
   try {
-    const savedUser = localStorage.getItem('user');
+    const savedUser = localStorage.getItem('user') || sessionStorage.getItem('user');
     return savedUser ? JSON.parse(savedUser) : null;
   } catch (e) {
     console.error('Failed to load user from localStorage:', e);
@@ -70,7 +70,7 @@ export const AuthProvider = ({ children }) => {
   const [loading] = useState(false);
   const isLoggedIn = Boolean(user);
 
-  const login = (email, password) => {
+  const login = (email, password, rememberMe = true) => {
     // Simple validation (in production, this would call a backend API)
     if (email && password) {
       const userData = {
@@ -79,7 +79,13 @@ export const AuthProvider = ({ children }) => {
         avatar: '',
         createdAt: new Date().toISOString(),
       };
-      trySetStorage('user', JSON.stringify(userData));
+      if (rememberMe) {
+        trySetStorage('user', JSON.stringify(userData));
+        sessionStorage.removeItem('user');
+      } else {
+        localStorage.removeItem('user');
+        sessionStorage.setItem('user', JSON.stringify(userData));
+      }
       ensureSettingsProfile(userData);
       setUser(userData);
       return true;

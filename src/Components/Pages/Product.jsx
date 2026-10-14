@@ -4,16 +4,20 @@ import { useLocation } from "react-router-dom";
 import { CartContext } from "../../CartContext";
 import { useCurrency } from "../../CurrencyContext";
 import { pushWebsiteNotification } from "../../utils/notifications";
+import { useWishlist } from "../../WishlistContext";
 import "../../Styles/Product.scss";
 import Footer from "../Layout/Footer";
 
 const ProductPage = () => {
   const { addToCart } = useContext(CartContext);
+  const { toggleWishlist, isSaved } = useWishlist();
   const { formatCurrency } = useCurrency();
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("specification");
   const [selectedColor, setSelectedColor] = useState("Off White");
   const [showCartMessage, setShowCartMessage] = useState(false);
+  const [activeImage, setActiveImage] = useState(0);
+  const [showImageZoom, setShowImageZoom] = useState(false);
   const location = useLocation();
 
   const defaultProduct = {
@@ -165,14 +169,18 @@ const ProductPage = () => {
     window.open(`https://wa.me/${supportNumber}?text=${encodeURIComponent(message)}`, "_blank");
   };
 
-  const handleLikeProduct = () => {
-    pushWebsiteNotification({
-      type: "like",
-      title: "Product Liked",
-      message: `${product.title} was liked on the website.`,
-      meta: { product: product.title },
-    });
-  };
+  const productIsSaved = isSaved(product.id || product.title);
+  const handleLikeProduct = () => toggleWishlist({
+    id: product.id || product.title,
+    name: product.title,
+    title: product.title,
+    price: product.price,
+    originalPrice: product.originalPrice,
+    image: product.images[0],
+    category: product.category,
+    rating: product.rating,
+    reviews: product.reviews,
+  });
 
   return (
     <div className="product-page">
@@ -190,14 +198,16 @@ const ProductPage = () => {
         <div className="product-content">
           <div className="product-gallery">
             <div className="main-image">
-              <img src={product.images[0]} alt={product.title} />
-              <button type="button" className="zoom-btn" aria-label="Zoom image">
+              <img src={product.images[activeImage] || product.images[0]} alt={product.title} />
+              <button type="button" className="zoom-btn" aria-label="Zoom image" onClick={() => setShowImageZoom(true)}>
                 +
               </button>
             </div>
             <div className="thumbnails">
               {product.images.map((img, idx) => (
-                <img key={idx} src={img} alt={`Product ${idx + 1}`} />
+                <button type="button" className={activeImage === idx ? "active" : ""} key={img} aria-label={`View product image ${idx + 1}`} onClick={() => setActiveImage(idx)}>
+                  <img src={img} alt="" />
+                </button>
               ))}
             </div>
           </div>
@@ -226,23 +236,23 @@ const ProductPage = () => {
             <div className="info-grid">
               <div className="info-item">
                 <label>Brand</label>
-                <value>{product.brand}</value>
+                <span>{product.brand}</span>
               </div>
               <div className="info-item">
                 <label>Size</label>
-                <value>{product.size}</value>
+                <span>{product.size}</span>
               </div>
               <div className="info-item">
                 <label>Weight</label>
-                <value>{product.weight}</value>
+                <span>{product.weight}</span>
               </div>
               <div className="info-item">
                 <label>Delivery</label>
-                <value>{product.delivery}</value>
+                <span>{product.delivery}</span>
               </div>
               <div className="info-item">
                 <label>Postal Code</label>
-                <value>{product.postalCode || "Not provided"}</value>
+                <span>{product.postalCode || "Not provided"}</span>
               </div>
               <div className="info-item">
                 <label>Variant</label>
@@ -301,10 +311,17 @@ const ProductPage = () => {
               <button type="button" className="btn-add-cart" onClick={handleAddToCart}>
                 Add To Cart
               </button>
-              <button type="button" className="btn-like" onClick={handleLikeProduct}>
-                <Heart size={18} />
+              <button type="button" className="btn-like" onClick={handleLikeProduct} aria-label={productIsSaved ? "Remove from wishlist" : "Add to wishlist"}>
+                <Heart size={18} fill={productIsSaved ? "currentColor" : "none"} />
               </button>
             </div>
+
+            {showImageZoom && (
+              <div className="product-image-zoom" role="dialog" aria-modal="true" aria-label={`${product.title} image`} onClick={() => setShowImageZoom(false)}>
+                <button type="button" aria-label="Close image preview" onClick={() => setShowImageZoom(false)}>×</button>
+                <img src={product.images[activeImage] || product.images[0]} alt={product.title} onClick={(event) => event.stopPropagation()} />
+              </div>
+            )}
 
             {showCartMessage && (
               <div className="cart-message">

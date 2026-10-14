@@ -4,8 +4,12 @@ import { useContext } from 'react'
 import { CartProvider } from './CartContext'
 import { CurrencyProvider } from './CurrencyContext'
 import { AuthProvider, AuthContext } from './AuthContext'
+import { WishlistProvider } from './WishlistContext'
 import Header from './Components/Layout/Header'
 import HomeHero from './Components/Pages/Landing'
+import AboutUs from './Components/Pages/AboutUs'
+import Wishlist from './Components/Pages/Wishlist'
+import Orders from './Components/Pages/Orders'
 import ProductPage from './Components/Pages/Product'
 import Category from './Components/Pages/Category'
 import Cart from './Components/Pages/Cart'
@@ -49,6 +53,9 @@ function AppRoutes() {
       {!hideHeader && <Header />}
       <Routes>
         <Route path="/" element={<HomeHero />} />
+        <Route path="/about" element={<AboutUs />} />
+        <Route path="/wishlist" element={<Wishlist />} />
+        <Route path="/orders" element={<Orders />} />
         <Route path="/product" element={<ProductPage />} />
         <Route
           path="/category"
@@ -103,9 +110,11 @@ function App() {
     <AuthProvider>
       <CartProvider>
         <CurrencyProvider>
-          <Router>
-            <AppRoutes />
-          </Router>
+          <WishlistProvider>
+            <Router>
+              <AppRoutes />
+            </Router>
+          </WishlistProvider>
         </CurrencyProvider>
       </CartProvider>
     </AuthProvider>

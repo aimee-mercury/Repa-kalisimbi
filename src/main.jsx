@@ -5,6 +5,7 @@ import './Styles/siteTheme.scss'
 import './Styles/responsive.scss'
 import './Styles/dashboardTheme.scss'
 import App from './App.jsx'
+import './Styles/redesign.scss'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

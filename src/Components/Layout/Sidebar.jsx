@@ -7,6 +7,8 @@ import {
   Bell,
   Settings,
   LogOut,
+  ChevronDown,
+  X,
 } from "lucide-react";
 import { AuthContext } from "../../AuthContext";
 import { getWebsiteUnreadCount } from "../../utils/notifications";
@@ -74,7 +76,7 @@ export default function Sidebar() {
         aria-label={mobileOpen ? "Close menu" : "Open menu"}
         onClick={() => setMobileOpen((prev) => !prev)}
       >
-        Menu
+        {mobileOpen ? <X size={18} /> : <span className="admin-mobile-menu-mark">≡</span>}
       </button>
 
       {mobileOpen && (
@@ -91,9 +93,9 @@ export default function Sidebar() {
           <img
             src="/Images/REPA LOGO.png"
             alt="Repa Technology Logo"
-            style={{ width: "30px", height: "auto" }}
+            style={{ width: "36px", height: "36px", objectFit: "contain" }}
           />
-          <span>Repa Technology</span>
+          <span>Repa <small>CONTROL ROOM</small></span>
         </div>
 
         <nav className="sidebar-menu">
@@ -108,15 +110,17 @@ export default function Sidebar() {
             type="button"
             className={`sidebar-item ${isProductsActive ? "active" : ""}`}
             onClick={() => setProductsOpen((v) => !v)}
+            aria-expanded={showProductsOpen}
+            aria-controls="dashboard-product-links"
           >
             <span className="icon">
               <Boxes size={18} />
             </span>
             <span className="label">Products</span>
-            <span className={`arrow ${showProductsOpen ? "open" : ""}`}>v</span>
+            <ChevronDown size={15} className={`arrow ${showProductsOpen ? "open" : ""}`} />
           </button>
 
-          <div className={`sidebar-submenu ${showProductsOpen ? "open" : ""}`}>
+          <div className={`sidebar-submenu ${showProductsOpen ? "open" : ""}`} id="dashboard-product-links">
             <SidebarSubItem
               label="New Product"
               active={location.pathname === "/dashboard/products/new"}

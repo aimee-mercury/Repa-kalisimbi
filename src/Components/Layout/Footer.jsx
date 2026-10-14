@@ -1,10 +1,29 @@
-import React from "react";
+import React, { useState } from "react";
+import { ArrowUpRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import "../../Styles/Footer.scss";
 
 const Footer = () => {
-  const openLiveChat = () => {
-    window.location.href = "mailto:support@example.com?subject=Live%20Chat%20Request";
+  const [email, setEmail] = useState("");
+  const [subscribed, setSubscribed] = useState(false);
+  const [subscribeError, setSubscribeError] = useState("");
+
+  const handleSubscribe = (event) => {
+    event.preventDefault();
+    const normalizedEmail = email.trim().toLowerCase();
+    try {
+      const savedSubscribers = JSON.parse(localStorage.getItem("newsletterSubscribers") || "[]");
+      const subscribers = Array.isArray(savedSubscribers) ? savedSubscribers : [];
+      if (!subscribers.includes(normalizedEmail)) {
+        localStorage.setItem("newsletterSubscribers", JSON.stringify([...subscribers, normalizedEmail]));
+      }
+      setSubscribed(true);
+      setSubscribeError("");
+    } catch (error) {
+      console.error("Unable to save newsletter subscription:", error);
+      setSubscribeError("We couldn’t save your email in this browser. Please try again.");
+    }
+    setEmail("");
   };
 
   return (
@@ -12,105 +31,61 @@ const Footer = () => {
       <div className="footer-newsletter">
         <div className="container footer-newsletter__inner">
           <div className="newsletter-text">
-            <h3>Sign Up for Newsletter</h3>
-            <p>Get exclusive deals, new arrivals, and weekly offers before everyone else.</p>
+            <span className="store-eyebrow">GOOD THINGS, OCCASIONALLY</span>
+            <h3>A little more good in your inbox.</h3>
+            <p>New arrivals, useful ideas, and offers worth opening.</p>
           </div>
-
-          <form className="newsletter-form" onSubmit={(e) => e.preventDefault()}>
-            <input type="email" placeholder="Enter your email address" aria-label="email" />
-            <button type="submit">Subscribe</button>
+          <form className="newsletter-form" onSubmit={handleSubscribe}>
+            <input type="email" placeholder="Your email address" aria-label="Email address" value={email} onChange={(event) => setEmail(event.target.value)} required />
+            <button type="submit">{subscribed ? "You’re on the list" : "Sign me up"} <ArrowUpRight size={16} /></button>
+            {subscribed && <span className="newsletter-success" role="status">Saved on this device. Thanks for joining!</span>}
+            {subscribeError && <span className="newsletter-success" role="alert">{subscribeError}</span>}
           </form>
         </div>
       </div>
 
       <div className="footer-main container">
         <div className="footer-brand">
-          <div className="footer__logo">
-            <span className="brand">Repa Technology</span>
-          </div>
-          <p>
-            Shop with confidence at Repa Technology. We combine verified quality, fair prices,
-            and fast support to make every order simple and secure.
-          </p>
-          <p>
-            Trusted by customers for quick delivery, genuine products, and reliable after-sales
-            service.
-          </p>
-          <div className="socials">
-            <a href="#" aria-label="facebook" className="social-link">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                <path d="M22 12.07C22 6.48 17.52 2 11.93 2 6.34 2 2 6.48 2 12.07c0 5.02 3.66 9.18 8.44 9.93v-7.03H8.9v-2.9h1.54V9.41c0-1.52.9-2.37 2.29-2.37.66 0 1.35.12 1.35.12v1.49h-.76c-.75 0-.98.47-.98.95v1.14h1.67l-.27 2.9h-1.4v7.03C18.34 21.25 22 17.09 22 12.07z" />
-              </svg>
-            </a>
-            <a href="#" aria-label="twitter" className="social-link">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                <path d="M22 5.92c-.63.28-1.3.48-2 .57.72-.43 1.27-1.1 1.53-1.9-.68.4-1.44.7-2.25.86C18.9 4.6 17.85 4 16.67 4c-1.66 0-3 1.34-3 3 0 .24.03.48.08.71C10.03 7.57 6.13 5.5 3.2 2.36c-.27.47-.43 1.02-.43 1.6 0 1.1.56 2.07 1.4 2.64-.52-.02-1.02-.16-1.45-.4v.04c0 1.54 1.09 2.82 2.54 3.11-.27.07-.55.11-.84.11-.21 0-.41-.02-.6-.06.41 1.28 1.6 2.21 3.02 2.24-1.11.86-2.5 1.37-4.01 1.37-.26 0-.52-.01-.77-.04 1.43.92 3.12 1.46 4.94 1.46 5.93 0 9.18-4.91 9.18-9.17v-.42c.63-.45 1.17-1.02 1.6-1.66-.58.26-1.2.44-1.85.52z" />
-              </svg>
-            </a>
-            <a href="#" aria-label="instagram" className="social-link">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M12 8.5a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M17.5 6.5h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </a>
-            <a href="#" aria-label="linkedin" className="social-link">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                <path d="M20 3H4c-.6 0-1 .4-1 1v16c0 .6.4 1 1 1h16c.6 0 1-.4 1-1V4c0-.6-.4-1-1-1zM8.5 18H6v-7h2.5v7zM7.25 9.75a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5zM18 18h-2.5v-3.5c0-.94-.6-1.5-1.4-1.5-.76 0-1.4.52-1.4 1.5V18H10V11h2.4v1.05c.36-.6 1.08-1.05 1.98-1.05 1.7 0 2.62 1.12 2.62 3.02V18z" />
-              </svg>
-            </a>
-          </div>
+          <Link className="footer__logo" to="/">
+            <img src="/Images/REPA LOGO.png" alt="" />
+            <span className="brand">Repa Kalisimbi</span>
+          </Link>
+          <p>Thoughtful technology for everyday life. Carefully selected, priced fairly, and backed by real support.</p>
+          <a className="footer-whatsapp-link" href="https://wa.me/250732659689" target="_blank" rel="noreferrer">Message us on WhatsApp <ArrowUpRight size={15} /></a>
         </div>
 
         <div className="footer-columns">
           <div className="col">
-            <h5>Quick Links</h5>
+            <h5>Explore</h5>
             <ul>
-              <li><Link to="/">About Us</Link></li>
-              <li><a href="mailto:support@example.com">Contact</a></li>
-              <li><Link to="/category">Products</Link></li>
-              <li><Link to="/login">Login</Link></li>
+              <li><Link to="/category">Shop all</Link></li>
+              <li><Link to="/category/laptops" state={{ category: "Laptops" }}>Laptops</Link></li>
+              <li><Link to="/category/smartphones" state={{ category: "Smartphones" }}>Smartphones</Link></li>
+              <li><Link to="/about">About Repa</Link></li>
             </ul>
           </div>
-
           <div className="col">
-            <h5>Customer Area</h5>
+            <h5>Your account</h5>
             <ul>
-              <li><Link to="/profile">My Account</Link></li>
-              <li><Link to="/cart">Orders</Link></li>
-              <li><Link to="/dashboard/history">Tracking ID</Link></li>
-              <li><Link to="/">Privacy Policy</Link></li>
+              <li><Link to="/profile">My account</Link></li>
+              <li><Link to="/wishlist">Saved items</Link></li>
+              <li><Link to="/orders">Order history</Link></li>
+              <li><Link to="/cart">Shopping cart</Link></li>
+              <li><Link to="/login">Sign in</Link></li>
             </ul>
           </div>
-
           <div className="col col-contact">
-            <h5>Contact</h5>
-            <p>Need help now? Our team is ready to assist with orders and product choices.</p>
-            <p>
-              Call us: <a href="tel:+1234567890">+1 234 567 890</a>
-            </p>
-            <p>
-              Email: <a href="mailto:support@example.com">support@example.com</a>
-            </p>
-            <button type="button" className="live-chat" onClick={openLiveChat}>
-              Live Chat
-            </button>
-            <div className="app-badges">
-              <a href="#" className="appstore">App Store</a>
-              <a href="#" className="playstore">Google Play</a>
-            </div>
+            <h5>We&apos;re here to help</h5>
+            <p>Questions about a product or order? Talk to our team.</p>
+            <p><a href="tel:+250732659689">+250 732 659 689</a></p>
+            <a className="live-chat" href="https://wa.me/250732659689" target="_blank" rel="noreferrer">Chat with us <ArrowUpRight size={15} /></a>
           </div>
         </div>
       </div>
-
       <div className="footer-bottom">
         <div className="container footer-bottom__inner">
-          <p>Copyright (c) {new Date().getFullYear()} Repa Technology. All rights reserved.</p>
-          <div className="footer-bottom-links">
-            <Link to="/">Terms</Link>
-            <Link to="/">Privacy</Link>
-            <Link to="/">Support</Link>
-          </div>
+          <p>© {new Date().getFullYear()} Repa Kalisimbi. Made for everyday.</p>
+          <div className="footer-bottom-links"><Link to="/about">About us</Link><Link to="/profile">Account</Link><a href="https://wa.me/250732659689" target="_blank" rel="noreferrer">Support</a></div>
         </div>
       </div>
     </footer>

@@ -1,10 +1,12 @@
 import React, { useContext, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { AuthContext } from '../../AuthContext'
 import '../../Styles/Profile.scss'
 import Footer from '../Layout/Footer'
 
 const Profile = () => {
-  const { user, updateUserProfile } = useContext(AuthContext)
+  const { user, updateUserProfile, logout } = useContext(AuthContext)
+  const navigate = useNavigate()
   const saved = typeof window !== 'undefined' && localStorage.getItem('settingsProfile')
   const parsed = saved ? JSON.parse(saved) : {}
   const [fallbackFirstName = 'User', fallbackLastName = ''] = String(user?.name || 'User').split(' ')
@@ -64,22 +66,21 @@ const Profile = () => {
           <p className="email">{profile.email}</p>
 
           <ul className="sidebar-links">
-            <li>Orders</li>
-            <li>Wallet</li>
-            <li>Cart</li>
-            <li>Address</li>
-            <li className="active">Account Details</li>
-            <li>Log Out</li>
+            <li><Link to="/orders">Orders</Link></li>
+            <li><Link to="/wishlist">Saved items</Link></li>
+            <li><Link to="/cart">Cart</Link></li>
+            <li className="active"><a href="#account-details">Account Details</a></li>
+            <li><button type="button" onClick={() => { logout(); navigate('/') }}>Log Out</button></li>
           </ul>
         </aside>
 
         <main className="profile-main">
           <div className="cards-row">
-            <div className="card">Order Tracking<br/><small>See your order history.</small></div>
-            <div className="card">Billing Address<br/><small>Set your billing address.</small></div>
+            <Link to="/orders" className="card">Order Tracking<br/><small>See your order history.</small></Link>
+            <Link to="/cart" className="card">Shopping Cart<br/><small>Review items in your cart.</small></Link>
           </div>
 
-          <section className="account-details">
+          <section className="account-details" id="account-details">
             <h2>Account Details</h2>
             <form onSubmit={handleSave} className="profile-form">
               <div className="form-row">

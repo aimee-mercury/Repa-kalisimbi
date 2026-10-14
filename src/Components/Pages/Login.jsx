@@ -9,6 +9,7 @@ const Login = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
   const location = useLocation();
@@ -20,7 +21,7 @@ const Login = () => {
     setLoading(true);
 
     setTimeout(() => {
-      if (login(email, password)) {
+      if (login(email, password, rememberMe)) {
         navigate(from, { replace: true });
       } else {
         setError("Please enter both email and password");
@@ -57,15 +58,13 @@ const Login = () => {
             <div className="form-group">
               <div className="password-wrapper">
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   placeholder="Enter password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
-                <span className="password-toggle" aria-hidden="true">
-                  Show
-                </span>
+                <button type="button" className="password-toggle" aria-label={showPassword ? "Hide password" : "Show password"} onClick={() => setShowPassword((visible) => !visible)}>{showPassword ? "Hide" : "Show"}</button>
               </div>
             </div>
 
@@ -78,8 +77,8 @@ const Login = () => {
                 />
                 <span>Remember me</span>
               </label>
-              <a href="#" className="forgot-password">
-                Forgot password?
+              <a href="https://wa.me/250732659689?text=Hello%2C%20I%20need%20help%20accessing%20my%20account." target="_blank" rel="noreferrer" className="forgot-password">
+                Need help signing in?
               </a>
             </div>
 

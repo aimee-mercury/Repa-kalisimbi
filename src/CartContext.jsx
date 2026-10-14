@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react'
 import { pushWebsiteNotification } from './utils/notifications'
+import { addOrder } from './utils/orders'
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const CartContext = createContext()
@@ -111,15 +112,30 @@ export const CartProvider = ({ children }) => {
 
       localStorage.setItem(DASHBOARD_PRODUCTS_KEY, JSON.stringify(nextDashboardProducts))
       localStorage.setItem(LANDING_PRODUCTS_KEY, JSON.stringify(nextLandingProducts))
+
+      const snapshot = cartItems.map((item) => ({ ...item }))
+      const total = snapshot.reduce((sum, item) => sum + Number(item.price || 0) * Number(item.quantity || 0), 0)
+      const order = addOrder({
+        id: `ORD-${Date.now().toString().slice(-6)}`,
+        createdAt: new Date().toISOString(),
+        items: snapshot,
+        itemCount: snapshot.reduce((sum, item) => sum + Number(item.quantity || 0), 0),
+        total,
+        status: 'Processing',
+        customer: JSON.parse(localStorage.getItem('user') || 'null')?.name || 'Guest',
+        email: JSON.parse(localStorage.getItem('user') || 'null')?.email || '',
+      })
+
       setCartItems([])
 
       pushWebsiteNotification({
         type: 'order',
         title: 'Order Completed',
-        message: `${cartItems.length} cart item(s) were checked out and stock was updated.`,
+        message: `${order.id} placed with ${snapshot.length} item(s). Stock was updated.`,
+        meta: { orderId: order.id, total },
       })
 
-      return true
+      return order
     } catch {
       return false
     }

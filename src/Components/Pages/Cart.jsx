@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Trash2, Plus, Minus, ShoppingCart, Headset, ShieldCheck, Truck } from 'lucide-react'
 import { CartContext } from '../../CartContext'
@@ -10,6 +10,7 @@ const Cart = () => {
   const navigate = useNavigate()
   const { cartItems, removeFromCart, updateQuantity, getTotalPrice, checkout } = useContext(CartContext)
   const { formatCurrency } = useCurrency()
+  const [checkoutError, setCheckoutError] = useState('')
 
   const handleContinueShopping = () => {
     navigate('/category')
@@ -18,7 +19,9 @@ const Cart = () => {
   const handleCheckout = () => {
     const didCheckout = checkout()
     if (didCheckout) {
-      navigate('/')
+      navigate('/orders')
+    } else {
+      setCheckoutError('We could not place your order. Please try again or contact our support team.')
     }
   }
 
@@ -141,6 +144,7 @@ const Cart = () => {
               </div>
 
               <button className="btn-checkout" onClick={handleCheckout}>Proceed to Checkout</button>
+              {checkoutError && <p className="checkout-error" role="alert">{checkoutError}</p>}
               <button className="btn-continue-shopping" onClick={handleContinueShopping}>
                 Continue Shopping
               </button>

@@ -11,6 +11,8 @@ const SignUp = () => {
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
   const { signup } = useContext(AuthContext);
 
@@ -78,30 +80,26 @@ const SignUp = () => {
             <div className="form-group">
               <div className="password-wrapper">
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   placeholder="Enter password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
-                <span className="password-toggle" aria-hidden="true">
-                  Show
-                </span>
+                <button type="button" className="password-toggle" aria-label={showPassword ? "Hide password" : "Show password"} onClick={() => setShowPassword((visible) => !visible)}>{showPassword ? "Hide" : "Show"}</button>
               </div>
             </div>
 
             <div className="form-group">
               <div className="password-wrapper">
                 <input
-                  type="password"
+                  type={showConfirmPassword ? "text" : "password"}
                   placeholder="Confirm password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
                 />
-                <span className="password-toggle" aria-hidden="true">
-                  Show
-                </span>
+                <button type="button" className="password-toggle" aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"} onClick={() => setShowConfirmPassword((visible) => !visible)}>{showConfirmPassword ? "Hide" : "Show"}</button>
               </div>
             </div>
 
@@ -112,8 +110,8 @@ const SignUp = () => {
                 onChange={(e) => setAcceptTerms(e.target.checked)}
               />
               <span>
-                I accept the <a href="#" className="link">Terms of Service</a> and{" "}
-                <a href="#" className="link">Privacy Policy</a>
+                I accept the <a href="/about#terms" className="link">Terms of Service</a> and{" "}
+                <a href="/about#privacy" className="link">Privacy Policy</a>
               </span>
             </label>
 
