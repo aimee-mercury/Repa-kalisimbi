@@ -1571,14 +1571,16 @@ select:focus-visible {
 }
 
 .dashboard-shell .sidebar-logo {
+  display: flex;
   gap: 10px;
   margin: 0 0 28px;
   padding: 0 7px 19px;
   border-bottom: 1px solid #e8e9e1;
   color: #273b2e;
-  font-size: 16px;
+  font-size: 13px;
   font-weight: 850;
   letter-spacing: -.035em;
+  text-decoration: none;
 }
 
 .dashboard-shell .sidebar-logo img {
@@ -3586,4 +3588,347 @@ body.dashboard-dark .dashboard-shell .product-report-page .close-card {
     width: 33px;
     height: 34px;
   }
+}
+
+body.dashboard-dark {
+  color-scheme: dark;
+  background: #111713;
+  color: #e8eee7;
+}
+
+body.dashboard-dark .dashboard-shell,
+body.dashboard-dark .dashboard-shell .dashboard-main,
+body.dashboard-dark .dashboard-main .admin-overview {
+  background: #141a16;
+  color: #e8eee7;
+}
+
+body.dashboard-dark .dashboard-shell .sidebar {
+  border-color: #313b33;
+  background: #1b231d;
+  box-shadow: 5px 0 22px rgba(0, 0, 0, .18);
+}
+
+body.dashboard-dark .dashboard-shell .sidebar-logo,
+body.dashboard-dark .dashboard-shell .sidebar-user strong {
+  color: #edf2e9 !important;
+}
+
+body.dashboard-dark .dashboard-shell .sidebar-logo {
+  border-color: #354037;
+}
+
+body.dashboard-dark .dashboard-shell .sidebar-logo small,
+body.dashboard-dark .dashboard-shell .sidebar-user span,
+body.dashboard-dark .dashboard-shell .sidebar-item,
+body.dashboard-dark .dashboard-shell .sidebar-subitem {
+  color: #b6c1b5 !important;
+}
+
+body.dashboard-dark .dashboard-shell .sidebar-item:hover,
+body.dashboard-dark .dashboard-shell .sidebar-subitem:hover {
+  background: #263128;
+}
+
+body.dashboard-dark .dashboard-shell .sidebar-item.active,
+body.dashboard-dark .dashboard-shell .sidebar-subitem.active {
+  background: #2c3b2d;
+  color: #e6f0dd !important;
+}
+
+body.dashboard-dark .dashboard-shell .sidebar-user,
+body.dashboard-dark .dashboard-shell .sidebar-submenu {
+  border-color: #354037;
+}
+
+body.dashboard-dark .dashboard-shell .sidebar-user .avatar-placeholder {
+  border-color: #3a493a;
+  background: #344434;
+  color: #e3efdc;
+}
+
+body.dashboard-dark .dashboard-shell .dashboard-header,
+body.dashboard-dark .dashboard-shell .admin-metric-card,
+body.dashboard-dark .dashboard-shell .admin-panel,
+body.dashboard-dark .dashboard-shell .admin-order-row,
+body.dashboard-dark .dashboard-shell .admin-stock-list > div,
+body.dashboard-dark .dashboard-shell .new-product-page .products-toolbar,
+body.dashboard-dark .dashboard-shell .new-product-page .home-posts-section,
+body.dashboard-dark .dashboard-shell .new-product-page .product-row,
+body.dashboard-dark .dashboard-shell .add-product-page .add-card,
+body.dashboard-dark .dashboard-shell .draft-products-page .draft-card,
+body.dashboard-dark .dashboard-shell .draft-products-page .draft-empty-state,
+body.dashboard-dark .dashboard-shell .notifications-group,
+body.dashboard-dark .dashboard-shell .notification-card,
+body.dashboard-dark .dashboard-shell .settings-card,
+body.dashboard-dark .dashboard-shell .settings-modal,
+body.dashboard-dark .dashboard-shell .category-modal,
+body.dashboard-dark .dashboard-shell .product-editor-grid input,
+body.dashboard-dark .dashboard-shell .product-editor-grid textarea,
+body.dashboard-dark .dashboard-shell .product-editor-grid select,
+body.dashboard-dark .dashboard-shell .product-report-page .summary-card,
+body.dashboard-dark .dashboard-shell .product-report-page .close-panel,
+body.dashboard-dark .dashboard-shell .product-report-page .close-card,
+body.dashboard-dark .dashboard-shell .product-report-page .panel,
+body.dashboard-dark .dashboard-shell .product-editor-modal,
+body.dashboard-dark .dashboard-shell .image-editor-modal {
+  border-color: #364138;
+  background: #202922;
+  color: #e8eee7;
+  box-shadow: 0 5px 18px rgba(0, 0, 0, .12);
+}
+
+body.dashboard-dark .dashboard-shell .admin-page-heading h1,
+body.dashboard-dark .dashboard-shell .admin-panel-heading h2,
+body.dashboard-dark .dashboard-shell .admin-metric-card > div > strong,
+body.dashboard-dark .dashboard-shell .admin-order-name strong,
+body.dashboard-dark .dashboard-shell .admin-order-total,
+body.dashboard-dark .dashboard-shell .admin-stock-list strong,
+body.dashboard-dark .dashboard-shell .admin-shortcuts strong,
+body.dashboard-dark .dashboard-shell .new-product-page .product-info h2,
+body.dashboard-dark .dashboard-shell .new-product-page .product-right .price-line strong,
+body.dashboard-dark .dashboard-shell .settings-card .info-item strong,
+body.dashboard-dark .dashboard-shell .profile-info h2,
+body.dashboard-dark .dashboard-shell .profile-info .name,
+body.dashboard-dark .dashboard-shell .notification-title,
+body.dashboard-dark .dashboard-shell .draft-card h2,
+body.dashboard-dark .dashboard-shell .report-table th,
+body.dashboard-dark .dashboard-shell .summary-card strong,
+body.dashboard-dark .dashboard-shell .close-card h4 {
+  color: #edf2e9 !important;
+}
+
+body.dashboard-dark .dashboard-shell .admin-page-heading p,
+body.dashboard-dark .dashboard-shell .admin-panel-heading p,
+body.dashboard-dark .dashboard-shell .admin-metric-card > div > span,
+body.dashboard-dark .dashboard-shell .admin-metric-card > div > small,
+body.dashboard-dark .dashboard-shell .admin-order-name small,
+body.dashboard-dark .dashboard-shell .admin-stock-list small,
+body.dashboard-dark .dashboard-shell .admin-shortcuts small,
+body.dashboard-dark .dashboard-shell .admin-chart-day small,
+body.dashboard-dark .dashboard-shell .admin-empty-state > span,
+body.dashboard-dark .dashboard-shell .new-product-page p,
+body.dashboard-dark .dashboard-shell .new-product-page .meta-line,
+body.dashboard-dark .dashboard-shell .new-product-page .icons-line,
+body.dashboard-dark .dashboard-shell .draft-products-page p,
+body.dashboard-dark .dashboard-shell .notifications-subtitle,
+body.dashboard-dark .dashboard-shell .notification-message,
+body.dashboard-dark .dashboard-shell .settings-page p,
+body.dashboard-dark .dashboard-shell .settings-card .info-item span,
+body.dashboard-dark .dashboard-shell .report-head p,
+body.dashboard-dark .dashboard-shell .summary-card span,
+body.dashboard-dark .dashboard-shell .close-card p,
+body.dashboard-dark .dashboard-shell .report-table td {
+  color: #b8c3b7 !important;
+}
+
+body.dashboard-dark .dashboard-shell .admin-eyebrow {
+  color: #bbcaa8 !important;
+}
+
+body.dashboard-dark .dashboard-shell .admin-inline-link,
+body.dashboard-dark .dashboard-shell .admin-empty-state a {
+  color: #c7d9b4 !important;
+}
+
+body.dashboard-dark .dashboard-shell .shortcut-icon,
+body.dashboard-dark .dashboard-shell .admin-order-avatar,
+body.dashboard-dark .dashboard-shell .admin-metric-icon,
+body.dashboard-dark .dashboard-shell .notification-icon {
+  border-color: #465644;
+  background: #344333;
+  color: #d8e8c9 !important;
+}
+
+body.dashboard-dark .dashboard-shell .admin-chart {
+  border-color: #465146;
+  background: repeating-linear-gradient(to bottom, transparent 0, transparent 37px, #344037 38px, transparent 39px);
+}
+
+body.dashboard-dark .dashboard-shell .admin-shortcuts > a,
+body.dashboard-dark .dashboard-shell .admin-order-row,
+body.dashboard-dark .dashboard-shell .admin-stock-list > div,
+body.dashboard-dark .dashboard-shell .settings-card-head,
+body.dashboard-dark .dashboard-shell .sidebar-logo {
+  border-color: #364138;
+}
+
+body.dashboard-dark .dashboard-shell .admin-welcome-callout {
+  border-color: #43523d;
+  background: #293629;
+}
+
+body.dashboard-dark .dashboard-shell .admin-welcome-callout > span {
+  background: #3a4b36;
+  color: #d8e8c9 !important;
+}
+
+body.dashboard-dark .dashboard-shell .admin-welcome-callout p {
+  color: #c1cdbd !important;
+}
+
+body.dashboard-dark .dashboard-shell .admin-welcome-callout > a {
+  color: #d3e4c2 !important;
+}
+
+body.dashboard-dark .dashboard-shell input:not([type="checkbox"]):not([type="radio"]),
+body.dashboard-dark .dashboard-shell select,
+body.dashboard-dark .dashboard-shell textarea,
+body.dashboard-dark .dashboard-shell .field-input,
+body.dashboard-dark .dashboard-shell .field-textarea,
+body.dashboard-dark .dashboard-shell .modal-grid input,
+body.dashboard-dark .dashboard-shell .modal-grid select {
+  border-color: #4a584b;
+  background: #18211a;
+  color: #edf2e9 !important;
+  color-scheme: dark;
+}
+
+body.dashboard-dark .dashboard-shell input::placeholder,
+body.dashboard-dark .dashboard-shell textarea::placeholder {
+  color: #a3b0a2 !important;
+  opacity: 1;
+}
+
+body.dashboard-dark .dashboard-shell input:focus,
+body.dashboard-dark .dashboard-shell select:focus,
+body.dashboard-dark .dashboard-shell textarea:focus {
+  border-color: #a0bb80;
+  outline: 3px solid rgba(160, 187, 128, .28);
+  outline-offset: 1px;
+}
+
+body.dashboard-dark .dashboard-shell .report-table th,
+body.dashboard-dark .dashboard-shell .report-table td {
+  border-color: #39453b;
+  background: #202922;
+}
+
+body.dashboard-dark .dashboard-shell .report-table th {
+  background: #29352b;
+}
+
+body.dashboard-dark .dashboard-shell .report-table tr:nth-child(even) td,
+body.dashboard-dark .dashboard-shell .orders-table .row {
+  background: #1a231c;
+}
+
+body.dashboard-dark .dashboard-shell .report-table-scroll,
+body.dashboard-dark .dashboard-shell .new-product-page .product-row,
+body.dashboard-dark .dashboard-shell .new-product-page .products-toolbar {
+  scrollbar-color: #52604f #1a231c;
+}
+
+body.dashboard-dark .dashboard-shell .field-label,
+body.dashboard-dark .dashboard-shell .add-product-page .field-label,
+body.dashboard-dark .dashboard-shell .add-product-page .radio-row label,
+body.dashboard-dark .dashboard-shell .add-product-page .chip,
+body.dashboard-dark .dashboard-shell .settings-modal label,
+body.dashboard-dark .dashboard-shell .product-editor-grid label,
+body.dashboard-dark .dashboard-shell .product-editor-grid span,
+body.dashboard-dark .dashboard-shell .product-editor-head h2,
+body.dashboard-dark .dashboard-shell .image-editor-head h2,
+body.dashboard-dark .dashboard-shell .modal-grid span {
+  color: #c1ccbd !important;
+}
+
+body.dashboard-dark .dashboard-shell .draft-btn,
+body.dashboard-dark .dashboard-shell .ghost-btn,
+body.dashboard-dark .dashboard-shell .notifications-mark-btn:disabled,
+body.dashboard-dark .dashboard-shell .export-actions button,
+body.dashboard-dark .dashboard-shell .new-product-page .pagination button,
+body.dashboard-dark .dashboard-shell .new-product-page .wish-btn,
+body.dashboard-dark .dashboard-shell .add-product-page .post-product-nav button {
+  border-color: #48554a;
+  background: #29352b;
+  color: #e2eadc !important;
+}
+
+body.dashboard-dark .dashboard-shell .admin-primary-button,
+body.dashboard-dark .dashboard-shell .add-product-page .publish-btn,
+body.dashboard-dark .dashboard-shell .add-product-page .category-btn,
+body.dashboard-dark .dashboard-shell .add-product-page .save-category-btn,
+body.dashboard-dark .dashboard-shell .draft-products-page .new-draft-btn,
+body.dashboard-dark .dashboard-shell .draft-products-page .open-draft-btn,
+body.dashboard-dark .dashboard-shell .new-product-page .publish-btn,
+body.dashboard-dark .dashboard-shell .new-product-page .add-to-home-btn,
+body.dashboard-dark .dashboard-shell .settings-page .save-btn,
+body.dashboard-dark .dashboard-shell .notifications-mark-btn:not(:disabled),
+body.dashboard-dark .dashboard-shell .export-actions button.primary {
+  border-color: #708962;
+  background: #617d51;
+  color: #fff !important;
+}
+
+body.dashboard-dark .dashboard-shell .meta-action-btn.theme-toggle {
+  border-color: #718565;
+  background: #d8e5cb;
+  color: #263a2c !important;
+}
+
+body.dashboard-dark .dashboard-shell .meta-action-btn.theme-toggle svg {
+  color: #263a2c !important;
+}
+
+body.dashboard-dark .dashboard-shell .meta-action-btn.theme-toggle:hover {
+  background: #edf4e6;
+}
+
+body.dashboard-dark .dashboard-shell .dashboard-header .header-kicker,
+body.dashboard-dark .dashboard-shell .dashboard-header .header-left h2,
+body.dashboard-dark .dashboard-shell .dashboard-header .header-left p,
+body.dashboard-dark .dashboard-shell .dashboard-header .meta-chip,
+body.dashboard-dark .dashboard-shell .dashboard-header .user-info strong,
+body.dashboard-dark .dashboard-shell .dashboard-header .user-info span {
+  color: #edf2e9 !important;
+}
+
+body.dashboard-dark .dashboard-shell .dashboard-header .header-kicker {
+  color: #c5d4b7 !important;
+}
+
+body.dashboard-dark .dashboard-shell .dashboard-header .meta-chip {
+  border-color: #3d4a3e;
+  background: #29342b;
+}
+
+body.dashboard-dark .dashboard-shell .dashboard-header .meta-chip.active {
+  border-color: #536c4d;
+  background: #30402f;
+  color: #d7e8ca !important;
+}
+
+body.dashboard-dark .dashboard-shell .dashboard-header .user-info {
+  border-color: #3b473c;
+  background: #1b241d;
+}
+
+body.dashboard-dark .dashboard-shell .dashboard-header .user-info .avatar-placeholder {
+  border-color: #4a5c49;
+  background: #354535;
+  color: #e7f0de !important;
+}
+
+body.dashboard-dark .dashboard-shell .sidebar-toggle {
+  border-color: #465246;
+  background: #202922;
+  color: #e8eee7 !important;
+}
+
+body.dashboard-dark .dashboard-shell .status.pending {
+  border-color: #94773c;
+  background: #493b20 !important;
+  color: #f2dfa8 !important;
+}
+
+body.dashboard-dark .dashboard-shell .status.followup {
+  border-color: #7471a8;
+  background: #33334d !important;
+  color: #d6d4fb !important;
+}
+
+body.dashboard-dark .dashboard-shell .status.processing {
+  border-color: #547d54;
+  background: #2d472f !important;
+  color: #d6ecd1 !important;
 }

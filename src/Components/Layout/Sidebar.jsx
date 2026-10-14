@@ -1,6 +1,6 @@
 "use client";
 import React, { useContext, useEffect, useMemo, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
   Boxes,
@@ -89,14 +89,14 @@ export default function Sidebar() {
       )}
 
       <aside className={`sidebar ${mobileOpen ? "open" : ""}`}>
-        <div className="sidebar-logo">
+        <Link to="/dashboard" className="sidebar-logo" onClick={() => setMobileOpen(false)}>
           <img
-            src="/Images/REPA LOGO.png"
-            alt="Repa Technology Logo"
+            src="/Images/REPA MARK TRANSPARENT.png"
+            alt="Repa Karisimbi Logo"
             style={{ width: "36px", height: "36px", objectFit: "contain" }}
           />
-          <span>Repa <small>CONTROL ROOM</small></span>
-        </div>
+          <span>Repa Karisimbi <small>CONTROL ROOM</small></span>
+        </Link>
 
         <nav className="sidebar-menu">
           <SidebarItem

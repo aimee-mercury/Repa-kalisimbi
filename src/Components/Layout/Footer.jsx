@@ -47,8 +47,8 @@ const Footer = () => {
       <div className="footer-main container">
         <div className="footer-brand">
           <Link className="footer__logo" to="/">
-            <img src="/Images/REPA LOGO.png" alt="" />
-            <span className="brand">Repa Kalisimbi</span>
+            <img src="/Images/REPA MARK TRANSPARENT.png" alt="" />
+            <span className="brand">Repa Karisimbi</span>
           </Link>
           <p>Thoughtful technology for everyday life. Carefully selected, priced fairly, and backed by real support.</p>
           <a className="footer-whatsapp-link" href="https://wa.me/250732659689" target="_blank" rel="noreferrer">Message us on WhatsApp <ArrowUpRight size={15} /></a>
@@ -84,7 +84,7 @@ const Footer = () => {
       </div>
       <div className="footer-bottom">
         <div className="container footer-bottom__inner">
-          <p>© {new Date().getFullYear()} Repa Kalisimbi. Made for everyday.</p>
+          <p>© {new Date().getFullYear()} Repa Karisimbi. Made for everyday.</p>
           <div className="footer-bottom-links"><Link to="/about">About us</Link><Link to="/profile">Account</Link><a href="https://wa.me/250732659689" target="_blank" rel="noreferrer">Support</a></div>
         </div>
       </div>

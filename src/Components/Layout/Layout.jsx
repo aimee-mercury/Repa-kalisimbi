@@ -1,5 +1,5 @@
 "use client";
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, { useContext, useLayoutEffect, useMemo, useState } from "react";
 import { Moon, Sun } from "lucide-react";
 import { AuthContext } from "../../AuthContext";
 import "../../Styles/layout.scss";
@@ -23,7 +23,7 @@ export default function DashboardHeader() {
     []
   );
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     localStorage.setItem(DASHBOARD_THEME_KEY, themeMode);
     const isDark = themeMode === "dark";
     document.body.classList.toggle("dashboard-dark", isDark);
@@ -64,7 +64,8 @@ export default function DashboardHeader() {
             className={`meta-action-btn theme-toggle ${themeMode === "dark" ? "is-dark" : ""}`}
             onClick={() => setThemeMode((prev) => (prev === "dark" ? "light" : "dark"))}
             aria-label={themeMode === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-            title={themeMode === "dark" ? "Light mode" : "Dark mode"}
+            aria-pressed={themeMode === "dark"}
+            title={themeMode === "dark" ? "Switch to white mode" : "Switch to dark mode"}
           >
             {themeMode === "dark" ? <Sun size={18} /> : <Moon size={18} />}
           </button>

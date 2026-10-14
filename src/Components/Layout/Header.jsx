@@ -108,13 +108,12 @@ const Header = () => {
       </div>
 
       <div className="header__top">
-        <Link to="/" className="header__logo" onClick={() => setMobileOpen(false)} aria-label="Repa Kalisimbi home">
+        <Link to="/" className="header__logo" onClick={() => setMobileOpen(false)} aria-label="Repa Karisimbi home">
           <img
-            src="/Images/REPA LOGO.png"
-            alt="Repa Kalisimbi Logo"
-            style={{ width: "30px", height: "auto" }}
+            src="/Images/REPA MARK TRANSPARENT.png"
+            alt="Repa Karisimbi Logo"
           />
-          <span className="brand">Repa Kalisimbi</span>
+          <span className="brand">Repa Karisimbi</span>
         </Link>
 
         <button

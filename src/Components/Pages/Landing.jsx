@@ -132,7 +132,7 @@ export default function HomeHero() {
       </section>
 
       <section className="store-about-callout container">
-        <span>REPA KALISIMBI · BUILT AROUND YOU</span>
+        <span>Repa Karisimbi · BUILT AROUND YOU</span>
         <p>Shopping for tech should feel exciting, not complicated.</p>
         <button type="button" onClick={() => navigate("/about")}>Get to know us <ArrowRight size={16} /></button>
       </section>
